@@ -1,0 +1,24 @@
+[package]
+name = "interoptopus_proc"
+description = "Macros to produce Interoptopus item info."
+authors = ["Ralf Biedert <rb@xr.io>"]
+version = "0.14.9"
+edition = "2018"
+license = "MIT"
+keywords = ["ffi"]
+categories = ["api-bindings", "development-tools::ffi"]
+documentation = "https://docs.rs/interoptopus_proc/"
+repository = "https://github.com/ralfbiedert/interoptopus"
+
+[lib]
+path = "src/lib.rs"
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0.36"
+syn = { version = "1.0.86", features = ["full"] }
+quote = "1.0.15"
+darling = "0.13.1"
+
+[dev-dependencies]
+interoptopus = { path = "../core" }
