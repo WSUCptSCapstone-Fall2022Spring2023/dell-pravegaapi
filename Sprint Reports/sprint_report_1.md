@@ -33,8 +33,9 @@ Here are links to the issues that we completed in this sprint:
   * "We did not get to this issue because..." (explain briefly)
 
 ## Code Files for Review
-  ## Code developed as first Interoptopus tests.
+  - Code developed as first Interoptopus tests.
   [testing.rs] (dell-pravegaapi/Tests/Interoptopus-Test-1-Example/)
+  
   [test/bindings.rs] (dell-pravegaapi/Tests/Interoptopus-Test-1-Example/)
   [Interop.rs] (dell-pravegaapi/Tests/Interoptopus-Test-1-Example/csharpBindings/)
  
