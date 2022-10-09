@@ -33,23 +33,25 @@ Here are links to the issues that we completed in this sprint:
   * "We did not get to this issue because..." (explain briefly)
 
 ## Code Files for Review
-Please review the following code files, which were actively developed during this sprint, for quality:
- * [Name of code file 1](https://github.com/your_repo/file_extension)
- * [Name of code file 2](https://github.com/your_repo/file_extension)
- * [Name of code file 3](https://github.com/your_repo/file_extension)
+  ## Code developed as first Interoptopus tests.
+  [testing.rs] (dell-pravegaapi/Tests/Interoptopus-Test-1-Example/)
+  [test/bindings.rs] (dell-pravegaapi/Tests/Interoptopus-Test-1-Example/)
+  [Interop.rs] (dell-pravegaapi/Tests/Interoptopus-Test-1-Example/csharpBindings/)
  
 ## Retrospective Summary
 Here's what went well:
-  * Item 1
-  * Item 2
-  * Item x
+  - Documentation and diagramming was done very accurately. We're proud of the results and will
+  ensure a smooth transition from the planning and modelling stage into the construction and testing
+  stages of development.
+  - Team members were responsive and put in the work to ensure deadlines were met. We're flexible
+  with meeting times and available for extra meetings to accommodate project needs.
+  - Criticism was never taken negatively and there wasn't an issue with constructive criticism being
+  taken the wrong way.
  
 Here's what we'd like to improve:
-   * Item 1
-   * Item 2
-   * Item x
+  - An issue that came up was the disconnect between the class and the project. We aim to follow the
+  class' content more closely to minimize the risk of missing details.
   
 Here are changes we plan to implement in the next sprint:
-   * Item 1
-   * Item 2
-   * Item x
+  - Watching the class videos consistently each week is the first step to fixing the problem we
+  encountered.
