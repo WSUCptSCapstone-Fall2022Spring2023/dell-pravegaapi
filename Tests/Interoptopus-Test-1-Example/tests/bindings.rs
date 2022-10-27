@@ -8,14 +8,13 @@ fn bindings_csharp() -> Result<(), Error> {
     use interoptopus_backend_csharp::overloads::{DotNet};
 
     let config = Config {
-        dll_name: "test_library".to_string(),
+        dll_name: "testing".to_string(),
         namespace_mappings: NamespaceMappings::new("My.Company"),
         ..Config::default()
     };
 
     Generator::new(config, testing::my_inventory())
         .add_overload_writer(DotNet::new())
-        //.add_overload_writer(Unity::new())
         .write_file("./csharpBindings/Interop.cs")?;
 
     Ok(())
