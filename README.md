@@ -45,7 +45,7 @@ No known problems as of 10.09.22
 
 ## Additional Documentation
 
-Sprint Report 1: 
+Sprint Report 1: https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Sprint%20Reports/sprint_report_1.md
 
 ## License
 
