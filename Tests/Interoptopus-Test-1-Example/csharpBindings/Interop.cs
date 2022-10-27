@@ -12,7 +12,7 @@ namespace My.Company
 {
     public static partial class Interop
     {
-        public const string NativeLib = "test_library";
+        public const string NativeLib = "testing";
 
         static Interop()
         {
