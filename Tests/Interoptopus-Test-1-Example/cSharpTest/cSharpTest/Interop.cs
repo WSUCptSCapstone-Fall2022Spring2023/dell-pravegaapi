@@ -19,19 +19,18 @@ namespace My.Company
         }
 
 
-        /// Function using the type.
-        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "my_function")]
-        public static extern Vec2 my_function(Vec2 input);
+        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "mem_test_function")]
+        public static extern Memtest mem_test_function();
 
     }
 
     /// A simple type in our FFI layer.
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct Vec2
+    public partial struct Memtest
     {
-        public float x;
-        public float y;
+        uint thing;
+        uint thing2;
     }
 
 

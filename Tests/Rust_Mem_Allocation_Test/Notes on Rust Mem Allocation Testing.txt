@@ -1,0 +1,3 @@
+When testing, there doesn't appear to be an issue with Rust memory allocation transfering a struct back from
+Rust to C# when using "let" in Rust. Rust appears passes off the memory to C# to which C# turns it into a value
+object and assigns it or does nothing with it depending on what the developer is doing.

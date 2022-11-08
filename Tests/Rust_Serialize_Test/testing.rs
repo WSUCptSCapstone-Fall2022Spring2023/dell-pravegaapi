@@ -1,4 +1,4 @@
-use interoptopus::{ffi_function, ffi_type, function, Inventory, InventoryBuilder};
+use interoptopus::{ffi_function, ffi_type, extra_type, function, Inventory, InventoryBuilder};
 use serde::{Serialize};
 /// A simple type in our FFI layer.
 #[ffi_type]
