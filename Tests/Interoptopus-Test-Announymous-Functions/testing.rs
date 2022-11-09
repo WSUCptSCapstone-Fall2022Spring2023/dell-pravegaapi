@@ -36,16 +36,16 @@ pub struct Inner {
 
 #[ffi_function]
 #[no_mangle]
-pub extern "C" fn test_closures(x: u32) -> u32{
-    // let s = add_one_v1(x);
-    // return s
-    return add_one_v1(x);
+pub extern "C" fn test_iterators() -> std::slice::Iter<*mut i32>{
+    let a = [1, 2, 3];
+    let mut iter = a.iter();
+    return iter;
 }
 // This will create a function `my_inventory` which can produce
 // an abstract FFI representation (called `Library`) for this crate.
 pub fn my_inventory() -> Inventory {
     {
-        InventoryBuilder::new().register(function!(my_function)).register(function!(test_closures))
+        InventoryBuilder::new().register(function!(my_function)).register(function!(test_iterators))
         .inventory()
     }
 }
