@@ -33,7 +33,9 @@ Here are links to the issues that we completed in this sprint:
  * [Feature Transfer Testing 9](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/issues/34)
    * Understanding how to test certain features taking longer than expected
 
-
+## Compiled Tests Worked on During Sprint 2 and Testing Notes:
+   * [Rust Component Tests](https://onedrive.live.com/view.aspx?resid=CA05A65F54DA622E!56794&ithint=file%2cxlsx&authkey=!AB43LdwoswSHSeY)
+   * [Compiled Notes](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/tree/main/Tests/Compiled%20Testing%20Notes)
 ## Code Files for Review
 Please review the following code files, which were actively developed during this sprint, for quality:
  * DeepClone implementation [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Clone_Test/cSharpTest/cSharpTest/Interop.cs)
@@ -53,7 +55,7 @@ Please review the following code files, which were actively developed during thi
  * Hashmap test [Interop.cs](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Tests/Hashmap/Interop.cs)
  * String and Async test [lib.rs](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Tests/StringAndAsync/src/lib.rs)
  * Tuple return type test [Interop.cs](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Tests/Tuples/Interop.cs)
- 
+
 ## Retrospective 
 Here's what went well:
   * 1) Staying on top of documentation deadlines
