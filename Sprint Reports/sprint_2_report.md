@@ -40,16 +40,19 @@ Please review the following code files, which were actively developed during thi
  * Enum test [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Enum_Test/csharpBindings/Interop.cs)
  * Global test [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Global_Test/csharpBindings/Interop.cs)
  * Mem Allocation test [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Mem_Allocation_Test/cSharpTest/cSharpTest/Interop.cs)
-                      * [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Mem_Allocation_Test/cSharpTest/cSharpTest/Program.cs)
+                      * [Program.cs](https://github.com/dell-pravegaapi/Tests/Rust_Mem_Allocation_Test/cSharpTest/cSharpTest/Program.cs)
  * pub(crate) test [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_pub(crate)_Test/cSharpBindings/Interop.cs)
-                  * [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_pub(crate)_Test/testing.rs)
+                  * [testing.rs](https://github.com/dell-pravegaapi/Tests/Rust_pub(crate)_Test/testing.rs)
                   
  * Serialize test  [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Serialize_Test/cSharpBindings/Interop.cs)
-                  * [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Serialize_Test/testing.rs)
+                  * [testing.rs](https://github.com/dell-pravegaapi/Tests/Rust_Serialize_Test/testing.rs)
  * Snafu and error passing test [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Snafu_Test/testing.rs)
-                              * [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Snafu_Test/cSharpTest/cSharpTest/Program.cs)
-                              * [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Snafu_Test/cSharpTest/cSharpTest/Interop.cs)
- * Tuple test [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Tuple_Test/testing.rs)
+                              + [Program.cs](https://github.com/dell-pravegaapi/Tests/Rust_Snafu_Test/cSharpTest/cSharpTest/Program.cs)
+                              + [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Snafu_Test/cSharpTest/cSharpTest/Interop.cs)
+ * Tuple object test [Interop.cs](https://github.com/dell-pravegaapi/Tests/Rust_Tuple_Test/testing.rs)
+ * Hashmap test [Interop.cs](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Tests/Hashmap/Interop.cs)
+ * String and Async test [lib.rs](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Tests/StringAndAsync/src/lib.rs)
+ * Tuple return type test [Interop.cs](https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Tests/Tuples/Interop.cs)
  
 ## Retrospective 
 Here's what went well:
