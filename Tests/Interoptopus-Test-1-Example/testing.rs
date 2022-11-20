@@ -12,7 +12,15 @@ pub struct Vec2 {
 #[ffi_function]
 #[no_mangle]
 pub extern "C" fn my_function(input: Vec2) -> Vec2 {
-    input
+    return test();
+}
+
+pub fn test() -> Vec2{
+    let thing = Vec2{
+        x: 1.0,
+        y: 2.0
+    };
+    return thing;
 }
 
 // This will create a function `my_inventory` which can produce

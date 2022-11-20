@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using My.Company;
 #pragma warning restore 0105
@@ -13,7 +14,7 @@ namespace My.Company
     public static partial class Interop
     {
         public const string NativeLib = @"C:\\Users\\john_\\Desktop\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Tests\\Rust_Mem_Allocation_Test\\target\\debug\\deps\\testing.dll";
-
+        public string test = Path.Combine(Environment.CurrentDirectory, "");
         static Interop()
         {
         }
