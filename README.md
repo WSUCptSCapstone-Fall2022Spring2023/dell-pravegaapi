@@ -12,7 +12,8 @@ Pravega is an open-source storage system implemented and led by Dell Technologie
 
 ### Prerequisites
 
-The user should have the most current version of .NET installed on their system. 
+The user should have the most current version of .NET Core installed on their system. 
+
 ### Add-ons
 
 Interoptopus: Interoptopus is a program that was developed to facilitate the wrapping of Rust Code in C#. It is included currently for quick access while developing the project.
@@ -32,7 +33,7 @@ Currently only test code wrapping Rust in C# has been implemented. The funcitona
 
 ## Known Problems
 
-No known problems as of 10.09.22
+No known problems as of 11.09.22
 
 
 ## Contributing
@@ -46,6 +47,7 @@ No known problems as of 10.09.22
 ## Additional Documentation
 
 Sprint Report 1: https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Sprint%20Reports/sprint_report_1.md
+Sprint Report 2: https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi/blob/main/Sprint%20Reports/sprint_2_report.md
 
 ## License
 
