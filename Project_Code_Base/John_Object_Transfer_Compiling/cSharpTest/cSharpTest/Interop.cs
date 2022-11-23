@@ -5,35 +5,174 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using My.Company;
+using Pravega;
 #pragma warning restore 0105
 
-namespace My.Company
+namespace Pravega
 {
-    public static partial class Interop
-    {
-        public const string NativeLib = @"C:\\Users\\john_\\Desktop\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project Code Base\\John Object Transfer Compiling\\target\\debug\\testing.dll";
 
-        static Interop()
-        {
-        }
-
-
-        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "mem_test_function")]
-        public static extern Memtest mem_test_function();
-
-    }
-
-    /// A simple type in our FFI layer.
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct Memtest
+    public partial struct CustomCSharpString
     {
-        public uint thing;
-        public uint thing2;
+        public uint capacity;
+        public U16Slice string_slice;
     }
 
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public partial struct CustomCSharpStringSlice
+    {
+        public U16Slice string_slice;
+        public ulong length;
+    }
 
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public partial struct CustomRustString
+    {
+        public uint capacity;
+        public U8Slice string_slice;
+    }
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public partial struct CustomRustStringSlice
+    {
+        public IntPtr slice_pointer;
+        public ulong length;
+    }
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public partial struct U16Tuple
+    {
+        ushort value1;
+        ushort value2;
+    }
+
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public partial struct U16Slice
+    {
+        public IntPtr slice_pointer;
+        public ulong length;
+    }
+    public partial struct U16Slice : IEnumerable<ushort>
+    {
+        public U16Slice(GCHandle handle, ulong count)
+        {
+            this.slice_pointer = handle.AddrOfPinnedObject();
+            this.length = count;
+        }
+        public U16Slice(IntPtr handle, ulong count)
+        {
+            this.slice_pointer = handle;
+            this.length = count;
+        }
+        public ushort this[int i]
+        {
+            get
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(byte));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                return Marshal.PtrToStructure<byte>(ptr);
+            }
+            set
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(ushort));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                Marshal.StructureToPtr<ushort>(value, ptr, false);
+            }
+        }
+        public ushort[] Copied
+        {
+            get
+            {
+                var rval = new ushort[length];
+                for (var i = 0; i < (int)length; i++)
+                {
+                    rval[i] = this[i];
+                }
+                return rval;
+            }
+        }
+        public int Count => (int)length;
+        public IEnumerator<ushort> GetEnumerator()
+        {
+            for (var i = 0; i < (int)length; ++i)
+            {
+                yield return this[i];
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+    }
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    public partial struct U8Slice
+    {
+        public IntPtr slice_pointer;
+        public ulong length;
+    }
+    public partial struct U8Slice : IEnumerable<byte>
+    {
+        public U8Slice(GCHandle handle, ulong count)
+        {
+            this.slice_pointer = handle.AddrOfPinnedObject();
+            this.length = count;
+        }
+        public U8Slice(IntPtr handle, ulong count)
+        {
+            this.slice_pointer = handle;
+            this.length = count;
+        }
+        public byte this[int i]
+        {
+            get
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(byte));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                return Marshal.PtrToStructure<byte>(ptr);
+            }
+            set
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(byte));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                Marshal.StructureToPtr<byte>(value, ptr, false);
+            }
+        }
+        public byte[] Copied
+        {
+            get
+            {
+                var rval = new byte[length];
+                for (var i = 0; i < (int) length; i++) {
+                    rval[i] = this[i];
+                }
+                return rval;
+            }
+        }
+        public int Count => (int) length;
+        public IEnumerator<byte> GetEnumerator()
+        {
+            for (var i = 0; i < (int)length; ++i)
+            {
+                yield return this[i];
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+    }
+   
 
     public class InteropException<T> : Exception
     {

@@ -1,9 +1,10 @@
 ﻿
- namespace My.Company
+ namespace Pravega
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -11,8 +12,17 @@
     {
         static void Main()
         {
-            Console.WriteLine(Environment.CurrentDirectory);
-            Console.WriteLine("testing vec2(1,2). returned x = " + Interop.mem_test_function().thing.ToString() + " returned y = " + Interop.mem_test_function().thing2.ToString());
+            // Showing taking a string from C# and turning it into a CustomString for sending into Rust
+            string testString = "test";
+            U16Slice test;
+            test.slice_pointer = Marshal.StringToHGlobalAnsi(testString);
+            test.length = (ulong)testString.Length;
+            CustomCSharpString testCustomString = new CustomCSharpString();
+            testCustomString.string_slice = test;
+            for (ulong i = 0; i < testCustomString.string_slice.length; i++)
+            {
+                Console.WriteLine((char)testCustomString.string_slice[(int)i]);
+            }
         }
     }
 }
