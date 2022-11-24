@@ -315,7 +315,7 @@ namespace Pravega
             get
             {
                 if (i >= Count) throw new IndexOutOfRangeException();
-                var size = Marshal.SizeOf(typeof(byte));
+                var size = Marshal.SizeOf(typeof(ushort));
                 var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
                 return Marshal.PtrToStructure<byte>(ptr);
             }

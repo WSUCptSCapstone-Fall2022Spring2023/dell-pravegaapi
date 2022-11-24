@@ -39,18 +39,18 @@ namespace Pravega
         // Equals
         public override bool Equals(CustomU128 obj)
         {
-            // null case
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
             // equals for U128
             if (obj.first_half == this.first_half && obj.second_half == this.second_half){
                 return true;
             }
             return false;
         }
+
+        // String
+        // No easy implementation. After 2 hours of tinkering, C# stores large numbers calculated as x.xxx...Ey where E represents
+        //  its 10^y. Because of this, trying to parse through the number as a string for a character isn't possible as it will
+        //  return the exponent y. Furthermore, no tricks like using /10 or %10 are possible since the number is too large and in 
+        //  testing the rounding will only go up to a certain value less than the maximum u128 value.
     }
 
 

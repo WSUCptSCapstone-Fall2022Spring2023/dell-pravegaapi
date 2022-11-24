@@ -10,10 +10,11 @@
 
     public static class Program
     {
+
         static void Main()
         {
             // Showing taking a string from C# and turning it into a CustomString for sending into Rust
-            string testString = "test";
+            /*string testString = "test";
             U16Slice test;
             test.slice_pointer = Marshal.StringToHGlobalAnsi(testString);
             test.length = (ulong)testString.Length;
@@ -23,6 +24,7 @@
             {
                 Console.WriteLine((char)testCustomString.string_slice[(int)i]);
             }
+            */
         }
     }
 }
