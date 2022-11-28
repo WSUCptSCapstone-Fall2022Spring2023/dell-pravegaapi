@@ -1,0 +1,45 @@
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.exe
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.deps.json
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.runtimeconfig.json
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\bin\Debug\net6.0\ref\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.pdb
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.AssemblyReference.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfoInputs.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfo.cs
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.CoreCompileInputs.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\ref\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.pdb
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Tests\Interoptopus-Test-1-Example\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.genruntimeconfig.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.exe
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.deps.json
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.runtimeconfig.json
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\ref\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.pdb
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.AssemblyReference.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfoInputs.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfo.cs
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.CoreCompileInputs.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\ref\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.pdb
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project Code Base\John Object Transfer Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.genruntimeconfig.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.exe
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.deps.json
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.runtimeconfig.json
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\ref\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.pdb
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.AssemblyReference.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfoInputs.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfo.cs
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.CoreCompileInputs.cache
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\ref\cSharpTest.dll
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.pdb
+C:\Users\john_\Desktop\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\John_Object_Transfer_Compiling\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.genruntimeconfig.cache
