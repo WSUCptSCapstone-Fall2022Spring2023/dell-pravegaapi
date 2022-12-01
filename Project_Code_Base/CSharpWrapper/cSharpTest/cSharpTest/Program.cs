@@ -14,17 +14,11 @@
         static void Main()
         {
             // Showing taking a string from C# and turning it into a CustomString for sending into Rust
-            /*string testString = "test";
-            U16Slice test;
-            test.slice_pointer = Marshal.StringToHGlobalAnsi(testString);
-            test.length = (ulong)testString.Length;
-            CustomCSharpString testCustomString = new CustomCSharpString();
-            testCustomString.string_slice = test;
-            for (ulong i = 0; i < testCustomString.string_slice.length; i++)
-            {
-                Console.WriteLine((char)testCustomString.string_slice[(int)i]);
-            }
-            */
+            string testString = "test";
+            CustomCSharpString customCSharpTest = new CustomCSharpString(testString);
+            Console.WriteLine("test convert from custom c#: " + customCSharpTest.ConvertToString());
+            CustomRustString customRustString = customCSharpTest.ConvertToRustString();
+            Interop.test(customRustString);
         }
     }
 }

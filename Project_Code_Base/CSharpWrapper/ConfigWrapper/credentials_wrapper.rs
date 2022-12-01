@@ -5,7 +5,7 @@
 ///     Provides definitions on the Rust side.
 ///
 use interoptopus::{ffi_type};
-use utility::CustomCSharpString;
+use utility::CustomRustString;
 
 
 
@@ -15,7 +15,7 @@ use utility::CustomCSharpString;
 #[repr(C)]
 pub struct CredWrapper {
     pub is_expired_result: bool,
-    pub get_request_metadata_result: CustomCSharpString,
+    pub get_request_metadata_result: CustomRustString,
 }
 // Credentials in palatable C#
 #[ffi_type]

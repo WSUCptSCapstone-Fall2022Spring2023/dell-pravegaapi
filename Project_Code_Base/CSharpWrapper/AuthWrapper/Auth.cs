@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Pravega;
+using Pravega.Shared;
 #pragma warning restore 0105
 
 namespace Pravega.Auth

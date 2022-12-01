@@ -12,7 +12,7 @@ namespace Pravega
 {
     public static partial class Interop
     {
-        public const string NativeLib = "ClientFactoryWrapper";
+        public const string NativeLib = "PravegaCSharp";
 
         static Interop()
         {
@@ -20,21 +20,23 @@ namespace Pravega
 
 
         [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "test")]
-        public static extern CustomCSharpString test(CustomCSharpString input);
+        public static extern CustomRustString test(CustomRustString input);
 
     }
 
+    /// String Structs
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct CustomCSharpString
+    public partial struct CustomRustString
     {
         public uint capacity;
-        public U16Slice string_slice;
+        public U8Slice string_slice;
     }
 
+    /// Slice Structs
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct U16Slice
+    public partial struct U8Slice
     {
         public IntPtr slice_pointer;
         public uint length;

@@ -9,6 +9,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Pravega;
+using Pravega.Auth;
+using Pravega.Retry;
+using Pravega.Shared;
+using Pravega.Utility;
+
 #pragma warning restore 0105
 
 namespace Pravega.Config
@@ -31,7 +36,7 @@ namespace Pravega.Config
         public ulong reader_wrapper_buffer_size;
         public ushort request_timeout0;
         public ushort request_timeout1;
-        public CustomCSharpStringSlice trustcerts;
+        public CustomRustStringSlice trustcerts;
     }
     /*
     Originally as: 
@@ -133,7 +138,7 @@ namespace Pravega.Config
     public partial struct CredWrapper
     {
         public bool is_expired_result;
-        public CustomCSharpString get_request_metadata_result;
+        public CustomRustString get_request_metadata_result;
     }
     // ***** Wrapper for Credentials *****
     [Serializable]

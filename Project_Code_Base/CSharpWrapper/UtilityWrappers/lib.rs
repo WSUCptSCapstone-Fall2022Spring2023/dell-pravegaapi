@@ -5,7 +5,7 @@
 ///     are located in here. Provides definitions on the Rust side.
 ///     
 use interoptopus::{ffi_type};
-
+use std::{slice, char};
 
 
 /////////////////////////////////////////
@@ -38,13 +38,79 @@ pub struct CustomU128{
 #[repr(C)]
 pub struct U8Slice{
     pub slice_pointer: *mut i32,
-    pub length: u64,
+    pub length: u32,
+}
+impl U8Slice{
+
+    // Constructs a U8 slice of length "newLength"
+    pub fn new(new_length: &u32) -> U8Slice {
+        let mut slice_vec: Vec<u8> = Vec::with_capacity(*new_length as usize);
+        U8Slice {
+            length: *new_length,
+            slice_pointer: slice_vec.as_mut_slice().as_mut_ptr() as *mut i32,
+        }
+    }
+
+    // Convert to standard rust u8 slice
+    pub fn as_rust_u8_slice_mut(&self) -> &mut [u8] {
+        unsafe{
+            let self_slice: &mut [u8] = slice::from_raw_parts_mut(
+                self.slice_pointer as *mut u8,
+                self.length as usize
+            );
+            return self_slice;
+        }           
+    }
+
+    // Takes a rust u8 slice and converts it into this custom slice
+    pub fn from_rust_u8_slice_mut(
+        source: &mut [u8],
+        new_length: &usize)
+    -> U8Slice{
+        U8Slice{
+            slice_pointer: source.as_mut_ptr() as *mut i32,
+            length: *new_length as u32,
+        }
+    }
 }
 #[ffi_type]
 #[repr(C)]
 pub struct U16Slice{
     pub slice_pointer: *mut i32,
-    pub length: u64,
+    pub length: u32,
+}
+impl U16Slice{
+
+    // Constructs a U8 slice of length "newLength"
+    pub fn new(new_length: &u32) -> U16Slice {
+        let mut slice_vec: Vec<u8> = Vec::with_capacity(*new_length as usize);
+        U16Slice {
+            length: *new_length,
+            slice_pointer: slice_vec.as_mut_slice().as_mut_ptr() as *mut i32,
+        }
+    }
+
+    // Convert to standard rust u16 slice
+    pub fn as_rust_u16_slice_mut(&self) -> &mut [u16] {
+        unsafe{
+            let self_slice: &mut [u16] = slice::from_raw_parts_mut(
+                self.slice_pointer as *mut u16,
+                self.length as usize
+            );
+            return self_slice;
+        }           
+    }
+
+    // Takes a rust u16 slice and converts it into this custom slice
+    pub fn from_rust_u16_slice_mut(
+        source: &mut [u16],
+        new_length: &usize) 
+    -> U16Slice{
+        U16Slice{
+            slice_pointer: source.as_mut_ptr() as *mut i32,
+            length: *new_length as u32,
+        }
+    }
 }
 #[ffi_type]
 #[repr(C)]
@@ -88,20 +154,38 @@ pub struct CustomRustString {
     pub capacity: u32,
     pub string_slice: U8Slice,
 }
-#[ffi_type]
-#[repr(C)]
-pub struct CustomCSharpString{
-    pub capacity: u32,
-    pub string_slice: U16Slice,
+// Functions related to CustomRustString
+impl CustomRustString{
+
+    // Default constructor
+    pub fn new(new_length: &u32) -> CustomRustString{
+        CustomRustString{
+            capacity: *new_length,
+            string_slice: U8Slice::new(new_length)
+        }
+    }
+
+    // Construct a string from a normal rust string.
+    pub fn from_string(source_string: String) -> CustomRustString{
+        let string_size: usize = source_string.len() as usize;
+        let mut source_string_clone: String = source_string.clone();
+        unsafe{
+            return CustomRustString 
+            { 
+                capacity: source_string.capacity() as u32,
+                string_slice: U8Slice::from_rust_u8_slice_mut(source_string_clone.as_mut_vec().as_mut_slice(), &string_size),
+            }
+        }
+    }
+
+    // Convert the contents of the object into a normal Rust string
+    pub fn as_string(&self) -> String{
+        return String::from_utf8_lossy(self.string_slice.as_rust_u8_slice_mut()).to_string();
+    }
 }
 
+
 // Custom string slice
-#[ffi_type]
-#[repr(C)]
-pub struct CustomCSharpStringSlice{
-    pub slice_pointer: *mut i32,
-    pub length: u64,
-}
 #[ffi_type]
 #[repr(C)]
 pub struct CustomRustStringSlice{

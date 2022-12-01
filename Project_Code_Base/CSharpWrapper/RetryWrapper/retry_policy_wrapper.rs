@@ -1,7 +1,7 @@
 ///
 /// File: retry_policy_wrapper.rs
 /// File Creator: John Sbur
-/// Purpose: Contains structs transferred from the Retry area. 
+/// Purpose: Contains structs transferred from the retry policy area. 
 ///     Provides definitions on the Rust side.
 ///
 use interoptopus::{ffi_type};

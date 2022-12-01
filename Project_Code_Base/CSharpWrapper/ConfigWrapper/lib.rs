@@ -10,7 +10,7 @@ pub mod credentials_wrapper;
 
 
 use interoptopus::{ffi_type};
-use utility::{CustomCSharpString, U16Tuple};
+use utility::{CustomRustString, U16Tuple};
 use shared_wrapper::PravegaNodeUriWrapper;
 use retry_wrapper::retry_policy_wrapper::RetryWithBackoffWrapper;
 
@@ -61,7 +61,7 @@ pub struct ClientConfigWrapper{
     pub request_timeout: U16Tuple,
 
     // 
-    pub trustcerts: CustomCSharpString,
+    pub trustcerts: CustomRustString,
 }
 /*
  Originally from pravega-client-rust/config/src/lib.rs 

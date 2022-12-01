@@ -6,7 +6,7 @@
 ///
 use interoptopus::{ffi_type};
 use interoptopus::patterns::option::FFIOption;
-use utility::{CustomU128, CustomCSharpString};
+use utility::{CustomU128, CustomRustString};
 
 
 
@@ -28,7 +28,7 @@ pub struct WriterIdWrapper{
 #[ffi_type]
 #[repr(C)]
 pub struct PravegaNodeUriWrapper {
-    pub inner: CustomCSharpString,
+    pub inner: CustomRustString,
 }
 /* 
     Originally from pravega-client-rust/shared/src/lib.rs
@@ -44,7 +44,7 @@ pub struct PravegaNodeUriWrapper {
 #[ffi_type]
 #[repr(C)]
 pub struct ScopeWrapper{
-    pub name: CustomCSharpString,
+    pub name: CustomRustString,
 }
 /*
     Originally from pravega-client-rust/shared/src/lib.rs 
@@ -62,7 +62,7 @@ pub struct ScopeWrapper{
 #[ffi_type]
 #[repr(C)]
 pub struct StreamWrapper {
-    pub name: CustomCSharpString,
+    pub name: CustomRustString,
 }
 /*
     Originally from 
@@ -99,7 +99,7 @@ pub struct ScopedStreamWrapper{
 #[ffi_type]
 #[repr(C)]
 pub struct DelegationTokenWrapper{
-    value: CustomCSharpString,
+    value: CustomRustString,
     expiry_time: FFIOption<u64>,
 }
 /*

@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Pravega;
+using Pravega.Utility;
 #pragma warning restore 0105
 
 namespace Pravega.Shared
@@ -43,7 +44,7 @@ namespace Pravega.Shared
     [StructLayout(LayoutKind.Sequential)]
     public partial struct DelegationTokenWrapper
     {
-        CustomCSharpString value;
+        CustomRustString value;
         Optionu64 expiry_time;
     }
 
@@ -54,7 +55,7 @@ namespace Pravega.Shared
     [StructLayout(LayoutKind.Sequential)]
     public partial struct ScopeWrapper
     {
-        public CustomCSharpString name;
+        public CustomRustString name;
     }
 
 
@@ -75,7 +76,7 @@ namespace Pravega.Shared
     [StructLayout(LayoutKind.Sequential)]
     public partial struct StreamWrapper
     {
-        public CustomCSharpString name;
+        public CustomRustString name;
     }
 
 
@@ -108,7 +109,7 @@ namespace Pravega.Shared
     [StructLayout(LayoutKind.Sequential)]
     public partial struct PravegaNodeUriWrapper
     {
-        public CustomCSharpString inner;
+        public CustomRustString inner;
     }
     /* 
         Originally from pravega-client-rust/shared/src/lib.rs

@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Pravega;
+using Pravega.Utility;
 #pragma warning restore 0105
 
 namespace Pravega.Retry
