@@ -1,0 +1,18 @@
+[package]
+name = "Pravega"
+authors = ["John Sbur"]
+version = "0.14.14"
+edition = "2018"
+license = "Apache-2.0"
+keywords = ["ffi","wrapper","C#"]
+categories = ["api-bindings", ".NET-core-development-tools"]
+repository = "https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi"
+
+[lib]
+path = "./client_factory_wrapper.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+interoptopus = { path = "../Interoptopus/core", version = "0.14.0"}
+interoptopus_backend_csharp = { path = "../Interoptopus/backends/csharp" }
+tokio = { version = "1", features = ["rt", "net"] }
