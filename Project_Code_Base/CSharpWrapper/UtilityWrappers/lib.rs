@@ -4,7 +4,7 @@
 /// Purpose: Contains helper structs that can transfer varying sizes of values. Slices, tuple, rust values, strings, and more
 ///     are located in here. Provides definitions on the Rust side.
 ///     
-use interoptopus::{ffi_type};
+use interoptopus::{ffi_type, patterns::string};
 use std::{slice, char};
 
 
@@ -172,7 +172,7 @@ impl CustomRustString{
         unsafe{
             return CustomRustString 
             { 
-                capacity: source_string.capacity() as u32,
+                capacity: string_size as u32,
                 string_slice: U8Slice::from_rust_u8_slice_mut(source_string_clone.as_mut_vec().as_mut_slice(), &string_size),
             }
         }
