@@ -168,3 +168,21 @@ pub struct ScopedSegmentWrapper{
         pub segment: Segment,
     }
 */
+#[ffi_type]
+#[repr(C)]
+pub struct ClientFactoryAsyncWrapper
+{
+
+temp: u32,
+}
+
+#[ffi_type]
+#[repr(C)]
+pub struct TableWrapper {
+    // name should be unique as it is used to construct the internal stream.
+    // different table with same name will share the same state.
+    name: CustomCSharpString,
+    endpoint: PravegaNodeUriWrapper,
+    factory: ClientFactoryAsyncWrapper,
+    delegation_token_provider: DelegationTokenWrapper,
+}

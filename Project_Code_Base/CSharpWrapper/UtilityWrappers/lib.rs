@@ -108,3 +108,9 @@ pub struct CustomRustStringSlice{
     pub slice_pointer: *mut i32,
     pub length: u64,
 }
+
+#[ffi_type]
+#[repr(C)]
+pub struct CustomUuid{
+    uuid: CustomU128,
+}

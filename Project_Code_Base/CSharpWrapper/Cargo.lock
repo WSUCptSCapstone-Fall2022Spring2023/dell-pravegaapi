@@ -34,6 +34,8 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
+ "segment_wrapper",
+ "shared_wrapper",
  "utility",
 ]
 
@@ -168,6 +170,16 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
+ "utility",
+]
+
+[[package]]
+name = "segment_wrapper"
+version = "0.14.14"
+dependencies = [
+ "interoptopus",
+ "interoptopus_backend_csharp",
+ "shared_wrapper",
  "utility",
 ]
 
