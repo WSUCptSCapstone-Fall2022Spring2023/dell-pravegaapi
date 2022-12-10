@@ -1,5 +1,5 @@
 [package]
-name = "byte_wrapper"
+name = "segment_wrapper"
 authors = ["John Sbur"]
 version = "0.14.14"
 edition = "2018"
@@ -17,4 +17,3 @@ interoptopus = { path = "../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../Interoptopus/backends/csharp" }
 utility = { path = "../UtilityWrappers" } 
 shared_wrapper = { path = "../SharedWrapper" } 
-segment_wrapper = { path = "../SegmentWrapper" }
