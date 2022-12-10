@@ -16,6 +16,7 @@ pub fn internal_test(input: CustomRustString) -> CustomRustString{
     let testing_slice: &[u8] = input.string_slice.as_rust_u8_slice_mut();
 
     // Print bytes as chars
+    println!("Pringing recieved chars from input::");
     while i < (input.capacity as u32) {
         print!("{0}", testing_slice[i as usize] as char);
         i = i+1;
@@ -24,12 +25,13 @@ pub fn internal_test(input: CustomRustString) -> CustomRustString{
     // Convert to regular rust string
     let input_string_in_rust: String = input.as_string();
     println!("\noutput::");
-    println!("Converted input into {0} .", input_string_in_rust);
-
-
+    println!("Converted input into Rust string containing '{0}'.", input_string_in_rust);
+    println!("test working");
+    
     // Convert back and return
     let rust_string: CustomRustString = CustomRustString::from_string(input_string_in_rust);
-    println!("{0}", rust_string.capacity);
+
+    println!("{0} {1}", rust_string.capacity, rust_string.string_slice.length);
     return rust_string;
 }
 
