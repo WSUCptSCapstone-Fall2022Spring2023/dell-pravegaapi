@@ -14,7 +14,7 @@ namespace Pravega
 {
     public static partial class Interop
     {
-        public const string NativeLib = "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\target\\debug\\deps\\PravegaCSharp";
+        public const string NativeLib = "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\target\\debug\\deps\\PravegaCSharp";
 
         static Interop()
         {

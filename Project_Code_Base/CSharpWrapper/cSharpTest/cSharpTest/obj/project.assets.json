@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\john_\\.nuget\\packages\\": {}
+    "C:\\Users\\brand\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "projectUniqueName": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
       "projectName": "cSharpTest",
-      "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
-      "packagesPath": "C:\\Users\\john_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\obj\\",
+      "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "packagesPath": "C:\\Users\\brand\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\john_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\brand\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -55,12 +55,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
-          }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }
