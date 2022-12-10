@@ -12,7 +12,19 @@ using Pravega;
 
 namespace Pravega
 {
-    /////////////////////////////////////////
+    public static partial class Interop
+    {
+        public const string NativeLib = "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\target\\debug\\deps\\PravegaCSharp";
+
+        static Interop()
+        {
+        }
+
+         [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "test")]
+        public static extern CustomRustString test(CustomRustString input);
+
+    }
+/////////////////////////////////////////
     /// Value Structs
     /////////////////////////////////////////
     // U128 wrapper for sending between C# and Rust
@@ -62,7 +74,7 @@ namespace Pravega
     public partial struct CustomRustStringSlice
     {
         public IntPtr slice_pointer;
-        public ulong length;
+        public uint length;
     }
     /// Used to hold a slice of Rust strings (Usually a vectory or array)
     [Serializable]
@@ -70,7 +82,7 @@ namespace Pravega
     public partial struct CustomCSharpStringSlice
     {
         public IntPtr slice_pointer;
-        public ulong length;
+        public uint length;
     }
     ///A pointer to an array of data someone else owns which may be modified.
     [Serializable]
@@ -78,16 +90,16 @@ namespace Pravega
     public partial struct U8Slice
     {
         public IntPtr slice_pointer;
-        public ulong length;
+        public uint length;
     }
     public partial struct U8Slice : IEnumerable<byte>
     {
-        public U8Slice(GCHandle handle, ulong count)
+        public U8Slice(GCHandle handle, uint count)
         {
             this.slice_pointer = handle.AddrOfPinnedObject();
             this.length = count;
         }
-        public U8Slice(IntPtr handle, ulong count)
+        public U8Slice(IntPtr handle, uint count)
         {
             this.slice_pointer = handle;
             this.length = count;
@@ -138,16 +150,16 @@ namespace Pravega
     public partial struct U16Slice
     {
         public IntPtr slice_pointer;
-        public ulong length;
+        public uint length;
     }
     public partial struct U16Slice : IEnumerable<ushort>
     {
-        public U16Slice(GCHandle handle, ulong count)
+        public U16Slice(GCHandle handle, uint count)
         {
             this.slice_pointer = handle.AddrOfPinnedObject();
             this.length = count;
         }
-        public U16Slice(IntPtr handle, ulong count)
+        public U16Slice(IntPtr handle, uint count)
         {
             this.slice_pointer = handle;
             this.length = count;
@@ -213,16 +225,16 @@ namespace Pravega
     public partial struct U128U64TupleSlice
     {
         public IntPtr slice_pointer;
-        public ulong length;
+        public uint length;
     }
     public partial struct U128U64TupleSlice : IEnumerable<U128U64TupleSlice>
     {
-        public U128U64TupleSlice(GCHandle handle, ulong count)
+        public U128U64TupleSlice(GCHandle handle, uint count)
         {
             this.slice_pointer = handle.AddrOfPinnedObject();
             this.length = count;
         }
-        public U128U64TupleSlice(IntPtr handle, ulong count)
+        public U128U64TupleSlice(IntPtr handle, uint count)
         {
             this.slice_pointer = handle;
             this.length = count;
@@ -301,7 +313,7 @@ namespace Pravega
         public ulong capacity;
         public U16Slice string_slice;
     }
-    public partial struct CustomCSharpString
+     public partial struct CustomCSharpString
     {
         // Default constructor. Creates Custom CSharp string from standard string in C#
         public CustomCSharpString(string source){
@@ -320,7 +332,7 @@ namespace Pravega
         public CustomCSharpString(CustomRustString source){
 
             // Grab all the bytes of the source
-            byte[] source_utf8_bytes = new byte[source.capacity];
+            byte[] source_utf8_bytes = new byte[source.string_slice.length];
             int i = 0;
             foreach (byte utf8Char in source.string_slice){
                 source_utf8_bytes[i] = utf8Char;
@@ -345,7 +357,6 @@ namespace Pravega
             // Add each element in the slice to a string.
             string returnString = string.Empty;
             foreach (ushort element in this.string_slice){
-                Console.WriteLine(((char)element).ToString());
                 returnString += ((char)element).ToString();
             }
 
@@ -357,7 +368,7 @@ namespace Pravega
         public CustomRustString ConvertToRustString(){
 
             // Check to make sure this isn't empty. If it is, return blank CustomRustString
-            CustomRustString returnObject = new CustomRustString(this.capacity);
+            CustomRustString returnObject = new CustomRustString(this.string_slice.length);
 
             // Parse through and set array contents of utf8 to this string's contents converted
             Encoding utf16 = Encoding.Unicode;
@@ -391,7 +402,7 @@ namespace Pravega
     }
     public partial struct CustomRustString
     {
-        public CustomRustString(ulong length){
+        public CustomRustString(uint length){
 
             // Create an empty array of the requested length
             byte[] byteArray = new byte[length];
