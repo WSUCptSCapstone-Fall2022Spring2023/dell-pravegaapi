@@ -10,15 +10,36 @@
 
     public static class Program
     {
+        public class Test
+        {
+            public int i;
+
+            public void inc()
+            {
+                i++;
+            }
+        }
+
+        public static void func(Test test)
+        {
+            test.inc();
+        }
 
         static void Main()
         {
+            Test test = new Test();
+            test.i = 0;
+            test.inc();
+            Console.WriteLine(test.i.ToString());
+            func(test);
+            Console.WriteLine(test.i.ToString());
+
 
             // test creating a thing
-            IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();
-            Console.WriteLine(clientFactoryObject.ToString());
-            IntPtr runtimeObject = Interop.TestGetRuntime(clientFactoryObject);
-            Console.WriteLine(runtimeObject.ToString());
+            //IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();
+            //Console.WriteLine(clientFactoryObject.ToString());
+            //IntPtr runtimeObject = Interop.TestGetRuntime(clientFactoryObject);
+            //Console.WriteLine(runtimeObject.ToString());
 
         }
 

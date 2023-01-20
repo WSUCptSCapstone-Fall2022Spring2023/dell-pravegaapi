@@ -18,25 +18,11 @@ using Pravega.Utility;
 
 namespace Pravega.Config
 {
-       // ***** Wrapper for ClientConfig *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct ClientConfigWrapper
-    {
-        public uint max_controller_connections;
-        public ConnectionTypeWrapper connection_type;
-        public RetryWithBackoffWrapper retry_policy;
-        public PravegaNodeUriWrapper controller_uri;
-        public ulong transaction_timeout_time;
-        public bool mock;
-        public bool is_tls_enabled;
-        public bool disable_cert_verification;
-        public CredentialsWrapper credentials;
-        public bool is_auth_enabled;
-        public ulong reader_wrapper_buffer_size;
-        public ushort request_timeout0;
-        public ushort request_timeout1;
-        public CustomRustStringSlice trustcerts;
+    // ***** Wrapper for ClientConfig *****
+    public class ClientConfig : RustStructWrapper{
+        public virtual string Type(){
+            return "ClientConfig";
+        }
     }
     /*
     Originally as: 

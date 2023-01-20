@@ -22,11 +22,13 @@ namespace Pravega
 
 
     }
- 
-    // Abstract Class for which all Rust Structs are represented in C#.
+
+    /////////////////////////////////////////
+    /// Abstract Class for which all Rust Structs are represented in C#.
+    /////////////////////////////////////////
     public abstract class RustStructWrapper{
 
-        private IntPtr _rustStructPointer;
+        protected IntPtr _rustStructPointer;
 
         // Default constructor
         public RustStructWrapper(){
@@ -47,6 +49,19 @@ namespace Pravega
         public bool IsNull(){
             if(this._rustStructPointer == IntPtr.Zero) return true;
             else return false;
+        }
+
+        // Virtual method meant to type check
+        public virtual string Type(){
+            return string.Empty;
+        }
+    }
+
+
+    // Classes from Rust Libraries that need representation in C#
+    public abstract class TokioRuntime{
+        public virtual string Type(){
+            return "tokio.Runtime";
         }
     }
 
