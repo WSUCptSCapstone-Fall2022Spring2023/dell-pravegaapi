@@ -7,3 +7,4 @@
 use interoptopus::{ffi_type};
 use interoptopus::patterns::option::FFIOption;
 use utility::{CustomRustString};
+

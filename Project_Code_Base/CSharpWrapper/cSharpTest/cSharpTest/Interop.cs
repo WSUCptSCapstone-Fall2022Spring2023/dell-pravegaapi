@@ -12,6 +12,7 @@ using Pravega;
 
 namespace Pravega
 {
+    ///
     public static partial class Interop
     {
         public const string NativeLib = "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\target\\debug\\deps\\PravegaCSharp";
@@ -23,8 +24,14 @@ namespace Pravega
          [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "test")]
         public static extern CustomRustString test(CustomRustString input);
 
+        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryTest")]
+        public static extern IntPtr CreateClientFactoryTest();
+
+        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "TestGetRuntime")]
+        public static extern IntPtr TestGetRuntime(IntPtr clientFactoryPointer);
+
     }
-/////////////////////////////////////////
+    /////////////////////////////////////////
     /// Value Structs
     /////////////////////////////////////////
     // U128 wrapper for sending between C# and Rust

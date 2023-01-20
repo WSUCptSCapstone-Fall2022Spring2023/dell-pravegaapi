@@ -13,15 +13,13 @@
 
         static void Main()
         {
-            string holder;
-            for (int i = 0; i < 10; i++)
-            {
-                holder = RandomString(4);
-                Console.WriteLine(Environment.NewLine + "-------------------" + Environment.NewLine + "String test #" + i.ToString());
-                Console.WriteLine("input = " + holder);
-                StringConversionTest(holder);
-                Console.WriteLine("-------------------");
-            }
+
+            // test creating a thing
+            IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();
+            Console.WriteLine(clientFactoryObject.ToString());
+            IntPtr runtimeObject = Interop.TestGetRuntime(clientFactoryObject);
+            Console.WriteLine(runtimeObject.ToString());
+
         }
 
         private static Random random = new Random();

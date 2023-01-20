@@ -20,11 +20,37 @@ namespace Pravega
         {
         }
 
-         [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "test")]
-        public static extern CustomRustString test(CustomRustString input);
 
     }
-/////////////////////////////////////////
+ 
+    // Abstract Class for which all Rust Structs are represented in C#.
+    public abstract class RustStructWrapper{
+
+        private IntPtr _rustStructPointer;
+
+        // Default constructor
+        public RustStructWrapper(){
+            this._rustStructPointer = IntPtr.Zero;
+        }
+
+        // Getter for the rust pointer
+        public IntPtr RustStructPointer{
+            get{return this._rustStructPointer;}
+        }
+
+        // Internal so that only this library can set the pointer and the user cannot.
+        internal void SetRustStructPointer(IntPtr newPointer){
+            this._rustStructPointer = newPointer;
+        }
+
+        // Method for determining if the class's pointer was consumed in rust or uninitialized.
+        public bool IsNull(){
+            if(this._rustStructPointer == IntPtr.Zero) return true;
+            else return false;
+        }
+    }
+
+    /////////////////////////////////////////
     /// Value Structs
     /////////////////////////////////////////
     // U128 wrapper for sending between C# and Rust

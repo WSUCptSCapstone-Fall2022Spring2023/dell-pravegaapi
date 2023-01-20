@@ -19,27 +19,12 @@ namespace Pravega
         }
 
 
-        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "test")]
-        public static extern CustomRustString test(CustomRustString input);
+        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryTest")]
+        public static extern IntPtr CreateClientFactoryTest();
 
-    }
+        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "TestGetRuntime")]
+        public static extern IntPtr TestGetRuntime(ref ulong clientFactoryPointer);
 
-    /// String Structs
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct CustomRustString
-    {
-        public uint capacity;
-        public U8Slice string_slice;
-    }
-
-    /// Slice Structs
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct U8Slice
-    {
-        public IntPtr slice_pointer;
-        public uint length;
     }
 
 
