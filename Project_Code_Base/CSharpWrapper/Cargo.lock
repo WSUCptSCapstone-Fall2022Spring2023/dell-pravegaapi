@@ -229,6 +229,8 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
+ "segment_wrapper",
+ "shared_wrapper",
  "utility",
 ]
 
@@ -522,11 +524,7 @@ dependencies = [
  "link-cplusplus",
 ]
 
-[[package]]
-name = "cxx-build"
-version = "1.0.86"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5044281f61b27bc598f2f6647d480aed48d2bf52d6eb0b627d84c0361b17aa70"
+
 dependencies = [
  "cc",
  "codespan-reporting",
