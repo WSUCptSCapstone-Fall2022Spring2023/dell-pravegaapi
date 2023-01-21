@@ -324,7 +324,17 @@ namespace Pravega
         private ulong capacity;
         private U16Slice string_slice;
 
-        // Default constructor. Creates Custom CSharp string from standard string in C#.
+        // Default Constructor. Creates with string " "
+        public CustomCSharpString(){
+            
+            // Set up slice with length equal to source's length
+            CustomCSharpString newCustomCSharpString = CustomCSharpString(" ");
+            this.string_slice = newCustomCSharpString.string_slice;
+            this.capacity = newCustomCSharpString.capacity;
+        }
+
+        
+        // Constructor. Creates Custom CSharp string from standard string in C#.
         public CustomCSharpString(string source){
             
             // Set up a slice for the CSharp string using Marshal.
@@ -372,7 +382,7 @@ namespace Pravega
                 this.capacity = newCustomCSharpString.capacity;
             }
             else{
-                
+
                 // Set up slice with length equal to source's length
                 string copiedString = source.ConvertToString();
                 CustomCSharpString newCustomCSharpString = CustomCSharpString(copiedString);

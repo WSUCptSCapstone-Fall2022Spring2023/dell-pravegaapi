@@ -15,7 +15,7 @@ using Pravega.Utility;
 namespace Pravega.Shared
 {
     //  ***** Wrapper for TxId *****
-    public class TxIdWrapper : CustomU128
+    public class TxId : CustomU128
     {
         public virtual string Type(){
             return "Shared.TxIdWrapper";
@@ -76,6 +76,12 @@ namespace Pravega.Shared
         private Scope _scope;
         private Stream _stream;
 
+        // Default Constructor
+        public ScopedStream(){
+            this._scope = new Scope();
+            this._stream = new Stream();
+        }
+
         // Setters and Getters
         public CustomCSharpString Scope{
             get{return (CustomCSharpString)this._scope;}
@@ -92,38 +98,71 @@ namespace Pravega.Shared
     }
 
 
-
-    
-
-
-
     //  ***** Wrapper for ScopedSegment *****]
-    public partial struct ScopedSegmentWrapper
+    public class ScopedSegment
     {
-        public Scope _scope;
-        public Stream _stream;
-        public SegmentWrapper _segment;
+        private Scope _scope;
+        private Stream _stream;
+        private Segment _segment;
+
+        // Default Constructor
+        public ScopedSegment(){
+            this._scope = new Scope();
+            this._segment = new Segment();
+            this._stream = new Stream();
+        }
+
+        // Setters and Getters
+        public CustomCSharpString Scope{
+            get{return (CustomCSharpString)this._scope;}
+            set{this._scope = value;}
+        }
+        public CustomCSharpString Stream{
+            get{return (CustomCSharpString)this._stream;}
+            set{this._stream = value;}
+        }
+        public Segment Segment{
+            get{return this._segment;}
+            set{this._segment = value;}
+        }
+
+        public virtual string Type(){
+            return "Shared. ScopedSegment";
+        }
     }
 
 
 
     //  ***** Wrapper for Segment *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct SegmentWrapper
+    public class Segment
     {
-        public long number;
-        public OptionTxIdWrapper tx_id;
+        private long _number;
+        private TxId _txId;
+
+        // Constructor
+        public Segment(){
+            this._number = 0;
+        }
+
+        // Setters and Getters
+        public long Number{
+            get{return this._number;}
+            set{this._number = value;}
+        }
+
+        public virtual string Type(){
+            return "Shared.Segment";
+        }
     }
 
 
 
-    // ***** Wrapper for Credentials *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct PravegaNodeUriWrapper
+    // ***** Wrapper for PravegaNodeUri *****
+    public class PravegaNodeUri : CustomCSharpString
     {
-        public CustomRustString inner;
+        public virtual string Type(){
+            return "Shared.PravegaNodeUri";
+        }
     }
     /* 
         Originally from pravega-client-rust/shared/src/lib.rs
