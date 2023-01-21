@@ -18,6 +18,19 @@
             {
                 i++;
             }
+
+           
+        }
+        public class a : Test
+        {
+
+        }
+        public class b : Test
+        {
+            public b()
+            {
+                this.i = 0;
+            }
         }
 
         public static void func(Test test)
@@ -27,13 +40,9 @@
 
         static void Main()
         {
-            Test test = new Test();
-            test.i = 0;
-            test.inc();
-            Console.WriteLine(test.i.ToString());
-            func(test);
-            Console.WriteLine(test.i.ToString());
-
+            b test = new b();
+            Test thing = (Test)test;
+            a thing2 = (a)thing;
 
             // test creating a thing
             //IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();

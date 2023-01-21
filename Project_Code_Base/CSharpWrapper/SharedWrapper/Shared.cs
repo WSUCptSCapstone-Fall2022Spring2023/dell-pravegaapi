@@ -15,21 +15,28 @@ using Pravega.Utility;
 namespace Pravega.Shared
 {
     //  ***** Wrapper for TxId *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct TxIdWrapper
+    public class TxIdWrapper : CustomU128
     {
-        public CustomU128 inner;
+        public virtual string Type(){
+            return "Shared.TxIdWrapper";
+        }
     }
 
 
-
     //  ***** Wrapper for WriterID *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct WriterIdWrapper
+    public class WriterId
     {
-        public CustomU128 inner;
+        private CustomU128 value;
+
+        // Setter and Getter for value
+        public CustomU128 Value{
+            get{return this.value;}
+            set{this.value = value;}
+        }
+
+        public virtual string Type(){
+            return "Shared.WriterID";
+        }
     }
     /* Originally from pravega-client-rust/shared/src/lib.rs 
         as:
@@ -38,57 +45,64 @@ namespace Pravega.Shared
     */
 
 
-
     //  ***** Wrapper for DelegationToken *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct DelegationTokenWrapper
-    {
-        CustomRustString value;
-        Optionu64 expiry_time;
+    public class DelegationToken : RustStructWrapper{
+        public virtual string Type(){
+            return "Shared.DelegationToken";
+        }
     }
-
 
 
     //  ***** Wrapper for Scope *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct ScopeWrapper
-    {
-        public CustomRustString name;
+    public class Scope : CustomCSharpString{
+        public virtual string Type(){
+            return "Shared.Scope";
+        }
     }
+    
 
+    //  ***** Wrapper for Stream *****
+    public class Stream : CustomCSharpString
+    {
+        public virtual string Type(){
+            return "Shared.Stream";
+        }
+    }
 
 
     //  ***** Wrapper for ScopedStream *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct ScopedStreamWrapper
+    public class ScopedStream
     {
-        public ScopeWrapper scope;
-        public StreamWrapper stream;
+        private Scope _scope;
+        private Stream _stream;
+
+        // Setters and Getters
+        public CustomCSharpString Scope{
+            get{return (CustomCSharpString)this._scope;}
+            set{this._scope = value;}
+        }
+        public CustomCSharpString Stream{
+            get{return (CustomCSharpString)this._stream;}
+            set{this._stream = value;}
+        }
+
+        public virtual string Type(){
+            return "Shared.ScopedStream";
+        }
     }
 
 
 
-    //  ***** Wrapper for Stream *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct StreamWrapper
-    {
-        public CustomRustString name;
-    }
+    
 
 
 
-    //  ***** Wrapper for ScopedSegment *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
+    //  ***** Wrapper for ScopedSegment *****]
     public partial struct ScopedSegmentWrapper
     {
-        public ScopeWrapper scope;
-        public StreamWrapper stream;
-        public SegmentWrapper segment;
+        public Scope _scope;
+        public Stream _stream;
+        public SegmentWrapper _segment;
     }
 
 
