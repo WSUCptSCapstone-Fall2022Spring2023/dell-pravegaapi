@@ -127,7 +127,7 @@ namespace Pravega.Shared
         }
 
         public virtual string Type(){
-            return "Shared. ScopedSegment";
+            return "Shared.ScopedSegment";
         }
     }
 

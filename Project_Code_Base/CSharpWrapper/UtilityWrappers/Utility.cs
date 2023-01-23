@@ -319,10 +319,10 @@ namespace Pravega
     /// <summary>
     ///     Helper struct that helps transfer strings between Rust and C# as this struct is C palatable. Represents a UTF-16 C# String
     /// </summary>
-    internal class CustomCSharpString
+    public class CustomCSharpString
     {
-        private ulong capacity;
-        private U16Slice string_slice;
+        protected ulong capacity;
+        protected U16Slice string_slice;
 
         // Default Constructor. Creates with string " "
         public CustomCSharpString(){
@@ -396,12 +396,20 @@ namespace Pravega
             Marshal.FreeHGlobal(this.string_slice.slice_pointer);
         } 
     
+        // Deep Clone function. Returns copy as a CustomCSharpString
+        public CustomCSharpString Clone(){
+
+            // this.NativeString generates a new managed string. The constructor from a managed string moves it into unmanaged memory, completing the deep clone.
+            CustomCSharpString clonedCopy = CustomCSharpString(this.NativeString);
+            return clonedCopy;
+        }
+
         // Setters and Getters
         public ulong Capacity{
             get{return this.capacity;}
         }
 
-        public U16Slice StringSlice{
+        internal U16Slice StringSlice{
             get{return this.string_slice;}
         }
 
