@@ -30,19 +30,14 @@ namespace Pravega.ClientFactoryModule
     public class ClientFactory : RustStructWrapper
     {
         // Override type to return this class's name.
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "ClientFactory";
         }
 
         // Default constructor. Initializes with a default ClientConfig
         public ClientFactory(){
-            DirectoryInfo test = System.IO.Directory.GetParent(Environment.CurrentDirectory);
-            test = test.Parent;
-            test = test.Parent;
-            test = test.Parent;
-            string path = Path.Combine(test.FullName, "PravegaCSharpLibrary\\target\\debug", WrapperConstants.RustDllPath);
-            Console.WriteLine(path);
-            System.Environment.SetEnvironmentVariable("PATH", path);
             this._rustStructPointer = Interop.CreateClientFactory();
         }
 
@@ -59,7 +54,9 @@ namespace Pravega.ClientFactoryModule
 
     /// Contains the class that wraps the Rust client factory async struct through a pointer and .dll function calls.
     public class ClientFactoryAsync : RustStructWrapper{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "ClientFactoryAsync";
         }
     }

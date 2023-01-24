@@ -13,7 +13,7 @@ namespace Pravega {
     // Contains globals for the C# wrapper
     public static class WrapperConstants
     {
-        internal const string RustDllPath = "PravegaCSharp.dll";
+        internal const string RustDllPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\PravegaCSharp.dll";
     }
 
     // The static class that manages .dll function call signatures in C#. Built upon in different modules.

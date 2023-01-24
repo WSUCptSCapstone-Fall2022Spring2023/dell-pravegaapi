@@ -12,5 +12,5 @@ repository = "https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravega
 path = "./lib.rs"
 
 [dependencies]
-interoptopus = { path = "../../Interoptopus/core", version = "0.14.0"}
-interoptopus_backend_csharp = { path = "../../Interoptopus/backends/csharp" }
+interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
+interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }

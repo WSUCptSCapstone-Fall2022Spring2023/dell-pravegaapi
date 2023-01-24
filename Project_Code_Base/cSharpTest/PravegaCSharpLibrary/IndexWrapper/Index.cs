@@ -14,13 +14,17 @@ using Pravega.Utility;
 namespace Pravega.Index
 {
     public class IndexWriter : RustStructWrapper {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "IndexWriter";
         }
     }
 
     public class IndexReader : RustStructWrapper{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "IndexReader";
         }
     }

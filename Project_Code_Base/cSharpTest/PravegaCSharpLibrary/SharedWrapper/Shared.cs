@@ -17,7 +17,9 @@ namespace Pravega.Shared
     //  ***** Wrapper for TxId *****
     public class TxId : CustomU128
     {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "Shared.TxIdWrapper";
         }
     }
@@ -27,6 +29,12 @@ namespace Pravega.Shared
     public class WriterId
     {
         private CustomU128 value;
+
+        // Default Constructor
+        public WriterId()
+        {
+            this.value = new CustomU128();
+        }
 
         // Setter and Getter for value
         public CustomU128 Value{
@@ -47,7 +55,9 @@ namespace Pravega.Shared
 
     //  ***** Wrapper for DelegationToken *****
     public class DelegationToken : RustStructWrapper{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "Shared.DelegationToken";
         }
     }
@@ -55,7 +65,9 @@ namespace Pravega.Shared
 
     //  ***** Wrapper for Scope *****
     public class Scope : CustomCSharpString{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "Shared.Scope";
         }
     }
@@ -64,7 +76,9 @@ namespace Pravega.Shared
     //  ***** Wrapper for Stream *****
     public class Stream : CustomCSharpString
     {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "Shared.Stream";
         }
     }
@@ -142,6 +156,7 @@ namespace Pravega.Shared
         // Constructor
         public Segment(){
             this._number = 0;
+            this._txId = new TxId();
         }
 
         // Setters and Getters
@@ -160,7 +175,9 @@ namespace Pravega.Shared
     // ***** Wrapper for PravegaNodeUri *****
     public class PravegaNodeUri : CustomCSharpString
     {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "Shared.PravegaNodeUri";
         }
     }

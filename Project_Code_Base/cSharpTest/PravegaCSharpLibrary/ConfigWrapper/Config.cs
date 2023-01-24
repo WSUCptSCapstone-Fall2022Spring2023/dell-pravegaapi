@@ -20,7 +20,9 @@ namespace Pravega.Config
 {
     // ***** Wrapper for ClientConfig *****
     public class ClientConfig : RustStructWrapper{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "ClientConfig";
         }
     }
@@ -120,7 +122,9 @@ namespace Pravega.Config
 
     /// Credentials Wrapper Class
     public class Credentials : RustStructWrapper {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "Config.Credentials";
         }
     }

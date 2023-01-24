@@ -58,7 +58,9 @@ namespace Pravega.Utility
     // Contains pointer to rust u128 and functions for running computations with the u128.
     public class CustomU128 : RustStructWrapper
     {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "u128";
         }
     }
