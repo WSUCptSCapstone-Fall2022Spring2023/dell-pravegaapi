@@ -10,11 +10,12 @@ using System.Text;
 using Pravega;
 #pragma warning restore 0105
 
-namespace Pravega
+namespace Pravega.Utility
 {
+    // The static class that manages .dll function call signatures in C#. Built upon in different modules.
     public static partial class Interop
     {
-        public const string NativeLib = "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\target\\debug\\deps\\PravegaCSharp";
+        public const string NativeLib = "..\\target\\debug\\PravegaCSharp.dll";
 
         static Interop()
         {

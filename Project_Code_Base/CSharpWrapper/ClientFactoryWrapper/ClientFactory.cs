@@ -17,9 +17,21 @@ using Pravega.Config;
 
 namespace Pravega.ClientFactory
 {
+    // Continues building the Interop class by adding method signatures found in Client Factory.
+    public static partial class Interop {
+
+        // Client Factory default constructor (default client config, generated runtime)
+        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactory")]
+        public static extern IntPtr CreateClientFactory();
+
+    }
+
     /// Contains the class that wraps the Rust client factory struct through a pointer and .dll function calls.
     public class ClientFactory : RustStructWrapper
     {
+        // Library for C# Wrapper method calls
+        private const string PravegaCSharpWrapperLib = "..\\target\\debug\\PravegaCSharp.dll";
+
         // Override type to return this class's name.
         public virtual string Type(){
             return "ClientFactory";
