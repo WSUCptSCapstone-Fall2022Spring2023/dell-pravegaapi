@@ -1,10 +1,8 @@
 ///
-/// File: lib.rs
-/// File Creator: John Sbur
-/// Purpose: Contains structs transferred from the client factory module as well as making other files in this folder useable in the cargo package.
-///     Provides definitions on the Rust side.
-///
+/// Contains methods for running functions from C# in the Client Factory Module.
+/// 
 
+// Relevant imports
 use interoptopus::{ffi_type, extra_type, Inventory, InventoryBuilder, ffi_function, function, lang::rust};
 use pravega_client::{client_factory::ClientFactory};
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};

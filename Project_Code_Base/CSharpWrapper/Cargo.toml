@@ -8,8 +8,23 @@ keywords = ["ffi","wrapper","C#"]
 categories = ["api-bindings", ".NET-core-development-tools"]
 repository = "https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi"
 
+[workspace]
+members = [
+    "AuthWrapper",
+    "ByteWrapper",
+    "ClientFactoryWrapper",
+    "ConfigWrapper",
+    "ConnectionPoolWrapper",
+    "ControllerClientWrapper",
+    "IndexWrapper",
+    "RetryWrapper",
+    "SharedWrapper",
+    "UtilityWrappers",
+    "WireProtocolWrapper"
+]
+
 [lib]
-path = "./src/conversion_file.rs"
+path = "./src/ClientFactoryWrapperMethods.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]

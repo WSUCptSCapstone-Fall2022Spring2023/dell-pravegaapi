@@ -13,36 +13,20 @@ using Pravega;
 
 namespace Pravega.Index
 {
-    // Note: These are left intentionally unfinished 
-    //  these will be completed once our team works on
-    //  the Index module.
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct AsyncSegmentReaderImplHolder
-    {
-        byte inner;
+    public class IndexWriter : RustStructWrapper {
+        public virtual string Type(){
+            return "IndexWriter";
+        }
     }
 
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct ByteWriterHolde
-    {
-        byte inner;
+    public class IndexReader : RustStructWrapper{
+        public virtual string Type(){
+            return "IndexReader";
+        }
     }
 
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct ClientFactoryAsyncHolder
-    {
-        byte inner;
-    }
 
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct ScopedStreamHolder
-    {
-        byte inner;
-    }
+    
 
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
@@ -51,22 +35,5 @@ namespace Pravega.Index
         byte inner;
     }
 
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct IndexReaderWrapper
-    {
-        ScopedStreamHolder stream;
-        ClientFactoryAsyncHolder factory;
-        SegmentMetadataClientHolder meta;
-        AsyncSegmentReaderImplHolder segment_reader;
-    }
-
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct IndexWriterWrapperu8
-    {
-        ByteWriterHolder byte_writer;
-        OptionU128U64TupleSlice hashed_fields;
-        Optionu8 fields;
-    }
+    
 }

@@ -118,20 +118,11 @@ namespace Pravega.Config
 
  
 
-    // Helper Struct for Credentials
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct CredWrapper
-    {
-        public bool is_expired_result;
-        public CustomRustString get_request_metadata_result;
-    }
-    // ***** Wrapper for Credentials *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct CredentialsWrapper
-    {
-        CredWrapper inner;
+    /// Credentials Wrapper Class
+    public class Credentials : RustStructWrapper {
+        public virtual string Type(){
+            return "Config.Credentials";
+        }
     }
     /*
     Originally from pravega-client-rust/config/src/credentials.rs

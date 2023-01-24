@@ -10,11 +10,12 @@ using System.Text;
 using Pravega;
 #pragma warning restore 0105
 
-namespace Pravega
+namespace Pravega.Utility
 {
+    // The static class that manages .dll function call signatures in C#. Built upon in different modules.
     public static partial class Interop
     {
-        public const string NativeLib = "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\target\\debug\\deps\\PravegaCSharp";
+        public const string NativeLib = "..\\target\\debug\\PravegaCSharp.dll";
 
         static Interop()
         {
@@ -36,7 +37,7 @@ namespace Pravega
         }
 
         // Getter for the rust pointer
-        public IntPtr RustStructPointer{
+        internal IntPtr RustStructPointer{
             get{return this._rustStructPointer;}
         }
 
@@ -65,46 +66,18 @@ namespace Pravega
         }
     }
 
+  
+    // Contains pointer to rust u128 and functions for running computations with the u128.
+    public class CustomU128 : RustStructWrapper
+    {
+        public virtual string Type(){
+            return "u128";
+        }
+    }
+    
     /////////////////////////////////////////
     /// Value Structs
     /////////////////////////////////////////
-    // U128 wrapper for sending between C# and Rust
-    // NOTE: u128 normally is comprised of 1 value, but u128 is not C palatable and as such can't be transferred
-    //  between C# and Rust. The solution here is to split the two halves of the u128 into two u64 values that
-    //  are C palatable. 
-    //  -When sent from one side to another, a u128 value is split into the two halves and bitwise ORed into the
-    //      two halves of this struct.
-    //  -When recieved from another wise, the first and second halves are ORed at different points on a u128 value
-    //      initialized at 0. first_half -> bits 0-63 and second_half -> bits 64-127. This builds the u128 back up
-    //      from its parts.
-    //  There isn't an easy way to transfer a value this big between the two sides, but doing so is O(1) each time.
-    //      For now, this is the fastest way to go between the two without risking using slices.
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct CustomU128
-    {
-        public ulong first_half;
-        public ulong second_half;
-    }
-    public partial struct CustomU128{
-
-        // Equals
-        public bool Equals(CustomU128 obj)
-        {
-            // equals for U128
-            if (obj.first_half == this.first_half && obj.second_half == this.second_half){
-                return true;
-            }
-            return false;
-        }
-
-        // String
-        // No easy implementation. After 2 hours of tinkering, C# stores large numbers calculated as x.xxx...Ey where E represents
-        //  its 10^y. Because of this, trying to parse through the number as a string for a character isn't possible as it will
-        //  return the exponent y. Furthermore, no tricks like using /10 or %10 are possible since the number is too large and in 
-        //  testing the rounding will only go up to a certain value less than the maximum u128 value.
-    }
-
 
     /////////////////////////////////////////
     /// Slice Structs
@@ -342,21 +315,27 @@ namespace Pravega
 
 
     /////////////////////////////////////////
-    /// String Structs
+    /// String Structs/Classes
     /////////////////////////////////////////
     /// <summary>
     ///     Helper struct that helps transfer strings between Rust and C# as this struct is C palatable. Represents a UTF-16 C# String
     /// </summary>
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct CustomCSharpString
+    public class CustomCSharpString
     {
-        public ulong capacity;
-        public U16Slice string_slice;
-    }
-     public partial struct CustomCSharpString
-    {
-        // Default constructor. Creates Custom CSharp string from standard string in C#
+        protected ulong capacity;
+        protected U16Slice string_slice;
+
+        // Default Constructor. Creates with string " "
+        public CustomCSharpString(){
+            
+            // Set up slice with length equal to source's length
+            CustomCSharpString newCustomCSharpString = CustomCSharpString(" ");
+            this.string_slice = newCustomCSharpString.string_slice;
+            this.capacity = newCustomCSharpString.capacity;
+        }
+
+        
+        // Constructor. Creates Custom CSharp string from standard string in C#.
         public CustomCSharpString(string source){
             
             // Set up a slice for the CSharp string using Marshal.
@@ -392,43 +371,117 @@ namespace Pravega
             this.string_slice = new_custom.string_slice;
         }
 
-        // Convert back from slice into C# string
-        public string ConvertToString(){
+        // Constructor from CustomCSharpString.
+        public CustomCSharpString(CustomCSharpString source){
+            
+            // Verify source isn't empty
+            if (source.string_slice.length == 0){
 
-            // Add each element in the slice to a string.
-            string returnString = string.Empty;
-            foreach (ushort element in this.string_slice){
-                returnString += ((char)element).ToString();
+                // Set up slice with length equal to source's length
+                CustomCSharpString newCustomCSharpString = CustomCSharpString(" ");
+                this.string_slice = newCustomCSharpString.string_slice;
+                this.capacity = newCustomCSharpString.capacity;
             }
+            else{
 
-            // Return compiled string
-            return returnString;
+                // Set up slice with length equal to source's length
+                string copiedString = source.ConvertToString();
+                CustomCSharpString newCustomCSharpString = CustomCSharpString(copiedString);
+                this.string_slice = newCustomCSharpString.string_slice;
+                this.capacity = newCustomCSharpString.capacity;
+            }
         }
 
-        // Convert from Custom C# string into Custom Rust string
-        public CustomRustString ConvertToRustString(){
+        // Destructor. Destroys the string slice this points to.
+        ~CustomCSharpString(){
+            Marshal.FreeHGlobal(this.string_slice.slice_pointer);
+        } 
+    
+        // Deep Clone function. Returns copy as a CustomCSharpString
+        public CustomCSharpString Clone(){
 
-            // Check to make sure this isn't empty. If it is, return blank CustomRustString
-            CustomRustString returnObject = new CustomRustString(this.string_slice.length);
+            // this.NativeString generates a new managed string. The constructor from a managed string moves it into unmanaged memory, completing the deep clone.
+            CustomCSharpString clonedCopy = CustomCSharpString(this.NativeString);
+            return clonedCopy;
+        }
 
-            // Parse through and set array contents of utf8 to this string's contents converted
-            Encoding utf16 = Encoding.Unicode;
-            Encoding utf8 = Encoding.UTF8;
-            byte[] source = Encoding.Unicode.GetBytes(this.ConvertToString());
-            byte[] translated = Encoding.Convert
-            (
-                utf16,
-                utf8,
-                source
-            );
+        // Setters and Getters
+        public ulong Capacity{
+            get{return this.capacity;}
+        }
 
-            // Assign to utf8 rust string and return afterwards
-            int i = 0;
-            foreach (byte utf8Char in translated){
-                returnObject.string_slice[i] = utf8Char;
-                i++;
+        internal U16Slice StringSlice{
+            get{return this.string_slice;}
+        }
+
+        public string NativeString{
+            get
+            {
+                // Add each element in the slice to a string.
+                string returnString = string.Empty;
+                foreach (ushort element in this.string_slice){
+                    returnString += ((char)element).ToString();
+                }
+
+                // Return compiled string
+                return returnString;
             }
-            return returnObject;
+            set
+            {
+                // Free current slice containing string
+                Marshal.FreeHGlobal(this.string_slice.slice_pointer);
+
+                // Create a new string based on the input
+                CustomCSharpString newString = CustomCSharpString(value);
+
+                // Retrieve values from the new string and assign them to this object.
+                this.string_slice = newString.StringSlice;
+                this.capacity = newString.Capacity;
+            }
+        }
+
+        public CustomRustString RustString{
+            get
+            {
+                // Check to make sure this isn't empty. If it is, return blank CustomRustString
+                CustomRustString returnObject = new CustomRustString(this.string_slice.length);
+
+                // Parse through and set array contents of utf8 to this string's contents converted
+                Encoding utf16 = Encoding.Unicode;
+                Encoding utf8 = Encoding.UTF8;
+                byte[] source = Encoding.Unicode.GetBytes(this.ConvertToString());
+                byte[] translated = Encoding.Convert
+                (
+                    utf16,
+                    utf8,
+                    source
+                );
+
+                // Assign to utf8 rust string and return afterwards
+                int i = 0;
+                foreach (byte utf8Char in translated){
+                    returnObject.string_slice[i] = utf8Char;
+                    i++;
+                }
+                return returnObject;
+            }
+            set
+            {
+                // Free current slice containing string
+                Marshal.FreeHGlobal(this.string_slice.slice_pointer);
+
+                // Create a new string based on the input
+                CustomCSharpString newString = CustomCSharpString(value);
+
+                // Retrieve values from the new string and assign them to this object.
+                this.string_slice = newString.StringSlice;
+                this.capacity = newString.Capacity;
+            }
+        }
+    
+        // Overrideable type function
+        public virtual string Type(){
+            return "Utility.CustomCSharpString";
         }
     }
     /// <summary>
@@ -460,6 +513,7 @@ namespace Pravega
     }
 
 
+    
 
     public class InteropException<T> : Exception
     {

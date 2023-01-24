@@ -316,6 +316,8 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
+ "pravega-client",
+ "pravega-client-config",
  "utility",
 ]
 
@@ -346,6 +348,15 @@ dependencies = [
  "interoptopus_backend_csharp",
  "retry_wrapper",
  "shared_wrapper",
+ "utility",
+]
+
+[[package]]
+name = "connection_pool_wrapper"
+version = "0.14.14"
+dependencies = [
+ "interoptopus",
+ "interoptopus_backend_csharp",
  "utility",
 ]
 
@@ -1115,6 +1126,15 @@ dependencies = [
  "sized-chunks",
  "typenum",
  "version_check",
+]
+
+[[package]]
+name = "index_wrapper"
+version = "0.14.14"
+dependencies = [
+ "interoptopus",
+ "interoptopus_backend_csharp",
+ "utility",
 ]
 
 [[package]]

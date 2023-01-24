@@ -17,13 +17,21 @@ using Pravega.Config;
 
 namespace Pravega.ClientFactory
 {
-    /// Contains the class that wraps the Rust client factory struct in idea. 
-    /// Design Idea: Use a struct as a wrapper between rust and C#. 
-    ///     Have the wrapper struct as an object within the C# class
-    ///     and use this object for function calls in the wrapper as 
-    ///     well as for represeting the contents of the class.
+    // Continues building the Interop class by adding method signatures found in Client Factory.
+    public static partial class Interop {
+
+        // Client Factory default constructor (default client config, generated runtime)
+        [DllImport(NativeLib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactory")]
+        public static extern IntPtr CreateClientFactory();
+
+    }
+
+    /// Contains the class that wraps the Rust client factory struct through a pointer and .dll function calls.
     public class ClientFactory : RustStructWrapper
     {
+        // Library for C# Wrapper method calls
+        private const string PravegaCSharpWrapperLib = "..\\target\\debug\\PravegaCSharp.dll";
+
         // Override type to return this class's name.
         public virtual string Type(){
             return "ClientFactory";
@@ -40,6 +48,16 @@ namespace Pravega.ClientFactory
         }
 
         // Constructor. Initializes with a ClientConfig and Runtime. Consumes ClientConfig and Runtime (sets to null after)
-        
+        public ClientFactory(ClientConfig factoryConfig, TokioRuntime factoryRuntime){
+            this._rustStructPointer = IntPtr.Zero;
+        }
     }
+
+    /// Contains the class that wraps the Rust client factory async struct through a pointer and .dll function calls.
+    public class ClientFactoryAsync : RustStructWrapper{
+        public virtual string Type(){
+            return "ClientFactoryAsync";
+        }
+    }
+
 }

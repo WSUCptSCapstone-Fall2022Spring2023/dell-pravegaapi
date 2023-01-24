@@ -1,6 +1,6 @@
 use interoptopus::{ffi_type, extra_type, Inventory, InventoryBuilder, ffi_function, function, lang::rust};
 use utility::{CustomRustStringSlice, CustomRustString};
-use std::io::{stdout, Write};
+use std::io::{Write};
 use utility::U8Slice;
 
 // Functions used for testing the functionality of passing strings between C# and Rust 
