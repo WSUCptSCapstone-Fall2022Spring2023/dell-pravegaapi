@@ -8,6 +8,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Pravega;
+    using Pravega.ClientFactoryModule;
 
     public static class Program
     {
@@ -15,8 +16,8 @@
 
         static void Main()
         {
-  
 
+            ClientFactory test = new ClientFactory();
             // test creating a thing
             //IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();
             //Console.WriteLine(clientFactoryObject.ToString());
