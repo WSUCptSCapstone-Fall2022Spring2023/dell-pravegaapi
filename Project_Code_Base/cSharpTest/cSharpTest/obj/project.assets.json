@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net6.0": {
+      "PravegaCSharpLibrary/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/PravegaCSharpLibrary.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PravegaCSharpLibrary.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "PravegaCSharpLibrary/1.0.0": {
+      "type": "project",
+      "path": "../PravegaCSharpLibrary/PravegaCSharpLibrary.csproj",
+      "msbuildProject": "../PravegaCSharpLibrary/PravegaCSharpLibrary.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net6.0": [
+      "PravegaCSharpLibrary >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\john_\\.nuget\\packages\\": {}
@@ -13,11 +32,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
       "projectName": "cSharpTest",
-      "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
       "packagesPath": "C:\\Users\\john_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\CSharpWrapper\\cSharpTest\\cSharpTest\\obj\\",
+      "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\john_\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -33,7 +52,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
+              "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
