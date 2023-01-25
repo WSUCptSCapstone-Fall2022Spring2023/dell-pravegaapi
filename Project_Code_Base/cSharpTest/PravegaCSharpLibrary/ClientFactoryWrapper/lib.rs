@@ -1,14 +1,19 @@
+#![allow(
+    non_snake_case,
+    unused_imports
+)]
 ///
 /// File: lib.rs
 /// File Creator: John Sbur
-/// Purpose: Contains structs transferred from the client factory module as well as making other files in this folder useable in the cargo package.
+/// Purpose: Contains methods transferred from the ClientFactory area. Not all methods are transferred, only necessary ones.
 ///     Provides definitions on the Rust side.
 ///
-
-use interoptopus::{ffi_type, extra_type, Inventory, InventoryBuilder, ffi_function, function, lang::rust};
+use interoptopus::{Inventory, InventoryBuilder};
 use pravega_client::{client_factory::ClientFactory};
+
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
 use utility::{CustomRustStringSlice, CustomRustString};
+use tokio::runtime::{Runtime, Handle};
 
 //////////////////////////
 // Client Factory Methods
@@ -34,6 +39,87 @@ extern "C" fn CreateClientFactory() -> *const ClientFactory{
     return box_pointer;
 }
 
+// Constructor for Client Factory
+//  -Creates client factory with inputted config, generated runtime
+//  *Consumes ClientConfig
+#[no_mangle]
+extern "C" fn CreateClientFactoryFromConfig(source_config: *const ClientConfig) -> *const ClientFactory{
+
+    unsafe{
+        // Get config from raw pointer
+        let source_config_pointer: ClientConfig = std::ptr::read(source_config);
+
+        // Create new client factory
+        let new_client_factory: ClientFactory = ClientFactory::new(source_config_pointer);
+
+        // Box and return client factory
+        let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
+        let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
+        return box_pointer;
+    }
+}
+
+// Constructor for Client Factory
+//  -Creates client factory with inputted config, generated runtime
+//  *Consumes ClientConfig
+//  *Consumes Runtime
+#[no_mangle]
+extern "C" fn CreateClientFactoryFromConfigAndRuntime(source_config_pointer: *const ClientConfig, source_runtime_pointer: *const Runtime) -> *const ClientFactory{
+
+    unsafe{
+        // Get config from raw pointer
+        let source_config: ClientConfig = std::ptr::read(source_config_pointer);
+
+        // Get runtime from raw poitner
+        let source_runtime: Runtime = std::ptr::read(source_runtime_pointer);
+
+        // Create new client factory
+        let new_client_factory: ClientFactory = ClientFactory::new_with_runtime(source_config, source_runtime);
+
+        // Box and return client factory
+        let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
+        let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
+        return box_pointer;
+    }
+}
+
+
+// Getters and Setters for ClientFactory
+
+// ClientFactory.runtime
+#[no_mangle]
+extern "C" fn GetClientFactoryRuntime(source_client_factory: &mut ClientFactory) -> *const Runtime{
+
+    // Retrieve runtime from client factory
+    let factory_runtime: &Runtime = source_client_factory.runtime();
+
+    // Return runtime pointer as raw pointer
+    return factory_runtime as *const Runtime;
+}
+
+// ClientFactory.runtime_handle
+#[no_mangle]
+extern "C" fn GetClientFactoryRuntimeHandle(source_client_factory: &mut ClientFactory) -> *const Handle{
+
+    // Retrieve handle from client factory
+    let factory_runtime_handle: Handle = source_client_factory.runtime_handle();
+
+    // Box and return handle pointer
+    let factory_runtime_handle_box: Box<Handle> = Box::new(factory_runtime_handle);
+    let box_pointer: *const Handle = Box::into_raw(factory_runtime_handle_box);     
+    return box_pointer;
+}
+
+// ClientFactory.config
+#[no_mangle]
+extern "C" fn GetClientFactoryConfig(source_client_factory: &mut ClientFactory) -> *const ClientConfig{
+
+    // Retrieve handle from client factory
+    let factory_config: &ClientConfig = source_client_factory.config();
+
+    // Return client config pointer as raw pointer
+    return factory_config as *const ClientConfig;
+}
 
 // Used for interoptopus wrapping
 pub fn my_inventory() -> Inventory {

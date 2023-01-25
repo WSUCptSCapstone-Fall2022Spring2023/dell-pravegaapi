@@ -18,11 +18,81 @@ using Pravega.Utility;
 
 namespace Pravega.Config
 {
+     // Continues building the Interop class by adding method signatures found in the Config para-module.
+    public static partial class Interop {
+        
+        // Set path of ClientFactory .dll specifically
+        public const string ConfigDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\config_wrapper.dll";
+
+        ////////
+        /// Client Config
+        ////////
+        // Default constructor
+        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientConfig")]
+        internal static extern IntPtr CreateClientConfig();
+
+        // Getters and Setters
+        // MaxConnectionsInPool
+        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMaxConnectionsInPool")]
+        internal static extern uint GetClientConfigMaxConnectionsInPool(IntPtr sourceClientConfig);
+        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxConnectionsInPool")]
+        internal static extern void SetClientConfigMaxConnectionsInPool(IntPtr sourceClientConfig, uint newValue);
+
+        // MaxControllerConnections
+        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMaxControllerConnections")]
+        internal static extern uint GetClientConfigMaxControllerConnections(IntPtr sourceClientConfig);
+        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxControllerConnections")]
+        internal static extern void SetClientConfigMaxControllerConnections(IntPtr sourceClientConfig, uint newValue);
+        ////////
+        ///
+        ////////
+    }
+
     // ***** Wrapper for ClientConfig *****
     public class ClientConfig : RustStructWrapper{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "ClientConfig";
         }
+
+        // Default Constructor. Initializes with default Pravega Client Config
+        // -https://github.com/pravega/pravega-client-rust/blob/master/config/src/lib.rs
+        public ClientConfig(){
+            this._rustStructPointer = Interop.CreateClientConfig();
+
+            // debug
+            //Console.WriteLine("client config pointer: " + this._rustStructPointer.ToString());
+        }
+
+        // Setters and Getters
+        public uint MaxConnectionsInPool{
+            get{
+                if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else{
+                    return Interop.GetClientConfigMaxConnectionsInPool(this._rustStructPointer);
+                }
+            }
+            set{
+                Interop.SetClientConfigMaxConnectionsInPool(this._rustStructPointer, value);
+            }
+        }
+        public uint MaxControllerConnections{
+            get{
+                if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else{
+                    return Interop.GetClientConfigMaxControllerConnections(this._rustStructPointer);
+                }
+            }
+            set{
+                Interop.SetClientConfigMaxControllerConnections(this._rustStructPointer, value);
+            }
+        } 
+
     }
     /*
     Originally as: 
@@ -120,7 +190,9 @@ namespace Pravega.Config
 
     /// Credentials Wrapper Class
     public class Credentials : RustStructWrapper {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "Config.Credentials";
         }
     }
