@@ -13,6 +13,8 @@ using System.Text;
 using Pravega;
 using Pravega.Utility;
 using Pravega.Config;
+using Pravega.Index;
+using Pravega.Shared;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule
@@ -21,7 +23,7 @@ namespace Pravega.ClientFactoryModule
     public static partial class Interop {
         
         // Set path of ClientFactory .dll specifically
-        public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
+        public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
 
         ////////
         /// Client Factory
@@ -159,6 +161,16 @@ namespace Pravega.ClientFactoryModule
                     return runtimeObject;
                 }
             }     
+        }
+
+        public IndexReader creatIndexReader(ScopedStream s)
+        {
+            return new IndexReader(s);
+        }
+
+        public IndexWriter createIndexWriter(ScopedStream s)
+        {
+            return new IndexWriter(s);
         }
     }
 

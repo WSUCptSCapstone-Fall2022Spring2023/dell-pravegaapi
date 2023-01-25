@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Pravega.Shared;
 using Pravega.Utility;
 #pragma warning restore 0105
 
@@ -19,6 +20,11 @@ namespace Pravega.Index
 #pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "IndexWriter";
         }
+
+        public IndexWriter(ScopedStream s)
+        {
+            this.RustStructPointer = IntPtr.Zero;
+        }
     }
 
     public class IndexReader : RustStructWrapper{
@@ -26,6 +32,11 @@ namespace Pravega.Index
         public virtual string Type(){
 #pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "IndexReader";
+        }
+
+        public IndexReader(ScopedStream s)
+        {
+            this.RustStructPointer = IntPtr.Zero;
         }
     }
 
