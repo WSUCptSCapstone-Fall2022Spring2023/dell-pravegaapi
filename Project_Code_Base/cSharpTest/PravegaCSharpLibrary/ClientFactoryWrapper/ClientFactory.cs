@@ -47,6 +47,10 @@ namespace Pravega.ClientFactoryModule
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandle")]
         internal static extern IntPtr GetClientFactoryRuntimeHandle(IntPtr sourceClientFactory);
 
+        // ClientFactory.runtime_handle
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfig")]
+        internal static extern IntPtr GetClientFactoryConfig(IntPtr sourceClientFactory);
+
         ////////
         /// 
         ////////
@@ -134,10 +138,27 @@ namespace Pravega.ClientFactoryModule
                     runtimeObject.RustStructPointer = runtimePointer;
 
                     // debug
-                    Console.WriteLine("debug: handle pointer = " + runtimeObject.RustStructPointer.ToString());
+                    //Console.WriteLine("debug: handle pointer = " + runtimeObject.RustStructPointer.ToString());
                     return runtimeObject;
                 }
             }
+        }
+        public ClientConfig Config{
+            get
+            {
+                if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else{
+                    IntPtr runtimePointer = Interop.GetClientFactoryConfig(this._rustStructPointer);
+                    ClientConfig runtimeObject = new ClientConfig();
+                    runtimeObject.RustStructPointer = runtimePointer;
+
+                    // debug
+                    //Console.WriteLine("debug: config pointer = " + runtimeObject.RustStructPointer.ToString());
+                    return runtimeObject;
+                }
+            }     
         }
     }
 

@@ -34,12 +34,8 @@
             testConfig.MaxConnectionsInPool = 10;
             ClientFactory test2 = new ClientFactory(testConfig, test.Runtime);
 
-
-            // test creating a thing
-            //IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();
-            //Console.WriteLine(clientFactoryObject.ToString());
-            //IntPtr runtimeObject = Interop.TestGetRuntime(clientFactoryObject);
-            //Console.WriteLine(runtimeObject.ToString());
+            testConfig = test2.Config;
+            Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
 
         }
 

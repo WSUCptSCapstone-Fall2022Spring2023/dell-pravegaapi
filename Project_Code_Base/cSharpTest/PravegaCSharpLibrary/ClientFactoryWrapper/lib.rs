@@ -110,6 +110,17 @@ extern "C" fn GetClientFactoryRuntimeHandle(source_client_factory: &mut ClientFa
     return box_pointer;
 }
 
+// ClientFactory.config
+#[no_mangle]
+extern "C" fn GetClientFactoryConfig(source_client_factory: &mut ClientFactory) -> *const ClientConfig{
+
+    // Retrieve handle from client factory
+    let factory_config: &ClientConfig = source_client_factory.config();
+
+    // Return client config pointer as raw pointer
+    return factory_config as *const ClientConfig;
+}
+
 // Used for interoptopus wrapping
 pub fn my_inventory() -> Inventory {
     {

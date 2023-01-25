@@ -60,6 +60,9 @@ namespace Pravega.Config
         // -https://github.com/pravega/pravega-client-rust/blob/master/config/src/lib.rs
         public ClientConfig(){
             this._rustStructPointer = Interop.CreateClientConfig();
+
+            // debug
+            //Console.WriteLine("client config pointer: " + this._rustStructPointer.ToString());
         }
 
         // Setters and Getters
