@@ -1,10 +1,14 @@
+#![allow(
+    non_snake_case,
+    unused_imports
+)]
 ///
 /// File: lib.rs
 /// File Creator: John Sbur
-/// Purpose: Contains helper structs that can transfer varying sizes of values. Slices, tuple, rust values, strings, and more
+/// Purpose: Contains helper structs and methods that can transfer varying sizes of values. Slices, tuple, rust values, strings, and more
 ///     are located in here. Provides definitions on the Rust side.
 ///     
-use interoptopus::{ffi_type, patterns::string};
+use interoptopus::{Inventory, InventoryBuilder, ffi_type};
 use std::{slice, char};
 
 
@@ -191,4 +195,12 @@ impl CustomRustString{
 pub struct CustomRustStringSlice{
     pub slice_pointer: *mut i32,
     pub length: u64,
+}
+
+// Used for interoptopus wrapping
+pub fn my_inventory() -> Inventory {
+    {
+        InventoryBuilder::new()
+        .inventory()
+    }
 }

@@ -40,6 +40,12 @@ namespace Pravega.Utility
             else return false;
         }
 
+        // Method to mark the class as consumed or null. (Rust ownership consumed the object this 
+        //  class's pointer pointed to. Therefore, the pointer here is marked as null for safety)
+        public void MarkAsNull(){
+            this._rustStructPointer = IntPtr.Zero;
+        }
+
         // Virtual method meant to type check
         public virtual string Type(){
             return string.Empty;

@@ -1,7 +1,7 @@
 ///
 /// File: ClientFactory.cs
 /// File Creator: John Sbur
-/// Purpose: Contains helper structs that are used in the ClientFactory module.
+/// Purpose: Contains helper classes and methods that are used in the ClientFactory module.
 ///
 #pragma warning disable 0105
 using System;
@@ -20,9 +20,16 @@ namespace Pravega.ClientFactoryModule
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop {
         
+        // Set path of ClientFactory .dll specifically
+        public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
+
         // Client Factory default constructor (default client config, generated runtime)
-        [DllImport(WrapperConstants.RustDllPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactory")]
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactory")]
         internal static extern IntPtr CreateClientFactory();
+
+        // Client Factory constructor (inputted client config, generated runtime)
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfig")]
+        internal static extern IntPtr CreateClientFactoryFromConfig(IntPtr clientConfigPointer);
 
     }
 
@@ -43,7 +50,18 @@ namespace Pravega.ClientFactoryModule
 
         // Constructor. Initializes with a ClientConfig. Consumes ClientConfig (sets to null after)
         public ClientFactory(ClientConfig factoryConfig){
-            this._rustStructPointer = IntPtr.Zero;
+
+            // Grab pointer from factoryConfig. If it's null, then throw an exception
+            if (factoryConfig.IsNull()){
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            else{
+                // Input pointer into constructor
+                this._rustStructPointer = Interop.CreateClientFactoryFromConfig(factoryConfig.RustStructPointer);
+
+                // Mark ClientConfig as null
+                factoryConfig.MarkAsNull();
+            }             
         }
 
         // Constructor. Initializes with a ClientConfig and Runtime. Consumes ClientConfig and Runtime (sets to null after)

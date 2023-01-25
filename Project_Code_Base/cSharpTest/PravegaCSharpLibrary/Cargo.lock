@@ -344,6 +344,8 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
+ "pravega-client",
+ "pravega-client-config",
  "retry_wrapper",
  "shared_wrapper",
  "utility",

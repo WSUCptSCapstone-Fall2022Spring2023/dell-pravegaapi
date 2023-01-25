@@ -18,3 +18,5 @@ interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
 shared_wrapper = { path = "../SharedWrapper" }
 retry_wrapper = { path = "../RetryWrapper" }
 utility = { path = "../UtilityWrappers" } 
+pravega-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master" }
+pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }

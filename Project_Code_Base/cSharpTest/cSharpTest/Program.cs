@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
     using Pravega;
     using Pravega.ClientFactoryModule;
+    using Pravega.Config;
 
     public static class Program
     {
@@ -16,8 +17,12 @@
 
         static void Main()
         {
+            ClientConfig testConfig = new ClientConfig();
+            Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
+            testConfig.MaxConnectionsInPool = 10;
+            Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
 
-            ClientFactory test = new ClientFactory();
+            ClientFactory test = new ClientFactory(testConfig);
             // test creating a thing
             //IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();
             //Console.WriteLine(clientFactoryObject.ToString());

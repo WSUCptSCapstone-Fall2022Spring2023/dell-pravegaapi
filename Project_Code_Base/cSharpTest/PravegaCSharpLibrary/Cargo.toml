@@ -24,7 +24,7 @@ members = [
 ]
 
 [lib]
-path = "./src/ClientFactoryWrapperMethods.rs"
+path = "./src/conversion_file.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
