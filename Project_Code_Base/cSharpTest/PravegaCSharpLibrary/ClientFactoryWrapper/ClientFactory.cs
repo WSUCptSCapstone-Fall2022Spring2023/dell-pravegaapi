@@ -23,6 +23,9 @@ namespace Pravega.ClientFactoryModule
         // Set path of ClientFactory .dll specifically
         public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
 
+        ////////
+        /// Client Factory
+        ////////
         // Client Factory default constructor (default client config, generated runtime)
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactory")]
         internal static extern IntPtr CreateClientFactory();
@@ -31,6 +34,22 @@ namespace Pravega.ClientFactoryModule
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfig")]
         internal static extern IntPtr CreateClientFactoryFromConfig(IntPtr clientConfigPointer);
 
+        // Client Factory constructor (inputted client config, inputted runtime)
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigAndRuntime")]
+        internal static extern IntPtr CreateClientFactoryFromConfigAndRuntime(IntPtr clientConfigPointer, IntPtr runtimePointer);
+
+        // Getters and Setters
+        // ClientFactory.runtime
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntime")]
+        internal static extern IntPtr GetClientFactoryRuntime(IntPtr sourceClientFactory);
+
+        // ClientFactory.runtime_handle
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandle")]
+        internal static extern IntPtr GetClientFactoryRuntimeHandle(IntPtr sourceClientFactory);
+
+        ////////
+        /// 
+        ////////
     }
 
     /// Contains the class that wraps the Rust client factory struct through a pointer and .dll function calls.
@@ -66,7 +85,59 @@ namespace Pravega.ClientFactoryModule
 
         // Constructor. Initializes with a ClientConfig and Runtime. Consumes ClientConfig and Runtime (sets to null after)
         public ClientFactory(ClientConfig factoryConfig, TokioRuntime factoryRuntime){
-            this._rustStructPointer = IntPtr.Zero;
+
+            // Grab pointer from factoryConfig. If it's null, then throw an exception
+            if (factoryConfig.IsNull() || factoryRuntime.IsNull()){
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            else{
+                // Input pointer into constructor
+                this._rustStructPointer = Interop.CreateClientFactoryFromConfigAndRuntime(
+                    factoryConfig.RustStructPointer,
+                    factoryRuntime.RustStructPointer
+                );
+
+                // Mark ClientConfig and Runtime as null
+                factoryConfig.MarkAsNull();
+                factoryRuntime.MarkAsNull();
+            }
+        }
+
+
+        // Setters and Getters
+        public TokioRuntime Runtime{
+            get
+            {
+                if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else{
+                    IntPtr runtimePointer = Interop.GetClientFactoryRuntime(this._rustStructPointer);
+                    TokioRuntime runtimeObject = new TokioRuntime();
+                    runtimeObject.RustStructPointer = runtimePointer;
+
+                    // debug
+                    Console.WriteLine("debug: runtime pointer = " + runtimeObject.RustStructPointer.ToString());
+                    return runtimeObject;
+                }
+            }
+        }
+        public TokioHandle Handle{
+            get
+            {
+                if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else{
+                    IntPtr runtimePointer = Interop.GetClientFactoryRuntimeHandle(this._rustStructPointer);
+                    TokioHandle runtimeObject = new TokioHandle();
+                    runtimeObject.RustStructPointer = runtimePointer;
+
+                    // debug
+                    Console.WriteLine("debug: handle pointer = " + runtimeObject.RustStructPointer.ToString());
+                    return runtimeObject;
+                }
+            }
         }
     }
 

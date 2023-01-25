@@ -21,8 +21,20 @@
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
             testConfig.MaxConnectionsInPool = 10;
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
+            testConfig.MaxConnectionsInPool = 11;
+            Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
 
             ClientFactory test = new ClientFactory(testConfig);
+
+            Console.WriteLine(test.Runtime.ToString());
+            Console.WriteLine(test.Handle.ToString());
+
+            testConfig = new ClientConfig();
+            Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
+            testConfig.MaxConnectionsInPool = 10;
+            ClientFactory test2 = new ClientFactory(testConfig, test.Runtime);
+
+
             // test creating a thing
             //IntPtr clientFactoryObject = Interop.CreateClientFactoryTest();
             //Console.WriteLine(clientFactoryObject.ToString());
@@ -31,6 +43,6 @@
 
         }
 
-    
+
     }
 }

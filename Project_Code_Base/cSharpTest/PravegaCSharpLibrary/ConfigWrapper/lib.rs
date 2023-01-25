@@ -51,6 +51,22 @@ extern "C" fn SetClientConfigMaxConnectionsInPool(source_config: &mut ClientConf
     return;
 }
 
+// ClientConfig.max_controller_connections
+#[no_mangle]
+extern "C" fn GetClientConfigMaxControllerConnections(source_config: &mut ClientConfig) -> u32{
+
+    // Get Max Connections and return
+    return source_config.max_controller_connections;
+}
+#[no_mangle]
+extern "C" fn SetClientConfigMaxControllerConnections(source_config: &mut ClientConfig, new_value: u32) -> (){
+
+    // Set Max Connections
+    source_config.max_controller_connections = new_value;
+
+    // Return
+    return;
+}
 
 // Used for interoptopus wrapping
 pub fn my_inventory() -> Inventory {

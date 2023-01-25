@@ -38,6 +38,11 @@ namespace Pravega.Config
         [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxConnectionsInPool")]
         internal static extern void SetClientConfigMaxConnectionsInPool(IntPtr sourceClientConfig, uint newValue);
 
+        // MaxControllerConnections
+        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMaxControllerConnections")]
+        internal static extern uint GetClientConfigMaxControllerConnections(IntPtr sourceClientConfig);
+        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxControllerConnections")]
+        internal static extern void SetClientConfigMaxControllerConnections(IntPtr sourceClientConfig, uint newValue);
         ////////
         ///
         ////////
@@ -71,6 +76,19 @@ namespace Pravega.Config
                 Interop.SetClientConfigMaxConnectionsInPool(this._rustStructPointer, value);
             }
         }
+        public uint MaxControllerConnections{
+            get{
+                if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else{
+                    return Interop.GetClientConfigMaxControllerConnections(this._rustStructPointer);
+                }
+            }
+            set{
+                Interop.SetClientConfigMaxControllerConnections(this._rustStructPointer, value);
+            }
+        } 
 
     }
     /*

@@ -27,6 +27,7 @@ namespace Pravega.Utility
         // Getter for the rust pointer
         internal IntPtr RustStructPointer{
             get{return this._rustStructPointer;}
+            set{this._rustStructPointer = value;}
         }
 
         // Internal so that only this library can set the pointer and the user cannot.
@@ -54,12 +55,20 @@ namespace Pravega.Utility
 
 
     // Classes from Rust Libraries that need representation in C#
-    public abstract class TokioRuntime{
+    public class TokioRuntime : RustStructWrapper{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "tokio.Runtime";
         }
     }
-
+    public class TokioHandle : RustStructWrapper{
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+        public virtual string Type(){
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+            return "tokio.Handle";
+        }
+    }
   
     // Contains pointer to rust u128 and functions for running computations with the u128.
     public class CustomU128 : RustStructWrapper
