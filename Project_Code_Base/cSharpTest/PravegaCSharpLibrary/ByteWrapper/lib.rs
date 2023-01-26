@@ -13,17 +13,18 @@ use pravega_client::{byte::ByteReader,byte::ByteWriter};
 use pravega_client_shared::{ScopedStream};
 use pravega_client::{client_factory::ClientFactory};
 use tokio;
+use futures::executor;
 
 
 #[no_mangle]
-pub async extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *const ByteReader{
+pub extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *const ByteReader{
     println!("Creating ScopedStream");
     // Create default ScopedSegment
     let default_Scoped_Stream: ScopedStream = ScopedStream::from("temp_A/temp_B");
    
     // Create new bytereader
     println!("CreatingByteWriter");
-    let new_byte_reader = source_client.create_byte_reader(default_Scoped_Stream).await;
+    let new_byte_reader = executor::block_on(source_client.create_byte_reader(default_Scoped_Stream));
 
     // Box and return client factory
     println!("Boxing and returning");

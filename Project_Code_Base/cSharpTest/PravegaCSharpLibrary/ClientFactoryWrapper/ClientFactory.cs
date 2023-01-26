@@ -4,18 +4,12 @@
 /// Purpose: Contains helper classes and methods that are used in the ClientFactory module.
 ///
 #pragma warning disable 0105
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using Pravega;
-using Pravega.Utility;
 using Pravega.Config;
+using Pravega.Event;
 using Pravega.Index;
 using Pravega.Shared;
-using Pravega.Event;
+using Pravega.Utility;
+using System.Runtime.InteropServices;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule

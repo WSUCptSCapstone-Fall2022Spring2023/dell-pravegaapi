@@ -20,3 +20,5 @@ pravega-client = { path = "../../../pravega-client-rust-master/pravega-client-ru
 pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }
 pravega-client-shared = {path = "../../../pravega-client-rust-master/pravega-client-rust-master/shared"}
 tokio = { version = "1", features = ["full"] }
+futures = "0.3.1"
+async-std = { version = "1", features = ["attributes", "tokio1"] }
