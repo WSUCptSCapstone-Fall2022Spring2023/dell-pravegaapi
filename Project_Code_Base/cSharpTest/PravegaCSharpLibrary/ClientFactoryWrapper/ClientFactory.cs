@@ -15,6 +15,7 @@ using Pravega.Utility;
 using Pravega.Config;
 using Pravega.Index;
 using Pravega.Shared;
+using Pravega.Event;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule
@@ -162,15 +163,34 @@ namespace Pravega.ClientFactoryModule
                 }
             }     
         }
-
+        //Spawns an IndexReader with a ScopedStream as input
+        //Full Functionality not yet implemented
         public IndexReader creatIndexReader(ScopedStream s)
         {
             return new IndexReader(s);
         }
-
+        //Spawns an IndexWriter with a ScopedStream as input
+        //Full Functionality not yet implemented
         public IndexWriter createIndexWriter(ScopedStream s)
         {
             return new IndexWriter(s);
+        }
+        //Spawns an EventReader with a ScopedStream as input
+        //Full Functionality not yet implemented
+        public EventReader creatEventReader(ScopedStream s)
+        {
+            return new EventReader(s);
+        }
+        //Spawns an EventWRiter with a ScopedStream as input
+        //Full Functionality not yet implemented
+        public EventWriter createEventWriter(ScopedStream s)
+        {
+            return new EventWriter(s);
+        }
+
+        public ByteReader createByteReader(ScopedStream s)
+        {
+            return new ByteReader(s,this.RustStructPointer);
         }
     }
 

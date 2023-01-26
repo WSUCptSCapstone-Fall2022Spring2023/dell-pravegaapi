@@ -11,6 +11,7 @@ dependencies = [
  "client_factory_wrapper",
  "config_wrapper",
  "controller_client_wrapper",
+ "event_wrapper",
  "interoptopus",
  "interoptopus_backend_csharp",
  "pravega-client",
@@ -229,6 +230,10 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
+ "pravega-client",
+ "pravega-client-config",
+ "pravega-client-shared",
+ "tokio 1.24.2",
  "utility",
 ]
 
@@ -747,6 +752,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "event_wrapper"
+version = "0.14.14"
+dependencies = [
+ "interoptopus",
+ "interoptopus_backend_csharp",
+ "utility",
 ]
 
 [[package]]

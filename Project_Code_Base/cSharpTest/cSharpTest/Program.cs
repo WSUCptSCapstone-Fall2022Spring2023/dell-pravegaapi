@@ -10,6 +10,7 @@
     using Pravega;
     using Pravega.ClientFactoryModule;
     using Pravega.Config;
+    using Pravega.Event;
 
     public static class Program
     {
@@ -37,6 +38,10 @@
             testConfig = test2.Config;
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
 
+
+            
+            ByteReader tb = test2.createByteReader(null);
+            Console.WriteLine(tb.Type());
         }
 
 

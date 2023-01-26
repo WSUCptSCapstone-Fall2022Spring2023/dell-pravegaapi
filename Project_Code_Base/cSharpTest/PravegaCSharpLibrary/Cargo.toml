@@ -20,7 +20,8 @@ members = [
     "RetryWrapper",
     "SharedWrapper",
     "UtilityWrappers",
-    "WireProtocolWrapper"
+    "WireProtocolWrapper",
+    "EventWrapper"
 ]
 
 [lib]
@@ -42,3 +43,4 @@ controller_client_wrapper = {path = "./ControllerClientWrapper"}
 shared_wrapper = {path = "./SharedWrapper"}
 utility = { path = "./UtilityWrappers" }
 wire_protocol_wrapper = {path = "./WireProtocolWrapper"}
+event_wrapper = {path = "./EventWrapper"}
