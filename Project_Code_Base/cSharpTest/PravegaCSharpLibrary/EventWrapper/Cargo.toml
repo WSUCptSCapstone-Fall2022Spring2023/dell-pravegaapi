@@ -1,6 +1,6 @@
 [package]
-name = "client_factory_wrapper"
-authors = ["John Sbur"]
+name = "event_wrapper"
+authors = ["Sam Lopez"]
 version = "0.14.14"
 edition = "2018"
 license = "Apache-2.0"
@@ -16,7 +16,3 @@ crate-type = ["cdylib", "rlib"]
 interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
 utility = { path = "../UtilityWrappers" } 
-pravega-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master" }
-pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }
-pravega-controller-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/controller-client" }
-tokio = { version = "1", features = ["full"] }

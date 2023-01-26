@@ -9,9 +9,10 @@
 ///     Provides definitions on the Rust side.
 ///
 use interoptopus::{Inventory, InventoryBuilder};
-use pravega_client::{client_factory::ClientFactory};
+use pravega_client::{client_factory::{ClientFactory, ClientFactoryAsync}};
 
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
+use pravega_controller_client::{ControllerClient};
 use utility::{CustomRustStringSlice, CustomRustString};
 use tokio::runtime::{Runtime, Handle};
 
@@ -119,6 +120,33 @@ extern "C" fn GetClientFactoryConfig(source_client_factory: &mut ClientFactory) 
 
     // Return client config pointer as raw pointer
     return factory_config as *const ClientConfig;
+}
+
+// ClientFactory.controller_client
+// *Cannot transfer traits back as raw pointers. (Probably not useful in C# anyways)
+/*
+#[no_mangle]
+extern "C" fn GetClientFactoryControllerClient(source_client_factory: &mut ClientFactory) -> *const ControllerClient{
+
+    // Retrieve handle from client factory
+    let factory_controller_client: &dyn ControllerClient = source_client_factory.controller_client();
+
+    // Return client config pointer as raw pointer
+    return factory_controller_client as *const ControllerClient;
+}
+*/
+
+// ClientFactory.to_async
+#[no_mangle]
+extern "C" fn ClientFactoryToAsync(source_client_factory: &mut ClientFactory) -> *const ClientFactoryAsync{
+
+    // Retrieve handle from client factory
+    let factory_client_async_clone: ClientFactoryAsync = source_client_factory.to_async();
+
+    // Box and return clientfactoryasync pointer
+    let factory_client_factory_async_clone_box: Box<ClientFactoryAsync> = Box::new(factory_client_async_clone);
+    let box_pointer: *const ClientFactoryAsync = Box::into_raw(factory_client_factory_async_clone_box);     
+    return box_pointer;
 }
 
 // Used for interoptopus wrapping

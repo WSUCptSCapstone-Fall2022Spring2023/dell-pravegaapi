@@ -51,6 +51,11 @@ namespace Pravega.ClientFactoryModule
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfig")]
         internal static extern IntPtr GetClientFactoryConfig(IntPtr sourceClientFactory);
 
+        // ClientFactory.to_async()
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsync")]
+        internal static extern IntPtr ClientFactoryToAsync(IntPtr sourceClientFactory);
+
+        
         ////////
         /// 
         ////////
@@ -159,6 +164,23 @@ namespace Pravega.ClientFactoryModule
                     return runtimeObject;
                 }
             }     
+        }
+        
+
+        // Methods
+        // Clones and returns a copy of this client factory's client factory async.
+        public ClientFactoryAsync ToAsync()
+        {
+            if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            else{
+                IntPtr clientFactoryAsyncClone = Interop.ClientFactoryToAsync(this._rustStructPointer);
+                ClientFactoryAsync newClientFactoryAsync = new ClientFactoryAsync();
+                newClientFactoryAsync.RustStructPointer = clientFactoryAsyncClone;
+
+                return newClientFactoryAsync;
+            }
         }
     }
 
