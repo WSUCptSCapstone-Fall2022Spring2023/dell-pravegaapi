@@ -15,6 +15,11 @@ use pravega_client::{client_factory::ClientFactory};
 use tokio;
 use futures::executor;
 
+use std::time::Duration;
+
+use tokio::runtime::Builder;
+use tokio_timer::clock::Clock;
+
 
 #[no_mangle]
 pub extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *const ByteReader{
@@ -24,7 +29,14 @@ pub extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *
    
     // Create new bytereader
     println!("CreatingByteWriter");
-    let new_byte_reader = executor::block_on(source_client.create_byte_reader(default_Scoped_Stream));
+    let mut _runtime = Builder::new_multi_thread()
+    .worker_threads(4)
+    .thread_name("my-custom-name")
+    .thread_stack_size(3 * 1024 * 1024)
+    .build()
+    .unwrap();
+ 
+    let new_byte_reader = _runtime.block_on(source_client.create_byte_reader(default_Scoped_Stream));
 
     // Box and return client factory
     println!("Boxing and returning");

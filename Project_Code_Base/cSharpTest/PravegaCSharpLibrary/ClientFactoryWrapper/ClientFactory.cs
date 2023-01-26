@@ -10,6 +10,8 @@ using Pravega.Index;
 using Pravega.Shared;
 using Pravega.Utility;
 using System.Runtime.InteropServices;
+using Pravega.Sync;
+using static Pravega.Shared.AsyncSegmentReaderImpl;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule
@@ -185,6 +187,36 @@ namespace Pravega.ClientFactoryModule
         public ByteReader createByteReader(ScopedStream s)
         {
             return new ByteReader(s,this.RustStructPointer);
+        }
+
+        public Table createTable(Scope s,string placeholder)
+        {
+            return new Table(s, placeholder);
+        }
+
+        public Synchronizer createSynchronizer(Scope s, string placehoder)
+        {
+            return new Synchronizer(s, placehoder);
+        }
+
+        public AsyncSegmentReaderImpl CreateAsyncSegmentReader(ScopedSegment s)
+        {
+            return new AsyncSegmentReaderImpl(s);
+        }
+
+        public RawClientImpl createRawClient(ScopedSegment s)
+        {
+            return new RawClientImpl(s);
+        }
+
+        public SegmentMetaDataClient createSegementMetaDataClient(ScopedSegment s)
+        {
+            return new SegmentMetaDataClient(s);
+        }
+
+        public DelegationTokenProvider createDelagationTokenProvider(ScopedStream s)
+        {
+            return new DelegationTokenProvider(s);
         }
     }
 

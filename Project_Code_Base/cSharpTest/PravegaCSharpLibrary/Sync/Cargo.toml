@@ -1,5 +1,5 @@
 [package]
-name = "byte_wrapper"
+name = "sync"
 authors = ["John Sbur"]
 version = "0.14.14"
 edition = "2018"

@@ -172,6 +172,8 @@ namespace Pravega.Shared
 
 
 
+
+
     // ***** Wrapper for PravegaNodeUri *****
     public class PravegaNodeUri : CustomCSharpString
     {
@@ -187,4 +189,91 @@ namespace Pravega.Shared
         #[derive(From, Shrinkwrap, Debug, Clone, Hash, PartialEq, Eq)]
         pub struct PravegaNodeUri(pub String);
     */
+
+    public class AsyncSegmentReaderImpl : RustStructWrapper
+    {
+        // Override type to return this class's name.
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+        public virtual string Type()
+        {
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+            return "AsyncSegmentReaderImpl";
+        }
+
+        public AsyncSegmentReaderImpl(ScopedSegment s)
+
+        {
+
+            this.RustStructPointer = IntPtr.Zero;
+
+        }
+
+        public class RawClientImpl : RustStructWrapper
+        {
+            // Override type to return this class's name.
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+            public virtual string Type()
+            {
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+                return "RawClientImpl";
+            }
+
+            public RawClientImpl(ScopedSegment s)
+
+            {
+
+                this.RustStructPointer = IntPtr.Zero;
+
+            }
+
+            public RawClientImpl(PravegaNodeUri p)
+            {
+                this.RustStructPointer = IntPtr.Zero;
+            }
+
+        }
+
+        public class SegmentMetaDataClient : RustStructWrapper
+        {
+            // Override type to return this class's name.
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+            public virtual string Type()
+            {
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+                return "SegmentMetaDataClient";
+            }
+
+            public SegmentMetaDataClient(ScopedSegment s)
+
+            {
+
+                this.RustStructPointer = IntPtr.Zero;
+
+            }
+
+
+        }
+
+        public class DelegationTokenProvider : RustStructWrapper
+        {
+            // Override type to return this class's name.
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+            public virtual string Type()
+            {
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+                return "DelegationTokenProvider ";
+            }
+
+            public DelegationTokenProvider(ScopedStream s)
+
+            {
+
+                this.RustStructPointer = IntPtr.Zero;
+
+            }
+
+
+        }
+
+    }
 }

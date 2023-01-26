@@ -21,7 +21,8 @@ members = [
     "SharedWrapper",
     "UtilityWrappers",
     "WireProtocolWrapper",
-    "EventWrapper"
+    "EventWrapper",
+    "Sync"
 ]
 
 [lib]
@@ -44,3 +45,4 @@ shared_wrapper = {path = "./SharedWrapper"}
 utility = { path = "./UtilityWrappers" }
 wire_protocol_wrapper = {path = "./WireProtocolWrapper"}
 event_wrapper = {path = "./EventWrapper"}
+sync = {path = "./Sync"}
