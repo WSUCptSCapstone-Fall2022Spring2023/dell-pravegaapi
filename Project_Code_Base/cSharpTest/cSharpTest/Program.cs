@@ -40,7 +40,7 @@
 
 
             
-            ByteReader tb = test2.createByteReader(null);
+            ByteReader tb = test.createByteReader(null);
             Console.WriteLine(tb.Type());
         }
 

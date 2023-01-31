@@ -18,44 +18,39 @@ use futures::executor;
 use std::time::Duration;
 
 use tokio::runtime::Builder;
+use tokio::task;
 use tokio_timer::clock::Clock;
 
 
 #[no_mangle]
 pub extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *const ByteReader{
-    println!("Creating ScopedStream");
+    println!("Creating ScopedStream, changed client");
     // Create default ScopedSegment
     let default_Scoped_Stream: ScopedStream = ScopedStream::from("temp_A/temp_B");
    
     // Create new bytereader
-    println!("CreatingByteWriter");
-    let mut _runtime = Builder::new_multi_thread()
-    .worker_threads(4)
-    .thread_name("my-custom-name")
-    .thread_stack_size(3 * 1024 * 1024)
-    .build()
-    .unwrap();
- 
-    let new_byte_reader = _runtime.block_on(source_client.create_byte_reader(default_Scoped_Stream));
+    println!("CreatingByteReader");
+    
+    let new_byte_reader = source_client.create_byte_reader(default_Scoped_Stream);
 
     // Box and return client factory
     println!("Boxing and returning");
-    let byte_reader_box: Box<ByteReader> = Box::new(new_byte_reader);
-    let box_pointer: *const ByteReader = Box::into_raw(byte_reader_box);
+    let byte_reader_box = Box::new(new_byte_reader);
+    let box_pointer: *const ByteReader = Box::into_raw(byte_reader_box) as *const ByteReader;
     return box_pointer;
 }
 
 #[no_mangle]
-pub async extern "C" fn CreateByteWriterHelper(source_client: &mut ClientFactory) -> *const ByteWriter{
+pub extern "C" fn CreateByteWriterHelper(source_client: &mut ClientFactory) -> *const ByteWriter{
 
     // Create default ScopedSegment
     let default_Scoped_Stream: ScopedStream = ScopedStream::from("temp_A/temp_B");
    
     // Create new bytereader
-    let new_byte_writer  = source_client.create_byte_writer(default_Scoped_Stream).await;
+    let new_byte_writer  = source_client.create_byte_writer(default_Scoped_Stream);
 
     // Box and return client factory
-    let byte_writer_box: Box<ByteWriter> = Box::new(new_byte_writer);
-    let box_pointer: *const ByteWriter = Box::into_raw(byte_writer_box);
+    let byte_writer_box = Box::new(new_byte_writer);
+    let box_pointer: *const ByteWriter = Box::into_raw(byte_writer_box) as *const ByteWriter;
     return box_pointer;
 }

@@ -19,6 +19,6 @@ utility = { path = "../UtilityWrappers" }
 pravega-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master" }
 pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }
 pravega-client-shared = {path = "../../../pravega-client-rust-master/pravega-client-rust-master/shared"}
-tokio = { version = "1", features = ["full"] }
+tokio  = "1.24.2"
 futures = "0.3.1"
 tokio-timer = "0.2.13"
