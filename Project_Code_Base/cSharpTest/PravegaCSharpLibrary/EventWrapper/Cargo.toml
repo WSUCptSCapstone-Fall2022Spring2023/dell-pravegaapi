@@ -1,6 +1,6 @@
 [package]
-name = "retry_wrapper"
-authors = ["John Sbur"]
+name = "event_wrapper"
+authors = ["Sam Lopez"]
 version = "0.14.14"
 edition = "2018"
 license = "Apache-2.0"
@@ -16,4 +16,3 @@ crate-type = ["cdylib", "rlib"]
 interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
 utility = { path = "../UtilityWrappers" } 
-pravega-client-retry = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/retry"}

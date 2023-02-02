@@ -20,6 +20,12 @@
             //Sets where to look for DllImport to find the Dll files
             Environment.CurrentDirectory = Pathgen.PathGen.CreateDllPath();
             ClientConfig testConfig = new ClientConfig();
+
+            //foreach (string thing in testConfig.TrustCerts)
+            //{
+            //    Console.WriteLine(thing);
+            //}
+
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
             testConfig.MaxConnectionsInPool = 10;
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());

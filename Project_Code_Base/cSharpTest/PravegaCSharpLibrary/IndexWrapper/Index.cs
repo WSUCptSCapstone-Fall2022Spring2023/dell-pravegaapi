@@ -1,14 +1,18 @@
 ///
-/// File: Index.cs
+/// File: ClientFactory.cs
 /// File Creator: John Sbur
-/// Purpose: Contains helper structs under the index module. Implements the C# equivalent of the Rust wrapper structs
+/// Purpose: Contains helper classes and methods that are used in the Index module.
 ///
 #pragma warning disable 0105
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+using Pravega;
 using Pravega.Utility;
+using Pravega.Config;
 #pragma warning restore 0105
 
 namespace Pravega.Index
