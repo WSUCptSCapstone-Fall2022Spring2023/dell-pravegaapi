@@ -23,7 +23,7 @@ use tokio_timer::clock::Clock;
 
 
 #[no_mangle]
-pub extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *const ByteReader{
+pub async extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *const ByteReader{
     println!("Creating ScopedStream, changed client");
     // Create default ScopedSegment
     let default_Scoped_Stream: ScopedStream = ScopedStream::from("temp_A/temp_B");
@@ -31,7 +31,7 @@ pub extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *
     // Create new bytereader
     println!("CreatingByteReader");
     
-    let new_byte_reader = source_client.create_byte_reader(default_Scoped_Stream);
+    let new_byte_reader = source_client.create_byte_reader(default_Scoped_Stream).await;
 
     // Box and return client factory
     println!("Boxing and returning");
