@@ -14,7 +14,35 @@ using Pravega.Utility;
 
 namespace Pravega.Retry
 {
+    public static partial class Interop
+    {
 
+        // Set path of Retry .dll specifically
+        public const string RetryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\retry_wrapper.dll";
+
+        ////////
+        /// RetryWithBackoff
+        ////////
+        // Default constructor
+        [DllImport(RetryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateDefaultRetryWithBackOff")]
+        internal static extern IntPtr CreateDefaultRetryWithBackOff();
+        
+    }
+
+    public class RetryWithBackoff : RustStructWrapper
+    {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+        public virtual string Type()
+        {
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
+            return "RetryWithBackoff";
+        }
+
+        // Default constructor
+        public RetryWithBackoff(){
+            this._rustStructPointer = Interop.CreateDefaultRetryWithBackOff();
+        }
+    }
     /*
     Originally from pravega-client-rust/retry/src/retry_policy.rs
     as:

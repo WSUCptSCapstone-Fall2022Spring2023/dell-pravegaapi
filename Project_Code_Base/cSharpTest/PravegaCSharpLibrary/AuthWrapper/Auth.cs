@@ -14,14 +14,5 @@ using Pravega.Shared;
 
 namespace Pravega.Auth
 {
-    //  ***** Wrapper for DelegationTokenProvider *****
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct DelegationTokenProviderWrapper
-    {
-        ScopedStream stream;
-        DelegationToken token;
-        bool signal_expiry;
-    }
 
 }

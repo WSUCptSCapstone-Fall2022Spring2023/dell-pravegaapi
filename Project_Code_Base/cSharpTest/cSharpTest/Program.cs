@@ -18,6 +18,12 @@
         static void Main()
         {
             ClientConfig testConfig = new ClientConfig();
+
+            //foreach (string thing in testConfig.TrustCerts)
+            //{
+            //    Console.WriteLine(thing);
+            //}
+
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
             testConfig.MaxConnectionsInPool = 10;
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());

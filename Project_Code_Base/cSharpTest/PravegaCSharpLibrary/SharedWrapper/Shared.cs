@@ -173,7 +173,7 @@ namespace Pravega.Shared
 
 
     // ***** Wrapper for PravegaNodeUri *****
-    public class PravegaNodeUri : CustomCSharpString
+    public class PravegaNodeUri : RustStructWrapper
     {
 #pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
