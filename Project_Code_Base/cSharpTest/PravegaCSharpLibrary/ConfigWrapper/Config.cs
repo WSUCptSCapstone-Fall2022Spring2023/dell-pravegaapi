@@ -25,9 +25,9 @@ namespace Pravega.Config
     public static partial class Interop {
 
         // Set path of ClientFactory .dll specifically
-        //public const string ConfigDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\config_wrapper.dll";
+        public const string ConfigDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\config_wrapper.dll";
         //public const string ConfigDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\config_wrapper.dll";
-        public const string ConfigDLLPath = "config_wrapper.dll";
+        //public const string ConfigDLLPath = "config_wrapper.dll";
         ////////
         /// Client Config
         ////////

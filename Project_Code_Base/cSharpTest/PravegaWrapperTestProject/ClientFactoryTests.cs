@@ -183,8 +183,8 @@ namespace PravegaWrapperTestProject
         public void ClientFactoryConfigTest()
         {
             ClientFactory testFactory = new ClientFactory();
-            ClientConfig testHandle = testFactory.Config;
-            Assert.IsFalse(testHandle.IsNull());
+            ClientConfig testConfig = testFactory.Config;
+            Assert.IsFalse(testConfig.IsNull());
         }
 
         // Unit Test. Client Factory config time. Aims for C# being at least 85% efficient
