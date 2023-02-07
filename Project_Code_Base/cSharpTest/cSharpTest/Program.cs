@@ -11,7 +11,12 @@
     using Pravega;
     using Pravega.ClientFactoryModule;
     using Pravega.Config;
+<<<<<<< HEAD
+    using Pravega.Event;
+
+=======
     using Pathgen;
+>>>>>>> main
     public static class Program
     {
 
@@ -45,6 +50,10 @@
             testConfig = test2.Config;
             Console.WriteLine(testConfig.MaxConnectionsInPool.ToString());
 
+
+            
+            ByteReader tb = test.createByteReader(null);
+            Console.WriteLine(tb.Type());
         }
 
     }

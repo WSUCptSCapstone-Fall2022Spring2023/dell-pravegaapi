@@ -4,15 +4,14 @@
 /// Purpose: Contains helper classes and methods that are used in the ClientFactory module.
 ///
 #pragma warning disable 0105
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using Pravega;
-using Pravega.Utility;
 using Pravega.Config;
+using Pravega.Event;
+using Pravega.Index;
+using Pravega.Shared;
+using Pravega.Utility;
+using System.Runtime.InteropServices;
+using Pravega.Sync;
+using static Pravega.Shared.AsyncSegmentReaderImpl;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule
@@ -21,9 +20,14 @@ namespace Pravega.ClientFactoryModule
     public static partial class Interop {
 
         // Set path of ClientFactory .dll specifically
+<<<<<<< HEAD
+        public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
+
+=======
         public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
+>>>>>>> main
         ////////
         /// Client Factory
         ////////
@@ -229,6 +233,66 @@ namespace Pravega.ClientFactoryModule
                 }
             }     
         }
+<<<<<<< HEAD
+        //Spawns an IndexReader with a ScopedStream as input
+        //Full Functionality not yet implemented
+        public IndexReader creatIndexReader(ScopedStream s)
+        {
+            return new IndexReader(s);
+        }
+        //Spawns an IndexWriter with a ScopedStream as input
+        //Full Functionality not yet implemented
+        public IndexWriter createIndexWriter(ScopedStream s)
+        {
+            return new IndexWriter(s);
+        }
+        //Spawns an EventReader with a ScopedStream as input
+        //Full Functionality not yet implemented
+        public EventReader creatEventReader(ScopedStream s)
+        {
+            return new EventReader(s);
+        }
+        //Spawns an EventWRiter with a ScopedStream as input
+        //Full Functionality not yet implemented
+        public EventWriter createEventWriter(ScopedStream s)
+        {
+            return new EventWriter(s);
+        }
+
+        public ByteReader createByteReader(ScopedStream s)
+        {
+            return new ByteReader(s,this.RustStructPointer);
+        }
+
+        public Table createTable(Scope s,string placeholder)
+        {
+            return new Table(s, placeholder);
+        }
+
+        public Synchronizer createSynchronizer(Scope s, string placehoder)
+        {
+            return new Synchronizer(s, placehoder);
+        }
+
+        public AsyncSegmentReaderImpl CreateAsyncSegmentReader(ScopedSegment s)
+        {
+            return new AsyncSegmentReaderImpl(s);
+        }
+
+        public RawClientImpl createRawClient(ScopedSegment s)
+        {
+            return new RawClientImpl(s);
+        }
+
+        public SegmentMetaDataClient createSegementMetaDataClient(ScopedSegment s)
+        {
+            return new SegmentMetaDataClient(s);
+        }
+
+        public DelegationTokenProvider createDelagationTokenProvider(ScopedStream s)
+        {
+            return new DelegationTokenProvider(s);
+=======
         
 
         // Methods
@@ -245,6 +309,7 @@ namespace Pravega.ClientFactoryModule
 
                 return newClientFactoryAsync;
             }
+>>>>>>> main
         }
     }
 

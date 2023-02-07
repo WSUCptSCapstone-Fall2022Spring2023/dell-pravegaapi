@@ -1,10 +1,6 @@
 [package]
-name = "event_wrapper"
-<<<<<<< HEAD
+name = "sync"
 authors = ["John Sbur"]
-=======
-authors = ["Sam Lopez"]
->>>>>>> main
 version = "0.14.14"
 edition = "2018"
 license = "Apache-2.0"
@@ -20,3 +16,9 @@ crate-type = ["cdylib", "rlib"]
 interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
 utility = { path = "../UtilityWrappers" } 
+pravega-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master" }
+pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }
+pravega-client-shared = {path = "../../../pravega-client-rust-master/pravega-client-rust-master/shared"}
+tokio = { version = "1", features = ["full"] }
+futures = "0.3.1"
+tokio-timer = "0.2.13"

@@ -11,12 +11,14 @@ dependencies = [
  "client_factory_wrapper",
  "config_wrapper",
  "controller_client_wrapper",
+ "event_wrapper",
  "interoptopus",
  "interoptopus_backend_csharp",
  "pravega-client",
  "pravega-client-config",
  "retry_wrapper",
  "shared_wrapper",
+ "sync",
  "tokio 1.24.2",
  "utility",
  "wire_protocol_wrapper",
@@ -227,8 +229,14 @@ checksum = "0d261e256854913907f67ed06efbc3338dfe6179796deefc1ff763fc1aee5535"
 name = "byte_wrapper"
 version = "0.14.14"
 dependencies = [
+ "futures 0.3.25",
  "interoptopus",
  "interoptopus_backend_csharp",
+ "pravega-client",
+ "pravega-client-config",
+ "pravega-client-shared",
+ "tokio 1.24.2",
+ "tokio-timer",
  "utility",
 ]
 
@@ -790,6 +798,12 @@ checksum = "a9c384f161156f5260c24a097c56119f9be8c798586aecc13afbcbe7b7e26bf8"
 dependencies = [
  "percent-encoding",
 ]
+
+[[package]]
+name = "futures"
+version = "0.1.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3a471a38ef8ed83cd6e40aa59c1ffe17db6855c18e3604d9c4ed8c08ebc28678"
 
 [[package]]
 name = "futures"
@@ -1748,7 +1762,7 @@ dependencies = [
  "chrono",
  "derive-new",
  "enum-iterator",
- "futures",
+ "futures 0.3.25",
  "futures-intrusive 0.3.1",
  "futures-util",
  "im",
@@ -1866,7 +1880,7 @@ version = "0.3.2"
 dependencies = [
  "async-trait",
  "dashmap 3.11.10",
- "futures",
+ "futures 0.3.25",
  "pravega-client-shared",
  "snafu",
  "tokio 1.24.2",
@@ -1880,7 +1894,7 @@ dependencies = [
  "async-trait",
  "clap",
  "derive_more",
- "futures",
+ "futures 0.3.25",
  "im",
  "jsonwebtoken",
  "num",
@@ -1912,7 +1926,7 @@ dependencies = [
  "bincode2",
  "byteorder",
  "derive-new",
- "futures",
+ "futures 0.3.25",
  "lazy_static",
  "log",
  "pravega-client-config",
@@ -2635,6 +2649,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "sync"
+version = "0.14.14"
+dependencies = [
+ "futures 0.3.25",
+ "interoptopus",
+ "interoptopus_backend_csharp",
+ "pravega-client",
+ "pravega-client-config",
+ "pravega-client-shared",
+ "tokio 1.24.2",
+ "tokio-timer",
+ "utility",
+]
+
+[[package]]
 name = "t1ha"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2773,6 +2802,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-executor"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb2d1b8f4548dbf5e1f7818512e9c406860678f29c300cdf0ebac72d1a3a1671"
+dependencies = [
+ "crossbeam-utils 0.7.2",
+ "futures 0.1.31",
+]
+
+[[package]]
 name = "tokio-io-timeout"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2824,6 +2863,18 @@ dependencies = [
  "futures-core",
  "pin-project-lite 0.2.9",
  "tokio 1.24.2",
+]
+
+[[package]]
+name = "tokio-timer"
+version = "0.2.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "93044f2d313c95ff1cb7809ce9a7a05735b012288a888b62d4434fd58c94f296"
+dependencies = [
+ "crossbeam-utils 0.7.2",
+ "futures 0.1.31",
+ "slab",
+ "tokio-executor",
 ]
 
 [[package]]
