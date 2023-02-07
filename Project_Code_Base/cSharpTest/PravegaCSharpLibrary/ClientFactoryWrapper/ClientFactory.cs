@@ -20,14 +20,11 @@ namespace Pravega.ClientFactoryModule
     public static partial class Interop {
 
         // Set path of ClientFactory .dll specifically
-<<<<<<< HEAD
-        public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
 
-=======
         public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
->>>>>>> main
+
         ////////
         /// Client Factory
         ////////
@@ -72,19 +69,19 @@ namespace Pravega.ClientFactoryModule
         // ClientFactory.new_with_runtime time take to complete in milliseconds in rust
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigAndRuntimeTime")]
         internal static extern ulong CreateClientFactoryFromConfigAndRuntimeTime();
-        
+
         // ClientFactory.runtime time take to complete in milliseconds in rust
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeTime")]
         internal static extern ulong GetClientFactoryRuntimeTime();
-        
+
         // ClientFactory.handle time take to complete in milliseconds in rust
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandleTime")]
         internal static extern ulong GetClientFactoryRuntimeHandleTime();
-        
+
         // ClientFactory.config time take to complete in milliseconds in rust
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfigTime")]
         internal static extern ulong GetClientFactoryConfigTime();
-        
+
         // to_async time take to complete in milliseconds in rust
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsyncTime")]
         internal static extern ulong ClientFactoryToAsyncTime();
@@ -99,7 +96,7 @@ namespace Pravega.ClientFactoryModule
     public static class ClientFactoryTestMethods
     {
         // Return time it takes in Rust to run "to_async"
-        public static float ToAsyncTime(){
+        public static float ToAsyncTime() {
             return Interop.ClientFactoryToAsyncTime();
         }
         // Return time it takes in Rust to run "config"
@@ -108,23 +105,23 @@ namespace Pravega.ClientFactoryModule
             return Interop.ClientFactoryToAsyncTime();
         }
         // Return time it takes in Rust to run "runtime_handle"
-        public static float HandleTime(){
+        public static float HandleTime() {
             return Interop.GetClientFactoryRuntimeHandleTime();
         }
         // Return time it takes in Rust to run "runtime"
-        public static float RuntimeTime(){
+        public static float RuntimeTime() {
             return Interop.GetClientFactoryRuntimeTime();
         }
         // Return time it takes in Rust to run the client factory constructor that takes a runtime and config
-        public static float ConstructorConfigAndRuntimeTime(){
+        public static float ConstructorConfigAndRuntimeTime() {
             return Interop.CreateClientFactoryFromConfigAndRuntimeTime();
         }
         // Return time it takes in Rust to run the client factory constructor that takes a config
-        public static float ConstructorConfigTime(){
+        public static float ConstructorConfigTime() {
             return Interop.CreateClientFactoryFromConfigTime();
         }
         // Return time it takes in Rust to the the client factory default constructor
-        public static float DefaultConstructorTime(){
+        public static float DefaultConstructorTime() {
             return Interop.CreateClientFactoryTime();
         }
     }
@@ -134,40 +131,40 @@ namespace Pravega.ClientFactoryModule
     {
         // Override type to return this class's name.
 #pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
+        public virtual string Type() {
 #pragma warning restore CS0114 // Member hides inherited member; missing override keyword
             return "ClientFactory";
         }
 
         // Default constructor. Initializes with a default ClientConfig
-        public ClientFactory(){
+        public ClientFactory() {
             this._rustStructPointer = Interop.CreateClientFactory();
         }
 
         // Constructor. Initializes with a ClientConfig. Consumes ClientConfig (sets to null after)
-        public ClientFactory(ClientConfig factoryConfig){
+        public ClientFactory(ClientConfig factoryConfig) {
 
             // Grab pointer from factoryConfig. If it's null, then throw an exception
-            if (factoryConfig.IsNull()){
+            if (factoryConfig.IsNull()) {
                 throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
             }
-            else{ 
+            else {
                 // Input pointer into constructor
                 this._rustStructPointer = Interop.CreateClientFactoryFromConfig(factoryConfig.RustStructPointer);
 
                 // Mark ClientConfig as null
                 factoryConfig.MarkAsNull();
-            }             
+            }
         }
 
         // Constructor. Initializes with a ClientConfig and Runtime. Consumes ClientConfig and Runtime (sets to null after)
-        public ClientFactory(ClientConfig factoryConfig, TokioRuntime factoryRuntime){
+        public ClientFactory(ClientConfig factoryConfig, TokioRuntime factoryRuntime) {
 
             // Grab pointer from factoryConfig. If it's null, then throw an exception
-            if (factoryConfig.IsNull() || factoryRuntime.IsNull()){
+            if (factoryConfig.IsNull() || factoryRuntime.IsNull()) {
                 throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
             }
-            else{
+            else {
                 // Input pointer into constructor
                 this._rustStructPointer = Interop.CreateClientFactoryFromConfigAndRuntime(
                     factoryConfig.RustStructPointer,
@@ -182,13 +179,13 @@ namespace Pravega.ClientFactoryModule
 
 
         // Setters and Getters
-        public TokioRuntime Runtime{
+        public TokioRuntime Runtime {
             get
             {
-                if (this.IsNull()){
+                if (this.IsNull()) {
                     throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
                 }
-                else{
+                else {
                     IntPtr runtimePointer = Interop.GetClientFactoryRuntime(this._rustStructPointer);
                     TokioRuntime runtimeObject = new TokioRuntime();
                     runtimeObject.RustStructPointer = runtimePointer;
@@ -199,13 +196,13 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
-        public TokioHandle Handle{
+        public TokioHandle Handle {
             get
             {
-                if (this.IsNull()){
+                if (this.IsNull()) {
                     throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
                 }
-                else{
+                else {
                     IntPtr runtimePointer = Interop.GetClientFactoryRuntimeHandle(this._rustStructPointer);
                     TokioHandle runtimeObject = new TokioHandle();
                     runtimeObject.RustStructPointer = runtimePointer;
@@ -216,13 +213,13 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
-        public ClientConfig Config{
+        public ClientConfig Config {
             get
             {
-                if (this.IsNull()){
+                if (this.IsNull()) {
                     throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
                 }
-                else{
+                else {
                     IntPtr runtimePointer = Interop.GetClientFactoryConfig(this._rustStructPointer);
                     ClientConfig runtimeObject = new ClientConfig();
                     runtimeObject.RustStructPointer = runtimePointer;
@@ -231,9 +228,9 @@ namespace Pravega.ClientFactoryModule
                     //Console.WriteLine("debug: config pointer = " + runtimeObject.RustStructPointer.ToString());
                     return runtimeObject;
                 }
-            }     
+            }
         }
-<<<<<<< HEAD
+
         //Spawns an IndexReader with a ScopedStream as input
         //Full Functionality not yet implemented
         public IndexReader creatIndexReader(ScopedStream s)
@@ -261,10 +258,10 @@ namespace Pravega.ClientFactoryModule
 
         public ByteReader createByteReader(ScopedStream s)
         {
-            return new ByteReader(s,this.RustStructPointer);
+            return new ByteReader(s, this.RustStructPointer);
         }
 
-        public Table createTable(Scope s,string placeholder)
+        public Table createTable(Scope s, string placeholder)
         {
             return new Table(s, placeholder);
         }
@@ -292,34 +289,34 @@ namespace Pravega.ClientFactoryModule
         public DelegationTokenProvider createDelagationTokenProvider(ScopedStream s)
         {
             return new DelegationTokenProvider(s);
-=======
-        
+        }
 
-        // Methods
-        // Clones and returns a copy of this client factory's client factory async.
-        public ClientFactoryAsync ToAsync()
-        {
-            if (this.IsNull()){
+
+            // Methods
+            // Clones and returns a copy of this client factory's client factory async.
+            public ClientFactoryAsync ToAsync()
+            {
+                if (this.IsNull()) {
                     throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
-            }
-            else{
-                IntPtr clientFactoryAsyncClone = Interop.ClientFactoryToAsync(this._rustStructPointer);
-                ClientFactoryAsync newClientFactoryAsync = new ClientFactoryAsync();
-                newClientFactoryAsync.RustStructPointer = clientFactoryAsyncClone;
+                }
+                else {
+                    IntPtr clientFactoryAsyncClone = Interop.ClientFactoryToAsync(this._rustStructPointer);
+                    ClientFactoryAsync newClientFactoryAsync = new ClientFactoryAsync();
+                    newClientFactoryAsync.RustStructPointer = clientFactoryAsyncClone;
 
-                return newClientFactoryAsync;
+                    return newClientFactoryAsync;
+                }
+
             }
->>>>>>> main
         }
-    }
 
-    /// Contains the class that wraps the Rust client factory async struct through a pointer and .dll function calls.
-    public class ClientFactoryAsync : RustStructWrapper{
+        /// Contains the class that wraps the Rust client factory async struct through a pointer and .dll function calls.
+        public class ClientFactoryAsync : RustStructWrapper {
 #pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
+            public virtual string Type() {
 #pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "ClientFactoryAsync";
+                return "ClientFactoryAsync";
+            }
         }
-    }
 
-}
+    }

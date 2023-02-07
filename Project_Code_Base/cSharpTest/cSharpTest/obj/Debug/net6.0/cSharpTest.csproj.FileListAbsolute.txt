@@ -34,3 +34,10 @@ C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pra
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.pdb
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.genruntimeconfig.cache
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\ref\cSharpTest.dll
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.AssemblyReference.cache
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.GeneratedMSBuildEditorConfig.editorconfig
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfoInputs.cache
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.AssemblyInfo.cs
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.CoreCompileInputs.cache
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.dll
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\refint\cSharpTest.dll

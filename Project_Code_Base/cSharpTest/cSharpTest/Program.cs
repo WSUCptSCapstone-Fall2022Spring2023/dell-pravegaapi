@@ -11,12 +11,12 @@
     using Pravega;
     using Pravega.ClientFactoryModule;
     using Pravega.Config;
-<<<<<<< HEAD
+
     using Pravega.Event;
 
-=======
+
     using Pathgen;
->>>>>>> main
+
     public static class Program
     {
 

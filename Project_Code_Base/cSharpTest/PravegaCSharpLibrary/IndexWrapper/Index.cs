@@ -9,12 +9,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-<<<<<<< HEAD
+
 using Pravega.Shared;
-=======
+
 using System.Text;
 using Pravega;
->>>>>>> main
+
 using Pravega.Utility;
 using Pravega.Config;
 #pragma warning restore 0105
