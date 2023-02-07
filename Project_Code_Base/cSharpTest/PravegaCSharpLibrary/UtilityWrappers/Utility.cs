@@ -51,6 +51,12 @@ namespace Pravega.Utility
         public virtual string Type(){
             return string.Empty;
         }
+
+        // Checks whether this object has the same pointer as another RustStructPointer
+        public bool IsEqual(RustStructWrapper other)
+        {
+            if(other._rustStructPointer == this._rustStructPointer) return true; else return false;
+        }
     }
 
 
@@ -300,7 +306,65 @@ namespace Pravega.Utility
             return this.GetEnumerator();
         }
     }
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct GenericSliceStruct<T> {
+        public IntPtr slice_pointer;
+        public uint length;
 
+        public GenericSliceStruct(GCHandle handle, uint count)
+        {
+            this.slice_pointer = handle.AddrOfPinnedObject();
+            this.length = count;
+        }
+        public GenericSliceStruct(IntPtr handle, uint count)
+        {
+            this.slice_pointer = handle;
+            this.length = count;
+        }
+        public T this[int i]
+        {
+            get
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(T));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                return Marshal.PtrToStructure<T>(ptr);
+            }
+            set
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(ushort));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                Marshal.StructureToPtr<T>(value, ptr, false);
+            }
+        }
+        public T UnsafeGet(int i) {
+            var size = Marshal.SizeOf(typeof(T));
+            var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+            return Marshal.PtrToStructure<T>(ptr);     
+        }
+        public T[] Copied
+        {
+            get
+            {
+                var rval = new T[length];
+                for (var i = 0; i < (int)length; i++)
+                {
+                    rval[i] = this[i];
+                }
+                return rval;
+            }
+        }
+        public int Count => (int)length;
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (var i = 0; i < (int)length; ++i)
+            {
+                yield return this[i];
+            }
+        }
+    }
 
 
     /////////////////////////////////////////
@@ -343,6 +407,12 @@ namespace Pravega.Utility
         // Constructor. Creates Custom CSharp string from standard string in C#.
         public CustomCSharpString(string source){
             
+            // Since this can't handle empty strings, always make sure there is a " " assigned at least at all times.
+            if (source == string.Empty)
+            {
+                source = " ";
+            }
+
             // Set up a slice for the CSharp string using Marshal.
             U16Slice source_slice;
             source_slice.slice_pointer = Marshal.StringToHGlobalUni(source);

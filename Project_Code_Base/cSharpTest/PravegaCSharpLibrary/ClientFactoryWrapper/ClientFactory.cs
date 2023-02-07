@@ -18,10 +18,16 @@ namespace Pravega.ClientFactoryModule
 {
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop {
-        
+
         // Set path of ClientFactory .dll specifically
+<<<<<<< HEAD
         public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
 
+=======
+        public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
+        //public const string ClientFactoryDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
+        //public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
+>>>>>>> main
         ////////
         /// Client Factory
         ////////
@@ -50,9 +56,77 @@ namespace Pravega.ClientFactoryModule
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfig")]
         internal static extern IntPtr GetClientFactoryConfig(IntPtr sourceClientFactory);
 
+        // ClientFactory.to_async()
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsync")]
+        internal static extern IntPtr ClientFactoryToAsync(IntPtr sourceClientFactory);
+
+        // ClientFactory testing functions
+        // ClientFactory default constructor time take to complete in milliseconds in rust
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryTime")]
+        internal static extern ulong CreateClientFactoryTime();
+
+        // ClientFactory.new with config time take to complete in milliseconds in rust
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigTime")]
+        internal static extern ulong CreateClientFactoryFromConfigTime();
+
+        // ClientFactory.new_with_runtime time take to complete in milliseconds in rust
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigAndRuntimeTime")]
+        internal static extern ulong CreateClientFactoryFromConfigAndRuntimeTime();
+        
+        // ClientFactory.runtime time take to complete in milliseconds in rust
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeTime")]
+        internal static extern ulong GetClientFactoryRuntimeTime();
+        
+        // ClientFactory.handle time take to complete in milliseconds in rust
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandleTime")]
+        internal static extern ulong GetClientFactoryRuntimeHandleTime();
+        
+        // ClientFactory.config time take to complete in milliseconds in rust
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfigTime")]
+        internal static extern ulong GetClientFactoryConfigTime();
+        
+        // to_async time take to complete in milliseconds in rust
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsyncTime")]
+        internal static extern ulong ClientFactoryToAsyncTime();
+
+
         ////////
         /// 
         ////////
+    }
+
+    // Static class with helper functions used for testing ClientFactory
+    public static class ClientFactoryTestMethods
+    {
+        // Return time it takes in Rust to run "to_async"
+        public static float ToAsyncTime(){
+            return Interop.ClientFactoryToAsyncTime();
+        }
+        // Return time it takes in Rust to run "config"
+        public static float ConfigTime()
+        {
+            return Interop.ClientFactoryToAsyncTime();
+        }
+        // Return time it takes in Rust to run "runtime_handle"
+        public static float HandleTime(){
+            return Interop.GetClientFactoryRuntimeHandleTime();
+        }
+        // Return time it takes in Rust to run "runtime"
+        public static float RuntimeTime(){
+            return Interop.GetClientFactoryRuntimeTime();
+        }
+        // Return time it takes in Rust to run the client factory constructor that takes a runtime and config
+        public static float ConstructorConfigAndRuntimeTime(){
+            return Interop.CreateClientFactoryFromConfigAndRuntimeTime();
+        }
+        // Return time it takes in Rust to run the client factory constructor that takes a config
+        public static float ConstructorConfigTime(){
+            return Interop.CreateClientFactoryFromConfigTime();
+        }
+        // Return time it takes in Rust to the the client factory default constructor
+        public static float DefaultConstructorTime(){
+            return Interop.CreateClientFactoryTime();
+        }
     }
 
     /// Contains the class that wraps the Rust client factory struct through a pointer and .dll function calls.
@@ -77,7 +151,7 @@ namespace Pravega.ClientFactoryModule
             if (factoryConfig.IsNull()){
                 throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
             }
-            else{
+            else{ 
                 // Input pointer into constructor
                 this._rustStructPointer = Interop.CreateClientFactoryFromConfig(factoryConfig.RustStructPointer);
 
@@ -159,6 +233,7 @@ namespace Pravega.ClientFactoryModule
                 }
             }     
         }
+<<<<<<< HEAD
         //Spawns an IndexReader with a ScopedStream as input
         //Full Functionality not yet implemented
         public IndexReader creatIndexReader(ScopedStream s)
@@ -217,6 +292,24 @@ namespace Pravega.ClientFactoryModule
         public DelegationTokenProvider createDelagationTokenProvider(ScopedStream s)
         {
             return new DelegationTokenProvider(s);
+=======
+        
+
+        // Methods
+        // Clones and returns a copy of this client factory's client factory async.
+        public ClientFactoryAsync ToAsync()
+        {
+            if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            else{
+                IntPtr clientFactoryAsyncClone = Interop.ClientFactoryToAsync(this._rustStructPointer);
+                ClientFactoryAsync newClientFactoryAsync = new ClientFactoryAsync();
+                newClientFactoryAsync.RustStructPointer = clientFactoryAsyncClone;
+
+                return newClientFactoryAsync;
+            }
+>>>>>>> main
         }
     }
 

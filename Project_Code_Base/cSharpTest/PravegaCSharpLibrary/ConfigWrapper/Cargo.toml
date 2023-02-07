@@ -20,3 +20,5 @@ retry_wrapper = { path = "../RetryWrapper" }
 utility = { path = "../UtilityWrappers" } 
 pravega-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master" }
 pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }
+pravega-client-retry = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/retry"}
+pravega-client-shared = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/shared"}

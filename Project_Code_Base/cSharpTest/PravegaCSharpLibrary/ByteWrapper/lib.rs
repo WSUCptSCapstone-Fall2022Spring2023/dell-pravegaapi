@@ -14,7 +14,7 @@ use pravega_client_shared::{ScopedStream};
 use pravega_client::{client_factory::ClientFactory};
 use tokio;
 use futures::executor;
-
+use std::thread;
 use std::time::Duration;
 
 use tokio::runtime::Builder;
@@ -23,21 +23,26 @@ use tokio_timer::clock::Clock;
 
 
 #[no_mangle]
-pub async extern "C" fn CreateByteReaderHelper(source_client: &mut ClientFactory) -> *const ByteReader{
+pub extern  "C" fn CreateByteReaderHelper(source_client: &ClientFactory) -> *const ByteReader{
     println!("Creating ScopedStream, changed client");
     // Create default ScopedSegment
     let default_Scoped_Stream: ScopedStream = ScopedStream::from("temp_A/temp_B");
    
     // Create new bytereader
-    println!("CreatingByteReader");
+    println!("CreatingByteReaderAdded handle");
+    //tokio::runtime::Handle::enter(&self);
     
-    let new_byte_reader = source_client.create_byte_reader(default_Scoped_Stream).await;
+    //println!("Handle {:?}", source_client.runtime_handle().runtime_flavor());
+   
+    let new_byte_reader = source_client.create_byte_reader(default_Scoped_Stream);
+    
 
     // Box and return client factory
     println!("Boxing and returning");
     let byte_reader_box = Box::new(new_byte_reader);
     let box_pointer: *const ByteReader = Box::into_raw(byte_reader_box) as *const ByteReader;
     return box_pointer;
+    
 }
 
 #[no_mangle]

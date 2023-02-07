@@ -173,6 +173,7 @@ impl CustomRustString{
     pub fn from_string(source_string: String) -> CustomRustString{
         let string_size: usize = source_string.len() as usize;
         let mut source_string_clone: String = source_string.clone();
+        println!("capacity: {0}, string_slice{1}", string_size, source_string_clone);
         unsafe{
             return CustomRustString 
             { 

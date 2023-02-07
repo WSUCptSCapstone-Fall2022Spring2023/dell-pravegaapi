@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "cSharpTest/1.0.0": {
+        "dependencies": {
+          "PravegaCSharpLibrary": "1.0.0"
+        },
+        "runtime": {
+          "cSharpTest.dll": {}
+        }
+      },
+      "PravegaCSharpLibrary/1.0.0": {
+        "runtime": {
+          "PravegaCSharpLibrary.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "cSharpTest/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PravegaCSharpLibrary/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -16,6 +16,7 @@ members = [
     "ConfigWrapper",
     "ConnectionPoolWrapper",
     "ControllerClientWrapper",
+    "EventWrapper",
     "IndexWrapper",
     "RetryWrapper",
     "SharedWrapper",
