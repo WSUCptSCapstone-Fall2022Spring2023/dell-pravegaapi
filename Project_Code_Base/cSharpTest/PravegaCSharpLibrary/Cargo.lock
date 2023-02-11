@@ -89,6 +89,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2cb2f989d18dd141ab8ae82f64d1a8cdd37e0840f73a406896cf5e99502fab61"
 
 [[package]]
+name = "async-ffi"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7e73758d044aab514155e8888ed142d408498712c6f82f24e3ee0650d5943b0"
+
+[[package]]
 name = "async-stream"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -229,6 +235,7 @@ checksum = "0d261e256854913907f67ed06efbc3338dfe6179796deefc1ff763fc1aee5535"
 name = "byte_wrapper"
 version = "0.14.14"
 dependencies = [
+ "async-ffi",
  "futures 0.3.25",
  "interoptopus",
  "interoptopus_backend_csharp",
@@ -236,7 +243,6 @@ dependencies = [
  "pravega-client-config",
  "pravega-client-shared",
  "tokio 1.24.2",
- "tokio-timer",
  "utility",
 ]
 
@@ -2391,6 +2397,15 @@ checksum = "0160a13a177a45bfb43ce71c01580998474f556ad854dcbca936dd2841a5c556"
 dependencies = [
  "core-foundation-sys",
  "libc",
+]
+
+[[package]]
+name = "segment_wrapper"
+version = "0.14.14"
+dependencies = [
+ "interoptopus",
+ "interoptopus_backend_csharp",
+ "utility",
 ]
 
 [[package]]

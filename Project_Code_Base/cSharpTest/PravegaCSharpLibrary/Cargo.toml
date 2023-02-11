@@ -19,6 +19,7 @@ members = [
     "EventWrapper",
     "IndexWrapper",
     "RetryWrapper",
+    "SegmentWrapper",
     "SharedWrapper",
     "UtilityWrappers",
     "WireProtocolWrapper",

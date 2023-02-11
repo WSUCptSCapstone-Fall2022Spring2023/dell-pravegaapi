@@ -29,20 +29,25 @@ namespace Pravega.ClientFactoryModule
         public const string ByteDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\byte_wrapper.dll";
 
         ////////
-        /// Byte
+        /// Byte Writer
         ////////
         public delegate void rustCallback(IntPtr arg);
-        // ByteReader default constructor (default client config, generated runtime)
+        // ByteWriter default constructor (default client config, generated runtime)
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteWriter")]
-        internal static extern IntPtr CreateByteWriter(IntPtr clientFactoryPointer, CustomRustString scope, CustomRustString stream, rustCallback callback);
+        internal static extern IntPtr CreateByteWriter(IntPtr clientFactoryPointer, CustomRustString scope, CustomRustString stream, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
 
+        // ByteWriter current offset getter
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterCurrentOffset")]
         internal static extern ulong ByteWriterCurrentOffset(IntPtr byteWriterPointer);
 
 
         ////////
-        /// 
+        /// Byte Reader
         ////////
+        // ByteReader current offset getter
+         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
+        internal static extern ulong ByteReaderCurrentOffset(IntPtr byteWriterPointer);
+
     }
 
     public class ByteWriter : RustStructWrapper{

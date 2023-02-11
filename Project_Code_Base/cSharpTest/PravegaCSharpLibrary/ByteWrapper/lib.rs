@@ -24,7 +24,14 @@ use std::time::Duration;
 use tokio::runtime::{Builder, Runtime};
 use tokio::task;
 
+// ByteReader.current_offset
+#[no_mangle]
+pub extern "C" fn ByteReaderCurrentOffset(source_byte_reader: &mut ByteReader) -> u64
+{
+    return source_byte_reader.current_offset();
+}
 
+// ByteWriter default constructor
 #[no_mangle]
 pub extern "C" fn CreateByteWriter(
     client_factory_async_ptr: &mut ClientFactoryAsync,
@@ -50,7 +57,7 @@ pub extern "C" fn CreateByteWriter(
         let spawn_factory: ClientFactoryAsync = unsafe { std::ptr::read(client_factory_async_ptr) };
 
         // Create the new bytewriter asynchronously with the inputted runtime and the 
-        tokio::spawn( async move {
+        spawn_factory.runtime_handle().spawn( async move {
             let result: ByteWriter = spawn_factory.create_byte_writer(ss).await;
             let result_box: Box<ByteWriter> = Box::new(result);
             let result_ptr: *const ByteWriter = Box::into_raw(result_box);
@@ -59,22 +66,8 @@ pub extern "C" fn CreateByteWriter(
     
 }
 
-#[no_mangle]
-pub extern "C" fn CreateByteWriterHelper(source_client: &mut ClientFactory) -> *const ByteWriter{
-    println!("test");
 
-    // Create default ScopedSegment
-    let default_Scoped_Stream: ScopedStream = ScopedStream::from("temp_A/temp_B");
-   
-    // Create new bytereader
-    let new_byte_writer  = source_client.create_byte_writer(default_Scoped_Stream);
-
-    // Box and return client factory
-    let byte_writer_box = Box::new(new_byte_writer);
-    let box_pointer: *const ByteWriter = Box::into_raw(byte_writer_box) as *const ByteWriter;
-    return box_pointer;
-}
-
+// ByteWriter.current_offset
 #[no_mangle]
 pub extern "C" fn ByteWriterCurrentOffset(source_byte_writer: &mut ByteWriter) -> u64
 {

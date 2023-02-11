@@ -247,6 +247,8 @@ namespace Pravega.ClientFactoryModule
                 return newClientFactoryAsync;
             }
         }
+
+        // Creates a Byte Writer using this object's client factory async.
         public async Task<ByteWriter> CreateByteWriter(ScopedStream writerScopedStream){
 
             ByteWriter returnWriter = new ByteWriter();

@@ -1,6 +1,6 @@
 [package]
-name = "event_wrapper"
-authors = ["Sam Lopez"]
+name = "segment_wrapper"
+authors = ["John Sbur"]
 version = "0.14.14"
 edition = "2018"
 license = "Apache-2.0"
