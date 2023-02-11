@@ -12,47 +12,76 @@ using Pravega;
 
 namespace Pravega.Utility
 {
-    /////////////////////////////////////////
-    /// Abstract Class for which all Rust Structs are represented in C#.
-    /////////////////////////////////////////
+    /// <summary>
+    ///    Abstract Class for most Pravega objects.
+    ///    The C# library works in most part by communicating between the Pravega Rust code
+    ///    and representing it in C#. A complex object can be created in Rust and stored in
+    ///    unmanaged memory while keeping a reference to that object in C#. This is the 
+    ///    basis of this class and with a reference to the object, we can perform typical
+    ///    operations on it from C# by calling Pravega Rust code.
+    /// </summary>
     public class RustStructWrapper{
 
+        /// <summary>
+        ///  Represents a reference to this object's Rust object counterpart.
+        /// </summary>
         protected IntPtr _rustStructPointer;
 
-        // Default constructor
+        /// <summary>
+        ///  Default constructor for RustStructWrapper. Initialized the internal pointer to be IntPtr.Zero.
+        /// </summary>
         public RustStructWrapper(){
             this._rustStructPointer = IntPtr.Zero;
         }
 
-        // Getter for the rust pointer
+        /// <summary>
+        ///  Allows internal code to get or set this object's internal pointer to a rust object.
+        /// </summary>
         internal IntPtr RustStructPointer{
             get{return this._rustStructPointer;}
             set{this._rustStructPointer = value;}
         }
 
-        // Internal so that only this library can set the pointer and the user cannot.
-        internal void SetRustStructPointer(IntPtr newPointer){
-            this._rustStructPointer = newPointer;
-        }
-
-        // Method for determining if the class's pointer was consumed in rust or uninitialized.
+        /// <summary>
+        ///  A method that determines whether this object is a null reference or not.
+        ///  
+        ///  Note: In rust, memory management is much different than C#. Unlike a 
+        ///     garbage collector in C#, Rust manages memory by ownership. What this 
+        ///     can lead to is portions of memory being deallocated after a function 
+        ///     is called using an object in Rust. To represent that in C#, an object
+        ///     may be set to null after being used in a function, showing that code
+        ///     in Rust deleted the object that this class refers to. More information:
+        ///     https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html
+        /// </summary>
+        /// <returns>
+        ///     -True if this object's reference is set to IntPtr.Zero, meaning it 
+        ///         either was not initialized, or it was deallocated at some point.
+        ///     -False if this object's reference is not set to IntPtr.Zero. This
+        ///         likely implies that this object is still allocated in unmanaged
+        ///         memory.
+        /// </returns>
         public bool IsNull(){
             if(this._rustStructPointer == IntPtr.Zero) return true;
             else return false;
         }
 
-        // Method to mark the class as consumed or null. (Rust ownership consumed the object this 
-        //  class's pointer pointed to. Therefore, the pointer here is marked as null for safety)
+        /// <summary>
+        ///  This method marks this object as being deallocated and therefore no longer accessible.
+        /// </summary>
         public void MarkAsNull(){
             this._rustStructPointer = IntPtr.Zero;
         }
 
-        // Virtual method meant to type check
-        public virtual string Type(){
-            return string.Empty;
-        }
-
-        // Checks whether this object has the same pointer as another RustStructPointer
+        /// <summary>
+        ///     This function compares this object and the inputted object, comparing their references.
+        /// </summary>
+        /// <param name="other">
+        ///     The other Rust object you want to compare.
+        /// </param>
+        /// <returns>
+        ///     -True if the inputted object is the same as this object.
+        ///     -False if the inputted object is not the same as this object.
+        /// </returns>
         public bool IsEqual(RustStructWrapper other)
         {
             if(other._rustStructPointer == this._rustStructPointer) return true; else return false;
@@ -60,30 +89,27 @@ namespace Pravega.Utility
     }
 
 
-    // Classes from Rust Libraries that need representation in C#
+    /// <summary>
+    ///  This class represents a TokioRuntime object created through Rust code.
+    ///     Runtime represents a thread that executions can occur on in the background
+    ///     apart from C# execution. Helps utilize asynchronous operations on both the
+    ///     C# side and Rust side of the code.
+    ///  More information: https://tokio.rs/
+    /// </summary>
     public class TokioRuntime : RustStructWrapper{
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "tokio.Runtime";
-        }
     }
+    /// <summary>
+    ///  This class represents a TokioHandle object created through Rust code.
+    ///  More information: https://tokio.rs/
+    /// </summary>
     public class TokioHandle : RustStructWrapper{
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "tokio.Handle";
-        }
     }
   
-    // Contains pointer to rust u128 and functions for running computations with the u128.
-    public class CustomU128 : RustStructWrapper
+    /// <summary>
+    ///  Represents a Unsigned 128bit integer.
+    /// </summary>
+    public class U128 : RustStructWrapper
     {
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "u128";
-        }
     }
     
     /////////////////////////////////////////
@@ -96,7 +122,7 @@ namespace Pravega.Utility
     /// Used to hold a slice of Rust strings (Usually a vectory or array)
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct CustomRustStringSlice
+    internal partial struct CustomRustStringSlice
     {
         public IntPtr slice_pointer;
         public uint length;
@@ -104,7 +130,7 @@ namespace Pravega.Utility
     /// Used to hold a slice of Rust strings (Usually a vectory or array)
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct CustomCSharpStringSlice
+    internal partial struct CustomCSharpStringSlice
     {
         public IntPtr slice_pointer;
         public uint length;
@@ -112,12 +138,12 @@ namespace Pravega.Utility
     ///A pointer to an array of data someone else owns which may be modified.
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct U8Slice
+    internal partial struct U8Slice
     {
         public IntPtr slice_pointer;
         public uint length;
     }
-    public partial struct U8Slice : IEnumerable<byte>
+    internal partial struct U8Slice : IEnumerable<byte>
     {
         public U8Slice(GCHandle handle, uint count)
         {
@@ -172,12 +198,12 @@ namespace Pravega.Utility
     }
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct U16Slice
+    internal partial struct U16Slice
     {
         public IntPtr slice_pointer;
         public uint length;
     }
-    public partial struct U16Slice : IEnumerable<ushort>
+    internal partial struct U16Slice : IEnumerable<ushort>
     {
         public U16Slice(GCHandle handle, uint count)
         {
@@ -231,81 +257,14 @@ namespace Pravega.Utility
             return this.GetEnumerator();
         }
     }
-    /*
-        Demonstration on converting a string into a u16 slice
 
-        string testString = "test";
-        U16Slice test;
-        test.slice_pointer = Marshal.StringToHGlobalAnsi(testString);
-        test.length = (ulong)testString.Length;
-        CustomCSharpString testCustomString = new CustomCSharpString();
-        testCustomString.string_slice = test;
-        for (ulong i = 0; i < testCustomString.string_slice.length; i++)
-        {
-            Console.WriteLine((char)testCustomString.string_slice[(int)i]);
-        }           
-    */
-    [Serializable]
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct U128U64TupleSlice
-    {
-        public IntPtr slice_pointer;
-        public uint length;
-    }
-    public partial struct U128U64TupleSlice : IEnumerable<U128U64TupleSlice>
-    {
-        public U128U64TupleSlice(GCHandle handle, uint count)
-        {
-            this.slice_pointer = handle.AddrOfPinnedObject();
-            this.length = count;
-        }
-        public U128U64TupleSlice(IntPtr handle, uint count)
-        {
-            this.slice_pointer = handle;
-            this.length = count;
-        }
-        public U128U64TupleSlice this[int i]
-        {
-            get
-            {
-                if (i >= Count) throw new IndexOutOfRangeException();
-                var size = 200; //128+64 plus little extra
-                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
-                return Marshal.PtrToStructure<U128U64TupleSlice>(ptr);
-            }
-            set
-            {
-                if (i >= Count) throw new IndexOutOfRangeException();
-                var size = 200;
-                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
-                Marshal.StructureToPtr<U128U64TupleSlice>(value, ptr, false);
-            }
-        }
-        public U128U64TupleSlice[] Copied
-        {
-            get
-            {
-                var rval = new U128U64TupleSlice[length];
-                for (var i = 0; i < (int)length; i++)
-                {
-                    rval[i] = this[i];
-                }
-                return rval;
-            }
-        }
-        public int Count => (int)length;
-        public IEnumerator<U128U64TupleSlice> GetEnumerator()
-        {
-            for (var i = 0; i < (int)length; ++i)
-            {
-                yield return this[i];
-            }
-        }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
-    }
+    /// <summary>
+    ///     Represents an array of objects allocated in Rust that need
+    ///     representation in C#.
+    /// </summary>
+    /// <typeparam name="T">
+    ///     Datatype of the Slice being represented.
+    /// </typeparam>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     internal struct GenericSliceStruct<T> {
@@ -375,7 +334,7 @@ namespace Pravega.Utility
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public partial struct U16Tuple
+    internal partial struct U16Tuple
     {
         ushort value1;
         ushort value2;
@@ -386,15 +345,29 @@ namespace Pravega.Utility
     /////////////////////////////////////////
     /// String Structs/Classes
     /////////////////////////////////////////
+
     /// <summary>
-    ///     Helper struct that helps transfer strings between Rust and C# as this struct is C palatable. Represents a UTF-16 C# String
+    ///     A class that represents an C# string in unmanaged memory.
+    ///     Used for sending strings from C# into Pravega Rust code.
+    ///     
+    ///     Special Note: Can never store an empty string.
     /// </summary>
     public class CustomCSharpString
     {
+        /// <summary>
+        ///  Represents the max length of this string.
+        /// </summary>
         protected ulong capacity;
-        protected U16Slice string_slice;
 
-        // Default Constructor. Creates with string " "
+        /// <summary>
+        ///  Represents the reference to the unmanaged C# string.
+        /// </summary>
+        internal U16Slice string_slice;
+
+        /// <summary>
+        ///  Default constructor. Creates an unmanaged string containing 
+        ///     only ' '. 
+        /// </summary>
         public CustomCSharpString(){
             
             // Set up slice with length equal to source's length
@@ -403,8 +376,12 @@ namespace Pravega.Utility
             this.capacity = newCustomCSharpString.capacity;
         }
 
-        
-        // Constructor. Creates Custom CSharp string from standard string in C#.
+        /// <summary>
+        ///  Constructor. Creates an unmanaged string from an inputted C# string.
+        /// </summary>
+        /// <param name="source">
+        ///  Managed string that this object will be created from.
+        /// </param>
         public CustomCSharpString(string source){
             
             // Since this can't handle empty strings, always make sure there is a " " assigned at least at all times.
@@ -413,17 +390,25 @@ namespace Pravega.Utility
                 source = " ";
             }
 
+            // Clone the source string so as to not rip the reference from managed memory.
+            string sourceClone = (string)source.Clone();
+            
             // Set up a slice for the CSharp string using Marshal.
             U16Slice source_slice;
-            source_slice.slice_pointer = Marshal.StringToHGlobalUni(source);
-            source_slice.length = (uint)source.Length;
+            source_slice.slice_pointer = Marshal.StringToHGlobalUni(sourceClone);
+            source_slice.length = (uint)sourceClone.Length;
 
             // Set this object's string slice to the source_slice and capacity to being the length
             this.string_slice = source_slice;
             this.capacity = source_slice.length;
         }
 
-        // Constructor from CustomRustString.
+        /// <summary>
+        ///  Constructor. Creates an unmanaged string from an inputted Rust string. 
+        /// </summary>
+        /// <param name="source">
+        ///  Unmanaged Rust string that this object will be created from.
+        /// </param>
         public CustomCSharpString(CustomRustString source){
 
             // Grab all the bytes of the source
@@ -446,7 +431,12 @@ namespace Pravega.Utility
             this.string_slice = new_custom.string_slice;
         }
 
-        // Constructor from CustomCSharpString.
+        /// <summary>
+        ///  Constructor. Creates an unmanaged C# string cloned from an inputted unmanaged C# string.
+        /// </summary>
+        /// <param name="source">
+        ///  Unmanaged C# string to be cloned from.
+        /// </param>
         public CustomCSharpString(CustomCSharpString source){
             
             // Verify source isn't empty
@@ -467,12 +457,23 @@ namespace Pravega.Utility
             }
         }
 
-        // Destructor. Destroys the string slice this points to.
+        /// <summary>
+        ///  Destructor. Frees the memory that this object points to.
+        /// </summary>
         ~CustomCSharpString(){
             Marshal.FreeHGlobal(this.string_slice.slice_pointer);
+            this.string_slice.slice_pointer = IntPtr.Zero;
+            this.string_slice.length = 0;
+            this.capacity = 0;
         } 
     
-        // Deep Clone function. Returns copy as a CustomCSharpString
+        /// <summary>
+        ///  Performs a deep clone on this object's unmanaged memory. Stores the clone in
+        ///  a new CustomCSharpString.
+        /// </summary>
+        /// <returns>
+        ///  A CustomCSharpString object containing a reference to the cloned memory.
+        /// </returns>
         public CustomCSharpString Clone(){
 
             // this.NativeString generates a new managed string. The constructor from a managed string moves it into unmanaged memory, completing the deep clone.
@@ -481,14 +482,24 @@ namespace Pravega.Utility
         }
 
         // Setters and Getters
+        /// <summary>
+        ///  Gets the capacity of this string. Represents the max length.
+        /// </summary>
         public ulong Capacity{
             get{return this.capacity;}
         }
 
+        /// <summary>
+        ///  Gets the internal slice that represents this string.
+        /// </summary>
         internal U16Slice StringSlice{
             get{return this.string_slice;}
         }
 
+        /// <summary>
+        ///  Gets this object in the form of a standard C# string.
+        ///  Sets this object based on a standard C# string.
+        /// </summary>
         public string NativeString{
             get
             {
@@ -515,6 +526,10 @@ namespace Pravega.Utility
             }
         }
 
+        /// <summary>
+        ///  Gets this object in the form of a UTF-8 Rust string.
+        ///  Sets this object based on a UTF-8 Rust string.
+        /// </summary>
         public CustomRustString RustString{
             get
             {
@@ -554,24 +569,22 @@ namespace Pravega.Utility
             }
         }
     
-        // Overrideable type function
-        public virtual string Type(){
-            return "Utility.CustomCSharpString";
-        }
     }
+
     /// <summary>
-    ///     Helper struct that helps transfer strings between Rust and C# as this struct is C palatable. Represents a UTF-8 Rust String
+    ///     Helper struct that helps transfer strings between Rust and C# as this struct is C palatable.
+    ///     Represents a UTF-8 Rust String.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public partial struct CustomRustString
     {
-        public ulong capacity;
-        public U8Slice string_slice;
+        internal ulong capacity;
+        internal U8Slice string_slice;
     }
     public partial struct CustomRustString
     {
-        public CustomRustString(uint length){
+        internal CustomRustString(uint length){
 
             // Create an empty array of the requested length
             byte[] byteArray = new byte[length];
@@ -584,19 +597,6 @@ namespace Pravega.Utility
             this.string_slice.slice_pointer = pointer;
             this.string_slice.length = length;
             this.capacity = length;
-        }
-    }
-
-
-    
-
-    public class InteropException<T> : Exception
-    {
-        public T Error { get; private set; }
-
-        public InteropException(T error): base($"Something went wrong: {error}")
-        {
-            Error = error;
         }
     }
 

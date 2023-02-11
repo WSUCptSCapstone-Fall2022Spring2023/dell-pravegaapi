@@ -15,7 +15,7 @@ using Pravega.Utility;
 namespace Pravega.Shared
 {
     //  ***** Wrapper for TxId *****
-    public class TxId : CustomU128
+    public class TxId : U128
     {
 #pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
@@ -28,16 +28,17 @@ namespace Pravega.Shared
     //  ***** Wrapper for WriterID *****
     public class WriterId
     {
-        private CustomU128 value;
+        private U128 value;
 
         // Default Constructor
         public WriterId()
         {
-            this.value = new CustomU128();
+            this.value = new U128();
         }
 
         // Setter and Getter for value
-        public CustomU128 Value{
+        public U128 Value
+        {
             get{return this.value;}
             set{this.value = value;}
         }

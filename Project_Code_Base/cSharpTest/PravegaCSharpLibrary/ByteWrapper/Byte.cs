@@ -31,7 +31,7 @@ namespace Pravega.ClientFactoryModule
         ////////
         /// Byte Writer
         ////////
-        public delegate void rustCallback(IntPtr arg);
+        internal delegate void rustCallback(IntPtr arg);
         // ByteWriter default constructor (default client config, generated runtime)
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteWriter")]
         internal static extern IntPtr CreateByteWriter(IntPtr clientFactoryPointer, CustomRustString scope, CustomRustString stream, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
@@ -50,15 +50,11 @@ namespace Pravega.ClientFactoryModule
 
     }
 
+    /// <summary>
+    ///     Allows for writing raw bytes directly to a segment.
+    ///     Typically created from a ClientFactory.
+    /// </summary>
     public class ByteWriter : RustStructWrapper{
-
-        // Override type to return this class's name.
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type()
-        {
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "ByteWriter";
-        }
 
         // Default constructor for byte writer. Initializes with no pointer
         internal ByteWriter()
@@ -109,18 +105,39 @@ namespace Pravega.ClientFactoryModule
             }
         }
     }
-    /// Contains the class that wraps the Rust client factory struct through a pointer and .dll function calls.
+
+
+    /// <summary>
+    ///     A ByteReader enables reading raw bytes from a segment. 
+    ///     Typically created from a ClientFactory.
+    /// </summary>
     public class ByteReader : RustStructWrapper
     {
-        // Override type to return this class's name.
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type()
+        /// <summary>
+        ///  Default constructor for ByteReader. Initializes with this object's pointer set to zero.
+        /// </summary>
+        internal ByteReader()
         {
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "ByteReader";
+            this._rustStructPointer = IntPtr.Zero;
         }
 
-
+        /// <summary>
+        ///  Gets this object's current offset.
+        /// </summary>
+        public ulong CurrentOffset
+        {
+            get
+            {
+                if (!this.IsNull())
+                {
+                    return Interop.ByteReaderCurrentOffset(this.RustStructPointer);
+                }
+                else
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+            }
+        }
     }
 
 
