@@ -103,6 +103,16 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
+        public ulong AvailableBytes{
+            get{
+                if (!this.IsNull()){
+                    return Interop.ByteWriterAvailable(this.RustStructPointer);
+                }
+                else{
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+            }
+        }
     }
     /// Contains the class that wraps the Rust client factory struct through a pointer and .dll function calls.
     public class ByteReader : RustStructWrapper

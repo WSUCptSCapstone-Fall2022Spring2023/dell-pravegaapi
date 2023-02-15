@@ -1,10 +1,6 @@
 [package]
 name = "event_wrapper"
-<<<<<<< HEAD
-authors = ["John Sbur"]
-=======
 authors = ["Sam Lopez"]
->>>>>>> main
 version = "0.14.14"
 edition = "2018"
 license = "Apache-2.0"

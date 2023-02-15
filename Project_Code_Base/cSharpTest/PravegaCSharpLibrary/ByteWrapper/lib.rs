@@ -80,3 +80,8 @@ pub extern "C" fn ByteWriterCurrentOffset(source_byte_writer: &mut ByteWriter) -
 {
     return source_byte_writer.current_offset();
 }
+
+pub extern "C" fn ByteWriterAvailable(source_byte_writer: &mut ByteWriter) -> u64
+{
+    return source_byte_writer.available();
+}
