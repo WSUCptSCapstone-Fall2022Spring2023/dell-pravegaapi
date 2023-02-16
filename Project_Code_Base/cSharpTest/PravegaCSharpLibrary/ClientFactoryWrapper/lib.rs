@@ -27,7 +27,7 @@ extern "C" fn CreateClientFactory() -> *const ClientFactory{
 
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -47,7 +47,7 @@ extern "C" fn CreateClientFactoryTime() -> u64
 
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
     // Run function
@@ -84,7 +84,7 @@ extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -127,7 +127,7 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -162,7 +162,7 @@ extern "C" fn GetClientFactoryRuntimeTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -198,7 +198,7 @@ extern "C" fn GetClientFactoryRuntimeHandleTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -232,7 +232,7 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -282,7 +282,7 @@ extern "C" fn ClientFactoryToAsyncTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
