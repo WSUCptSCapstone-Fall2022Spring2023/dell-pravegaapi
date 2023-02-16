@@ -25,7 +25,7 @@ namespace Pravega.Sync
     {
 
         // Set path of sync .dll specifically
-        public const string SyncDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\byte_wrapper.dll";
+        public const string SyncDLLPath = "byte_wrapper.dll";//@"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\byte_wrapper.dll";
 
         ////////
         /// sync

@@ -39,6 +39,8 @@ namespace Pravega.ClientFactoryModule
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterCurrentOffset")]
         internal static extern ulong ByteWriterCurrentOffset(IntPtr byteWriterPointer);
 
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteReaderHelper")]
+        internal static extern IntPtr CreateByteReader(IntPtr l);
 
         ////////
         /// 
@@ -115,7 +117,13 @@ namespace Pravega.ClientFactoryModule
             return "ByteReader";
         }
 
+        public ByteReader(ScopedStream s, IntPtr clientFactory)
 
+        {
+
+            this.RustStructPointer = Interop.CreateByteReader(clientFactory);
+
+        }
     }
 
 

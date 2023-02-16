@@ -157,6 +157,11 @@ namespace Pravega.ClientFactoryModule
             }             
         }
 
+        public ByteReader createByteReader(ScopedStream s)
+        {
+            return new ByteReader(s, this.RustStructPointer);
+        }
+
         // Constructor. Initializes with a ClientConfig and Runtime. Consumes ClientConfig and Runtime (sets to null after)
         public ClientFactory(ClientConfig factoryConfig, TokioRuntime factoryRuntime){
 
