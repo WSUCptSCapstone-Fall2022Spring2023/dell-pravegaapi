@@ -232,7 +232,7 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    

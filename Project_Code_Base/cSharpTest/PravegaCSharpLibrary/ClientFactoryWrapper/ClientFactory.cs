@@ -25,6 +25,7 @@ namespace Pravega.ClientFactoryModule
         public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
+
         ////////
         /// Client Factory
         ////////
@@ -92,72 +93,164 @@ namespace Pravega.ClientFactoryModule
         ////////
     }
 
-    // Static class with helper functions used for testing ClientFactory
+    /// <summary>
+    ///  Testing class. Measures time it takes to execute an equivalent function in Rust.
+    ///     Time returned represents execution time in nanoseconds.
+    ///  
+    ///  Ex. C# contains ClientFactory.ToAsync()
+    ///   Rust also contains a method called to_async() that is ran from
+    ///   a clientfactory. The function ToAsyncTime() runs that function 
+    ///   in a Rust .dll call and returns how long it took to execute.
+    /// </summary>
     public static class ClientFactoryTestMethods
     {
-        // Return time it takes in Rust to run "to_async"
+        /// <summary>
+        ///   Return time it takes in Rust to run "to_async"
+        /// </summary>
+        /// <returns>
+        ///  Execution time in nanoseconds
+        /// </returns>
         public static float ToAsyncTime(){
             return Interop.ClientFactoryToAsyncTime();
         }
-        // Return time it takes in Rust to run "config"
+
+        /// <summary>
+        ///  Return time it takes in Rust to run "config"
+        /// </summary>
+        /// <returns>
+        ///  Execution time in nanoseconds
+        /// </returns> 
         public static float ConfigTime()
         {
             return Interop.ClientFactoryToAsyncTime();
         }
-        // Return time it takes in Rust to run "runtime_handle"
+
+        /// <summary>
+        ///   Return time it takes in Rust to run "runtime_handle"
+        /// </summary>
+        /// <returns>
+        ///  Execution time in nanoseconds
+        /// </returns>
         public static float HandleTime(){
             return Interop.GetClientFactoryRuntimeHandleTime();
         }
-        // Return time it takes in Rust to run "runtime"
+
+        /// <summary>
+        ///   Return time it takes in Rust to run "runtime"
+        /// </summary>
+        /// <returns>
+        ///  Execution time in nanoseconds
+        /// </returns>
         public static float RuntimeTime(){
             return Interop.GetClientFactoryRuntimeTime();
         }
-        // Return time it takes in Rust to run the client factory constructor that takes a runtime and config
+         
+        /// <summary>
+        ///   Return time it takes in Rust to run the client factory constructor that takes a runtime and config
+        /// </summary>
+        /// <returns>
+        ///  Execution time in nanoseconds
+        /// </returns>
         public static float ConstructorConfigAndRuntimeTime(){
             return Interop.CreateClientFactoryFromConfigAndRuntimeTime();
         }
-        // Return time it takes in Rust to run the client factory constructor that takes a config
+
+        /// <summary>
+        ///   Return time it takes in Rust to run the client factory constructor that takes a config
+        /// </summary>
+        /// <returns>
+        ///  Execution time in nanoseconds
+        /// </returns>
         public static float ConstructorConfigTime(){
             return Interop.CreateClientFactoryFromConfigTime();
         }
-        // Return time it takes in Rust to the the client factory default constructor
+
+        /// <summary>
+        ///   Return time it takes in Rust to the the client factory default constructor
+        /// </summary>
+        /// <returns>
+        ///  Execution time in nanoseconds
+        /// </returns>
         public static float DefaultConstructorTime(){
             return Interop.CreateClientFactoryTime();
         }
     }
 
-    /// Contains the class that wraps the Rust client factory struct through a pointer and .dll function calls.
+    /// <summary>
+    ///  Applications should use ClientFactory to create resources they need.
+    ///
+    ///  ClientFactory contains a connection pool that is shared by all the 
+    ///    readers and writers it creates. It also contains a tokio runtime that is 
+    ///    used to drive async tasks. Spawned tasks in readers and writers are tied 
+    ///    to this runtime. Tokio runtime represents the asynchronous execution
+    ///    environement that client factory will execute asynchronous functions from.
+    ///     
+    /// </summary>
     public class ClientFactory : RustStructWrapper
     {
-        // Override type to return this class's name.
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "ClientFactory";
-        }
-
-        // Default constructor. Initializes with a default ClientConfig
+        /// <summary>
+        ///  Default Constructor. Initializes ClientFactory with a default ClientConfig and
+        ///  a generated config.
+        ///  LocalHost = 9090
+        /// 
+        ///  Default configuration:
+        ///   MaxConnectionsInPool = uint.MaxValue
+        ///   MaxControllerConnections = 3
+        ///   ConnectionType = Tokio
+        ///   RetryPolicy = new RetryWithBackoff(); // Default constructor
+        ///   TransactionTimeoutTime = 9000
+        ///   Mock = false
+        ///   IsTlsEnabled = (determined based on application)
+        ///   IsAuthEnabled = false
+        ///   RequestTimeout = (determined based on application)
+        /// </summary>
         public ClientFactory(){
             this._rustStructPointer = Interop.CreateClientFactory();
         }
 
-        // Constructor. Initializes with a ClientConfig. Consumes ClientConfig (sets to null after)
+        /// <summary>
+        ///  Constructor. Initializes with a ClientConfig.
+        ///     Consumes ClientConfig (sets to null after)
+        /// </summary>
+        /// <param name="factoryConfig">
+        ///  Config to base the client factory on.
+        /// </param>
+        /// <exception cref="PravegaException">
+        ///  This error is thrown when an object has a bad
+        ///     reference or no reference. In this case, the
+        ///     inputted clientconfig was set to null.
+        /// </exception>
         public ClientFactory(ClientConfig factoryConfig){
 
             // Grab pointer from factoryConfig. If it's null, then throw an exception
             if (factoryConfig.IsNull()){
                 throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
             }
-            else{ 
+            else{
                 // Input pointer into constructor
                 this._rustStructPointer = Interop.CreateClientFactoryFromConfig(factoryConfig.RustStructPointer);
 
                 // Mark ClientConfig as null
                 factoryConfig.MarkAsNull();
-            }             
+            }
         }
 
-        // Constructor. Initializes with a ClientConfig and Runtime. Consumes ClientConfig and Runtime (sets to null after)
+        /// <summary>
+        ///  Constructor. Initializes with a ClientConfig.
+        ///     Consumes ClientConfig (sets to null after)
+        ///     Consumes Runtime (sets to null after)
+        /// </summary>
+        /// <param name="factoryConfig">
+        ///     Config to base the client factory on.
+        /// </param>
+        /// <param name="factoryRuntime">
+        ///     Runtime this factory will execute in.
+        /// </param>
+        /// <exception cref="PravegaException">
+        ///  This error is thrown when an object has a bad
+        ///     reference or no reference. In this case, the
+        ///     either one or more inputs were set to null.
+        /// </exception>        
         public ClientFactory(ClientConfig factoryConfig, TokioRuntime factoryRuntime){
 
             // Grab pointer from factoryConfig. If it's null, then throw an exception
@@ -179,6 +272,10 @@ namespace Pravega.ClientFactoryModule
 
 
         // Setters and Getters
+        /// <summary>
+        ///  Gets the runtime object that this clientfactory's asynchronous operations 
+        ///  execute on.
+        /// </summary>
         public TokioRuntime Runtime{
             get
             {
@@ -196,6 +293,10 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
+        /// <summary>
+        ///  Gets the handle of the runtime object that this clientfactory's asynchronous
+        ///  operations execute on.
+        /// </summary>
         public TokioHandle Handle{
             get
             {
@@ -213,6 +314,9 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
+        /// <summary>
+        /// Gets the configuration settings of this client factory.
+        /// </summary>
         public ClientConfig Config{
             get
             {
@@ -233,7 +337,16 @@ namespace Pravega.ClientFactoryModule
         
 
         // Methods
-        // Clones and returns a copy of this client factory's client factory async.
+        /// <summary>
+        ///   Gets the asynchronous factory this object is tied to, clones it, and returns
+        ///   it.
+        /// </summary>
+        /// <returns>
+        ///   A clone of this object's ClientFactoryAsync.
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///   This error is thrown if this object is set to null or uninitialized.
+        /// </exception>
         public ClientFactoryAsync ToAsync()
         {
             if (this.IsNull()){
@@ -248,7 +361,16 @@ namespace Pravega.ClientFactoryModule
             }
         }
 
-        // Creates a Byte Writer using this object's client factory async.
+        /// <summary>
+        ///  Creates a new byte writer from a ScopedStream input and uses this object's
+        ///  ClientFactoryAsync.
+        /// </summary>
+        /// <param name="writerScopedStream">
+        ///  ScopedStream to base the bytewriter on.
+        /// </param>
+        /// <returns>
+        ///  Newly created bytewriter running on this clientfactory's runtime.
+        /// </returns>
         public async Task<ByteWriter> CreateByteWriter(ScopedStream writerScopedStream){
 
             ByteWriter returnWriter = new ByteWriter();
