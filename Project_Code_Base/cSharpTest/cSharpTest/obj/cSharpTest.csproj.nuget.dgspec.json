@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj": {}
+    "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj": {}
   },
   "projects": {
-    "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj": {
+    "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+        "projectUniqueName": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
         "projectName": "cSharpTest",
-        "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
-        "packagesPath": "C:\\Users\\eveer\\.nuget\\packages\\",
-        "outputPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
+        "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+        "packagesPath": "C:\\Users\\brand\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\eveer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\brand\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
-                "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
+              "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
+                "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
               }
             }
           }
@@ -63,17 +63,17 @@
         }
       }
     },
-    "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
+    "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
+        "projectUniqueName": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
         "projectName": "PravegaCSharpLibrary",
-        "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
-        "packagesPath": "C:\\Users\\eveer\\.nuget\\packages\\",
-        "outputPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\obj\\",
+        "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
+        "packagesPath": "C:\\Users\\brand\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\eveer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\brand\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
