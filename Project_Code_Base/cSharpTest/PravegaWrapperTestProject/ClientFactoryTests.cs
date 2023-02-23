@@ -61,9 +61,10 @@ namespace PravegaWrapperTestProject
             timer.Start();
             ClientFactory testFactory = new ClientFactory();
             timer.Stop();
-
+            double ticks = timer.ElapsedTicks;
+            double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
             // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.DefaultConstructorTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.DefaultConstructorTime() * 0.85) < timerNanoseconds);
         }
 
         // Unit Test. Client Factory constructor from client config
@@ -97,9 +98,11 @@ namespace PravegaWrapperTestProject
             timer.Start();
             ClientFactory testFactory2 = new ClientFactory(testConfig);
             timer.Stop();
+            double ticks = timer.ElapsedTicks;
+            double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
 
             // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigTime() * 0.85) < timerNanoseconds);
         }
 
         // Unit Test. Client Factory constructor from client config and runtime
@@ -146,9 +149,11 @@ namespace PravegaWrapperTestProject
             timer.Start();
             ClientFactory testFactory2 = new ClientFactory(testConfig, testRuntime);
             timer.Stop();
+            double ticks = timer.ElapsedTicks;
+            double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
 
             // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigAndRuntimeTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigAndRuntimeTime() * 0.85) < timerNanoseconds);
         }
 
         // Unit Test. Client Factory runtime
@@ -171,9 +176,11 @@ namespace PravegaWrapperTestProject
             timer.Start();
             TokioRuntime testConfig = testFactory.Runtime;
             timer.Stop();
+            double ticks = timer.ElapsedTicks;
+            double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
 
             // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.RuntimeTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.RuntimeTime() * 0.85) < timerNanoseconds);
         }
 
         // Unit Test. Client Factory handle
@@ -196,9 +203,11 @@ namespace PravegaWrapperTestProject
             timer.Start();
             TokioHandle testConfig = testFactory.Handle;
             timer.Stop();
+            double ticks = timer.ElapsedTicks;
+            double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
 
             // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.HandleTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.HandleTime() * 0.85) < timerNanoseconds);
         }
 
         // Unit Test. Client Factory config
@@ -221,9 +230,11 @@ namespace PravegaWrapperTestProject
             timer.Start();
             ClientConfig testConfig = testFactory.Config;
             timer.Stop();
+            double ticks = timer.ElapsedTicks;
+            double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
 
             // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ConfigTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.ConfigTime() * 0.85) < timerNanoseconds);
         }
 
         // Unit Test. Client Factory to async
@@ -246,9 +257,11 @@ namespace PravegaWrapperTestProject
             timer.Start();
             ClientFactoryAsync testAsyncFactory = testFactory.ToAsync();
             timer.Stop();
+            double ticks = timer.ElapsedTicks;
+            double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
 
             // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ToAsyncTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.ToAsyncTime() * 0.85) < timerNanoseconds);
         }
     }
 }
