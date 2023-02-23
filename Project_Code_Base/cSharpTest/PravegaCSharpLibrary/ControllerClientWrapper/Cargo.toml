@@ -16,3 +16,7 @@ crate-type = ["cdylib", "rlib"]
 interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
 utility = { path = "../UtilityWrappers" } 
+pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }
+pravega-controller-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/controller-client" }
+pravega-client-shared = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/shared" }
+tokio = { version = "1", features = ["full"] }

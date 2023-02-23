@@ -17,6 +17,7 @@ using Pravega.Index;
 using Pravega.Shared;
 using Pravega.Event;
 using System.Runtime.CompilerServices;
+using static Pravega.Interop;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule
@@ -31,7 +32,6 @@ namespace Pravega.ClientFactoryModule
         ////////
         /// Byte Writer
         ////////
-        internal delegate void rustCallback(IntPtr arg);
         // ByteWriter default constructor (default client config, generated runtime)
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteWriter")]
         internal static extern IntPtr CreateByteWriter(IntPtr clientFactoryPointer, CustomRustString scope, CustomRustString stream, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
@@ -39,7 +39,6 @@ namespace Pravega.ClientFactoryModule
         // ByteWriter current offset getter
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterCurrentOffset")]
         internal static extern ulong ByteWriterCurrentOffset(IntPtr byteWriterPointer);
-
 
         ////////
         /// Byte Reader

@@ -13,9 +13,11 @@
     using Pravega.Config;
     using Pravega.Shared;
     using Pravega.Event;
+    using Pravega.ControllerCli;
 
 
     using Pathgen;
+    using Pravega.Utility;
 
     public static class Program
     {
@@ -26,6 +28,10 @@
             Environment.CurrentDirectory = Pathgen.PathGen.CreateDllPath();
 
             ClientFactory testFactory = new ClientFactory();
+            ControllerClient testClient = testFactory.FactoryControllerClient;
+            //Scope testScope = new Scope();
+            //testScope.NativeString = "test";
+            //Task<bool> task = testClient.CreateScope(testScope);
             ScopedStream testSS = new ScopedStream();
             testSS.Scope.NativeString= "test";
             testSS.Stream.NativeString= "test";

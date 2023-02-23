@@ -19,8 +19,11 @@ namespace Pravega {
 
         internal const string RustDllPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\PravegaCSharp.dll";
 
-        
-        
+        /// <summary>
+        /// Delegate function used for async callbacks from rust.
+        /// </summary>
+        internal delegate void rustCallback(IntPtr arg);
+
 
     }
 

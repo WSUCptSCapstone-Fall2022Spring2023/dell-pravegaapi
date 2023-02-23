@@ -93,15 +93,26 @@ namespace Pravega.Config
     }
 
     // ***** Wrapper for ClientConfig *****
+    /// <summary>
+    ///  This class contains configuration that is passed on to Pravega client.
+    /// </summary>
     public class ClientConfig : RustStructWrapper{
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "ClientConfig";
-        }
 
-        // Default Constructor. Initializes with default Pravega Client Config
-        // -https://github.com/pravega/pravega-client-rust/blob/master/config/src/lib.rs
+        /// <summary>
+        ///    Default Constructor. Initializes with default Pravega Client Config
+        ///    
+        ///     Default configuration:
+        ///     MaxConnectionsInPool = uint.MaxValue
+        ///     MaxControllerConnections = 3
+        ///     ConnectionType = Tokio
+        ///     RetryPolicy = new RetryWithBackoff(); // Default constructor
+        ///     TransactionTimeoutTime = 9000
+        ///     Mock = false
+        ///     IsTlsEnabled = (determined based on application)
+        ///     IsAuthEnabled = false
+        ///     RequestTimeout = (determined based on application)
+        //      https://github.com/pravega/pravega-client-rust/blob/master/config/src/lib.rs
+        /// </summary>
         public ClientConfig(){
             this._rustStructPointer = Interop.CreateClientConfig();
 
@@ -110,6 +121,9 @@ namespace Pravega.Config
         }
 
         // Setters and Getters
+        /// <summary>
+        ///  Sets or Gets the max number of connections the configuration supports
+        /// </summary>
         public uint MaxConnectionsInPool{
             get{
                 if (this.IsNull()){
@@ -128,6 +142,9 @@ namespace Pravega.Config
                 }
             }
         }
+        /// <summary>
+        ///  Sets or Gets the max number of controllers the configuration allows to be connected
+        /// </summary>
         public uint MaxControllerConnections{
             get{
                 if (this.IsNull()){
@@ -146,6 +163,9 @@ namespace Pravega.Config
                 }
             }
         } 
+        /// <summary>
+        ///  Sets or Gets this configuration's retry policy
+        /// </summary>
         public RetryWithBackoff RetryPolicy{
             get{
                 if (this.IsNull()){
@@ -166,6 +186,9 @@ namespace Pravega.Config
                 }
             }
         }
+        /// <summary>
+        ///  Sets or Gets this configuration's controller uri
+        /// </summary>
         public PravegaNodeUri ControllerUri{
             get{
                 if (this.IsNull()){
@@ -186,6 +209,9 @@ namespace Pravega.Config
                 }
             }
         }
+        /// <summary>
+        ///  Sets or Gets this configuration's transaction timeout time
+        /// </summary>
         public ulong TransactionTimeoutTime{
             get{
                 if (this.IsNull()){
@@ -204,6 +230,9 @@ namespace Pravega.Config
                 }
             }
         }
+        /// <summary>
+        ///  Sets or Gets a bool representing whether this configuration is a mock or not.
+        /// </summary>
         public bool Mock{
             get{
                 if (this.IsNull()){
@@ -233,6 +262,9 @@ namespace Pravega.Config
                 }
             }
         }
+        /// <summary>
+        ///  Sets or Gets a bool representing whether this configuration is tlsenabled or not
+        /// </summary>
         public bool IsTlsEnabled{
             get{
                 if (this.IsNull()){

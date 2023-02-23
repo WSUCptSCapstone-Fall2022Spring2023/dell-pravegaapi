@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using Pravega;
@@ -271,6 +272,29 @@ namespace Pravega.Utility
         public IntPtr slice_pointer;
         public uint length;
 
+        public GenericSliceStruct(List<string>? sourceList)
+        {
+            if (sourceList == null)
+            {
+                this.length = 0;
+                this.slice_pointer = IntPtr.Zero;
+            }
+            else
+            {
+                // Convert each C# string into the custom C# string.
+                CustomRustString[] contiguousList = new CustomRustString[sourceList.Count];
+                for (int i = 0; i < sourceList.Count; i++)
+                {
+                    CustomRustString temp = new CustomCSharpString(sourceList[i]).RustString;
+                    contiguousList[i] = temp;
+                }
+
+                this.slice_pointer = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(CustomRustString)) * contiguousList.Length);
+                this.length = (uint)contiguousList.Length;
+
+            }
+        }
+
         public GenericSliceStruct(GCHandle handle, uint count)
         {
             this.slice_pointer = handle.AddrOfPinnedObject();
@@ -317,6 +341,84 @@ namespace Pravega.Utility
         }
         public int Count => (int)length;
         public IEnumerator<T> GetEnumerator()
+        {
+            for (var i = 0; i < (int)length; ++i)
+            {
+                yield return this[i];
+            }
+        }
+    }
+
+    /// <summary>
+    ///  Represents an array of strings in UTF-8 allocated in unmanaged memory.
+    /// </summary>
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct RustStringVector
+    {
+        public IntPtr slice_pointer;
+        public uint length;
+
+        public RustStringVector(List<string>? sourceList)
+        {
+            if (sourceList == null)
+            {
+                this.length = 0;
+                this.slice_pointer = IntPtr.Zero;
+            }
+            else
+            {
+                // Convert each C# string into the custom C# string.
+                CustomRustString[] contiguousList = new CustomRustString[sourceList.Count];
+                for (int i = 0; i < sourceList.Count; i++)
+                {
+                    CustomRustString temp = new CustomCSharpString(sourceList[i]).RustString;
+                    contiguousList[i] = temp;
+                }
+
+                this.slice_pointer = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(CustomRustString)) * contiguousList.Length);
+                this.length = (uint)contiguousList.Length;
+
+            }
+        }
+
+        public CustomRustString this[int i]
+        {
+            get
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(CustomRustString));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                return Marshal.PtrToStructure<CustomRustString>(ptr);
+            }
+            set
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(ushort));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                Marshal.StructureToPtr<CustomRustString>(value, ptr, false);
+            }
+        }
+        public CustomRustString UnsafeGet(int i)
+        {
+            var size = Marshal.SizeOf(typeof(CustomRustString));
+            var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+            return Marshal.PtrToStructure<CustomRustString>(ptr);
+        }
+        public CustomRustString[] Copied
+        {
+            get
+            {
+                var rval = new CustomRustString[length];
+                for (var i = 0; i < (int)length; i++)
+                {
+                    rval[i] = this[i];
+                }
+                return rval;
+            }
+        }
+        public int Count => (int)length;
+        public IEnumerator<CustomRustString> GetEnumerator()
         {
             for (var i = 0; i < (int)length; ++i)
             {

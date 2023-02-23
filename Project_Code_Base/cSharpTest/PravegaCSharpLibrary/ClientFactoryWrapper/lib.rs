@@ -12,7 +12,7 @@ use interoptopus::{Inventory, InventoryBuilder};
 use pravega_client::{client_factory::{ClientFactory, ClientFactoryAsync}};
 use std::time::Instant;
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
-use pravega_controller_client::{ControllerClient};
+use pravega_controller_client::{ControllerClient, ControllerClientImpl, mock_controller::MockController};
 use utility::{CustomRustStringSlice, CustomRustString};
 use tokio::runtime::{Runtime, Handle};
 
@@ -27,7 +27,7 @@ extern "C" fn CreateClientFactory() -> *const ClientFactory{
 
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:8050")
         .build()
         .expect("create config");
    
@@ -47,7 +47,7 @@ extern "C" fn CreateClientFactoryTime() -> u64
 
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:8050")
         .build()
         .expect("create config");
     // Run function
@@ -84,7 +84,7 @@ extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:8050")
         .build()
         .expect("create config");
    
@@ -127,7 +127,7 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:8050")
         .build()
         .expect("create config");
    
@@ -232,7 +232,7 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
+        .controller_uri("localhost:8050")
         .build()
         .expect("create config");
    
@@ -251,18 +251,16 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
 }
 
 // ClientFactory.controller_client
-// *Cannot transfer traits back as raw pointers. (Probably not useful in C# anyways)
-/*
 #[no_mangle]
-extern "C" fn GetClientFactoryControllerClient(source_client_factory: &mut ClientFactory) -> *const ControllerClient{
+extern "C" fn GetClientFactoryControllerClient(source_client_factory: &mut ClientFactory) -> *const &dyn ControllerClient{
 
-    // Retrieve handle from client factory
+    // Retrieve pointer and box
     let factory_controller_client: &dyn ControllerClient = source_client_factory.controller_client();
-
-    // Return client config pointer as raw pointer
-    return factory_controller_client as *const ControllerClient;
+    let controller_box: Box<&dyn ControllerClient> = Box::new(factory_controller_client);
+    let return_pointer: *const &dyn ControllerClient = Box::into_raw(controller_box);
+    return return_pointer;
 }
-*/
+
 
 // ClientFactory.to_async
 #[no_mangle]

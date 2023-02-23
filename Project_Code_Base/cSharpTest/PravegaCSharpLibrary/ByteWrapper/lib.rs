@@ -55,24 +55,26 @@ pub extern "C" fn CreateByteWriter(
         };
 
         // Set the execution of this function into the runtime pointer inputted
-        //let _h = client_factory_async_ptr.runtime_handle().enter();
         let spawn_factory: ClientFactoryAsync = unsafe { std::ptr::read(client_factory_async_ptr) };
+        //let _runtime_handle: EnterGuard = spawn_factory.runtime_handle().enter();
         let runtime: Runtime = Runtime::new().unwrap();
         let _runtime_handle: EnterGuard = runtime.enter();
 
         // Create the new bytewriter asynchronously with the inputted runtime and the
-        //spawn_factory.runtime_handle().spawn( async move {
-        let join_handle: JoinHandle<()> = runtime.spawn( async move {
-
-            println!("test");
+        //let join_handle: JoinHandle<()> = runtime.spawn( async move { 
+        runtime.block_on( async {
+            println!("pre enter factory runtime");
+            //let _spawn_factory_runtime = spawn_factory.runtime_handle().enter();
+            //println!("entered factory runtime");
             let result: ByteWriter = spawn_factory.create_byte_writer(ss).await;
+            println!("finished operation");
             let result_box: Box<ByteWriter> = Box::new(result);
             let result_ptr: *const ByteWriter = Box::into_raw(result_box);
             unsafe { callback(result_ptr) };
-            //unsafe { callback(1 as *const ByteWriter) };
-        });
+        }) ;
+
         //thread::sleep(time::Duration::from_secs(5));
-        while !join_handle.is_finished() { println!("test"); thread::sleep(Duration::from_millis(10)) }
+        //while !join_handle.is_finished() { println!("test"); thread::sleep(Duration::from_millis(10)) }
         
 }
 

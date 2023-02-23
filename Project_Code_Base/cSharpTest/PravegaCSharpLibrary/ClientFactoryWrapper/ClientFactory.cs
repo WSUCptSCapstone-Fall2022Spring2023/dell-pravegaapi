@@ -13,6 +13,7 @@ using System.Text;
 using Pravega;
 using Pravega.Utility;
 using Pravega.Config;
+using Pravega.ControllerCli;
 using Pravega.Shared;
 #pragma warning restore 0105
 
@@ -54,6 +55,10 @@ namespace Pravega.ClientFactoryModule
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfig")]
         internal static extern IntPtr GetClientFactoryConfig(IntPtr sourceClientFactory);
 
+        // ClientFactory.controller_client
+        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryControllerClient")]
+        internal static extern IntPtr GetClientFactoryControllerClient(IntPtr sourceClientFactory);
+        
         // ClientFactory.to_async()
         [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsync")]
         internal static extern IntPtr ClientFactoryToAsync(IntPtr sourceClientFactory);
@@ -334,7 +339,26 @@ namespace Pravega.ClientFactoryModule
                 }
             }     
         }
-        
+        /// <summary>
+        /// Gets the controller client of this client factory. Responsible for creating streams and other fundamental operations
+        /// in Pravega.
+        /// </summary>
+        public ControllerClient FactoryControllerClient
+        {
+            get
+            {
+                if (this.IsNull()){
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else{
+                    IntPtr controllerClientPointer = Interop.GetClientFactoryControllerClient(this._rustStructPointer);
+                    ControllerClient controllerClientObject = new ControllerClient();
+                    controllerClientObject.RustStructPointer = controllerClientPointer;
+
+                    return controllerClientObject;
+                }
+            }
+        }
 
         // Methods
         /// <summary>
@@ -379,7 +403,11 @@ namespace Pravega.ClientFactoryModule
         }
     }
 
-    /// Contains the class that wraps the Rust client factory async struct through a pointer and .dll function calls.
+
+    /// <summary>
+    ///  Applications can use ClientFactoryAsync from a synchronized ClientFactory to monitor
+    ///  asynchronous operations.
+    /// </summary>
     public class ClientFactoryAsync : RustStructWrapper{
 #pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public virtual string Type(){
