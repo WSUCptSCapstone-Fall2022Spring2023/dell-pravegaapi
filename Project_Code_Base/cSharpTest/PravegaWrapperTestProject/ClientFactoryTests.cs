@@ -15,11 +15,34 @@ namespace PravegaWrapperTestProject
     using Pravega.Utility;
     using System.Diagnostics;
 
+
     public partial class PravegaCSharpTest
     {
-        /// <summary>
-        ///  Client Factory Tests
-        /// </summary> 
+
+        public static String CreateDllPath()
+        {
+           var cwd = System.IO.Directory.GetCurrentDirectory();
+           String code_base = "Project_Code_Base";
+           int indexTo = cwd.IndexOf(code_base);
+           String return_string;
+           // If IndexOf could not find code_base String
+           if (indexTo == -1)
+           {
+               return "";
+           }
+           return_string = cwd.Substring(0, indexTo + code_base.Length);
+           return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\";
+
+           return return_string;
+        }
+        [SetUp]
+        public void SetupEnvironment()
+        {
+           Environment.CurrentDirectory = CreateDllPath();
+        }
+        // / <summary>
+        // /  Client Factory Tests
+        // / </summary> 
         // Unit Test. Client Factory default constructor
         [Test]
         public void ClientFactoryDefaultConstructorTest()
