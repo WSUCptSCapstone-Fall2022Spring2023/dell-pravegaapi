@@ -13,7 +13,7 @@ use pravega_client::{client_factory::{ClientFactory, ClientFactoryAsync}};
 use std::time::Instant;
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
 use pravega_controller_client::{ControllerClient, ControllerClientImpl, mock_controller::MockController};
-use utility::{CustomRustStringSlice, CustomRustString};
+use utility_wrapper::{CustomRustStringSlice, CustomRustString};
 use tokio::runtime::{Runtime, Handle};
 
 //////////////////////////

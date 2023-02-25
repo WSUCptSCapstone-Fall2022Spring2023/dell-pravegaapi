@@ -20,7 +20,7 @@ dependencies = [
  "shared_wrapper",
  "sync",
  "tokio 1.24.2",
- "utility",
+ "utility_wrapper",
  "wire_protocol_wrapper",
 ]
 
@@ -243,7 +243,7 @@ dependencies = [
  "pravega-client-config",
  "pravega-client-shared",
  "tokio 1.24.2",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -332,7 +332,7 @@ dependencies = [
  "pravega-client-config",
  "pravega-controller-client",
  "tokio 1.24.2",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -366,7 +366,7 @@ dependencies = [
  "pravega-client-shared",
  "retry_wrapper",
  "shared_wrapper",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -375,7 +375,7 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -410,7 +410,7 @@ dependencies = [
  "pravega-client-shared",
  "pravega-controller-client",
  "tokio 1.24.2",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -776,7 +776,7 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -1175,7 +1175,7 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -2251,7 +2251,7 @@ dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
  "pravega-client-retry",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -2409,7 +2409,7 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -2510,7 +2510,7 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -2679,7 +2679,7 @@ dependencies = [
  "pravega-client-shared",
  "tokio 1.24.2",
  "tokio-timer",
- "utility",
+ "utility_wrapper",
 ]
 
 [[package]]
@@ -3164,11 +3164,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "utility"
+name = "utility_wrapper"
 version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
+ "tokio 1.24.2",
 ]
 
 [[package]]
@@ -3436,5 +3437,5 @@ version = "0.14.14"
 dependencies = [
  "interoptopus",
  "interoptopus_backend_csharp",
- "utility",
+ "utility_wrapper",
 ]

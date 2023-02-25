@@ -16,7 +16,7 @@ use pravega_client_shared::{ScopedStream, Scope, Stream};
 use pravega_client::{client_factory::ClientFactory};
 use tokio;
 use futures::executor;
-use utility::CustomRustString;
+use utility_wrapper::CustomRustString;
 
 use std::ffi::c_void;
 use tokio::task::JoinHandle;

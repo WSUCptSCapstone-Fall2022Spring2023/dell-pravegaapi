@@ -11,7 +11,7 @@ use interoptopus::{Inventory, InventoryBuilder};
 use pravega_controller_client::{self, ControllerClientImpl, ControllerClient};
 use tokio::{runtime::{Runtime, Handle, EnterGuard}, task::JoinHandle};
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
-use utility::CustomRustString;
+use utility_wrapper::CustomRustString;
 use pravega_client_shared::Scope;
 use std::{thread, time::{self, Duration}, mem::size_of, mem};
 
@@ -50,7 +50,7 @@ extern "C" fn ControllerClientImplCreateScope(
             let _runtime_handle: EnterGuard = runtime.enter();
 
             // Create the new bytewriter asynchronously with the inputted runtime and the
-            let join_handle: JoinHandle<()> = tokio::task::spawn( async move {
+            runtime.block_on( async {
 
                 // Move a controllerclient reference into memory and clone it so we don't worry about its lifetime.
                 let controller_client: &dyn ControllerClient = std::ptr::read(raw_pointer as *const &dyn ControllerClient);
@@ -63,11 +63,9 @@ extern "C" fn ControllerClientImplCreateScope(
                 println!("test create scope end");
                 callback(1 as *const i32);
             });
-            
-            // Wait for the tread to finish before returning from this execution.
-            while !join_handle.is_finished() { println!("test"); thread::sleep(Duration::from_millis(10)) }
-        }
     }
+}
+
 
 // Used for interoptopus wrapping
 pub fn my_inventory() -> Inventory {

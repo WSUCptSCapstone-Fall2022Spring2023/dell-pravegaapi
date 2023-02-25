@@ -21,7 +21,7 @@ members = [
     "RetryWrapper",
     "SegmentWrapper",
     "SharedWrapper",
-    "UtilityWrappers",
+    "UtilityWrapper",
     "WireProtocolWrapper",
     "EventWrapper",
     "Sync"
@@ -44,7 +44,7 @@ config_wrapper = { path = "./ConfigWrapper" }
 retry_wrapper = {path = "./RetryWrapper"}
 controller_client_wrapper = {path = "./ControllerClientWrapper"}
 shared_wrapper = {path = "./SharedWrapper"}
-utility = { path = "./UtilityWrappers" }
+utility_wrapper = { path = "./UtilityWrapper" }
 wire_protocol_wrapper = {path = "./WireProtocolWrapper"}
 event_wrapper = {path = "./EventWrapper"}
 sync = {path = "./Sync"}

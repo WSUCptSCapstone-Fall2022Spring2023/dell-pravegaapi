@@ -23,17 +23,17 @@ namespace Pravega.ControllerCli
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop
     {
-        public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
-        
+        public const string ControllerclientDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
+
         ////////
         /// Controller Client
         ////////
         // ControllerClient default constructor (inputted client config, inputted handle)
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateControllerCliDefault")]
+        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateControllerCliDefault")]
         internal static extern IntPtr CreateControllerCliDefault(IntPtr clientConfigPointer, IntPtr handlePointer);
-
+        
         // ControllerClient.create_scope()
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
+        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
         internal static extern void ControllerClientImplCreateScope(IntPtr controllerClientPointer, CustomRustString newScope, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
     }
 

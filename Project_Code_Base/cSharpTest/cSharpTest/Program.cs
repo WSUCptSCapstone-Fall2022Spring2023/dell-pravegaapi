@@ -29,15 +29,16 @@
 
             ClientFactory testFactory = new ClientFactory();
             ControllerClient testClient = testFactory.FactoryControllerClient;
-            //Scope testScope = new Scope();
-            //testScope.NativeString = "test";
-            //Task<bool> task = testClient.CreateScope(testScope);
-            ScopedStream testSS = new ScopedStream();
-            testSS.Scope.NativeString= "test";
-            testSS.Stream.NativeString= "test";
+            Scope testScope = new Scope();
+            testScope.NativeString = "test";
+            Task<bool> task = testClient.CreateScope(testScope);
+            task.GetAwaiter().GetResult();
+            //ScopedStream testSS = new ScopedStream();
+            //testSS.Scope.NativeString= "test";
+            //testSS.Stream.NativeString= "test";
 
-            Task<ByteWriter> newWriter = testFactory.CreateByteWriter(testSS);
-            ByteWriter result = newWriter.GetAwaiter().GetResult();
+            //Task<ByteWriter> newWriter = testFactory.CreateByteWriter(testSS);
+            //ByteWriter result = newWriter.GetAwaiter().GetResult();
 
             Console.WriteLine("test");
 

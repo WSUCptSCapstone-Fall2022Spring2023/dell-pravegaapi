@@ -10,7 +10,7 @@
 
 use interoptopus::{Inventory, InventoryBuilder};
 use interoptopus::{ffi_type};
-use utility::U16Tuple;
+use utility_wrapper::U16Tuple;
 use pravega_client_retry::retry_policy::{RetryWithBackoff};
 
 // Default constructor for RetryWithBackoff
