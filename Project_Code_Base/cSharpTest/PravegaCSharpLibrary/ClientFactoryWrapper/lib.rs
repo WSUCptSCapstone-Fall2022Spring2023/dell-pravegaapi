@@ -10,11 +10,15 @@
 ///
 use interoptopus::{Inventory, InventoryBuilder};
 use pravega_client::{client_factory::{ClientFactory, ClientFactoryAsync}};
-use std::time::Instant;
+use std::{time::Instant, string};
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
 use pravega_controller_client::{ControllerClient, ControllerClientImpl, mock_controller::MockController};
 use utility_wrapper::{CustomRustStringSlice, CustomRustString};
 use tokio::runtime::{Runtime, Handle};
+use once_cell::sync::OnceCell;
+use debugless_unwrap::*;
+
+static INSTANCE: OnceCell<ClientFactory> = OnceCell::new();
 
 //////////////////////////
 // Client Factory Methods
@@ -23,7 +27,8 @@ use tokio::runtime::{Runtime, Handle};
 // Default Constructor for Client Factory
 //  -Creates client factory with default config, generated runtime.
 #[no_mangle]
-extern "C" fn CreateClientFactory() -> *const ClientFactory{
+extern "C" fn CreateClientFactory() -> &'static ClientFactory{
+//extern "C" fn CreateClientFactory() -> *const ClientFactory{
 
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
@@ -35,9 +40,11 @@ extern "C" fn CreateClientFactory() -> *const ClientFactory{
     let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
 
     // Box and return client factory
-    let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
-    let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);
-    return box_pointer;
+    //let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
+    //let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);
+    //return box_pointer;
+    INSTANCE.set(new_client_factory).debugless_unwrap();
+    return INSTANCE.get().unwrap();
 }
 #[no_mangle]
 extern "C" fn CreateClientFactoryTime() -> u64
@@ -74,9 +81,11 @@ extern "C" fn CreateClientFactoryFromConfig(source_config: *const ClientConfig) 
         let new_client_factory: ClientFactory = ClientFactory::new(source_config_pointer);
 
         // Box and return client factory
-        let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
-        let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
-        return box_pointer;
+        //let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
+        //let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
+        //return box_pointer;
+        INSTANCE.set(new_client_factory).debugless_unwrap();
+        return INSTANCE.get().unwrap();
     }
 }
 #[no_mangle]

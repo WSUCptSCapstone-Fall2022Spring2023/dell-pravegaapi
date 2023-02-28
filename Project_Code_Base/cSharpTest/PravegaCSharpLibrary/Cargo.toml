@@ -32,6 +32,7 @@ path = "./src/conversion_file.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+async-std = { version = "1", features = ["attributes", "tokio1"] }
 tokio = { version = "1", features = ["full"] }
 pravega-client = { path = "../../pravega-client-rust-master/pravega-client-rust-master" }
 pravega-client-config = { path = "../../pravega-client-rust-master/pravega-client-rust-master/config" }

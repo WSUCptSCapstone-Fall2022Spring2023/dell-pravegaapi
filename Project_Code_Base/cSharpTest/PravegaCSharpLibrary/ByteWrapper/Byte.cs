@@ -43,12 +43,17 @@ namespace Pravega.ClientFactoryModule
         ////////
         /// Byte Reader
         ////////
+        // ByteReader default constructor
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteReader")]
+        internal static extern IntPtr CreateByteReader(IntPtr clientFactoryPointer, CustomRustString scope, CustomRustString stream, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
+
         // ByteReader current offset getter
-         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
         internal static extern ulong ByteReaderCurrentOffset(IntPtr byteWriterPointer);
 
     }
 
+    
     /// <summary>
     ///     Allows for writing raw bytes directly to a segment.
     ///     Typically created from a ClientFactory.
@@ -62,7 +67,7 @@ namespace Pravega.ClientFactoryModule
         }
 
         internal async Task InitializeByteWriter(
-            ClientFactoryAsync spawnFactory,
+            ClientFactory spawnFactory,
             ScopedStream writerScopedStream
         )
         {
@@ -77,7 +82,7 @@ namespace Pravega.ClientFactoryModule
             }
         }
         private Task<IntPtr> GenerateByteWriterHelper(
-            ClientFactoryAsync spawnFactory,
+            ClientFactory spawnFactory,
             ScopedStream writerScopedStream
         )
         {
@@ -120,6 +125,37 @@ namespace Pravega.ClientFactoryModule
             this._rustStructPointer = IntPtr.Zero;
         }
 
+        internal async Task InitializeByteReader(
+            ClientFactory spawnFactory,
+            ScopedStream writerScopedStream
+        )
+        {
+            if (!spawnFactory.IsNull())
+            {
+                IntPtr byteWriterPointer = await GenerateByteReaderHelper(spawnFactory, writerScopedStream);
+                this._rustStructPointer = byteWriterPointer;
+            }
+            else
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+        }
+        private Task<IntPtr> GenerateByteReaderHelper(
+            ClientFactory spawnFactory,
+            ScopedStream writerScopedStream
+        )
+        {
+            TaskCompletionSource<IntPtr> task = new TaskCompletionSource<IntPtr>();
+            Interop.CreateByteReader(
+                spawnFactory.RustStructPointer,
+                writerScopedStream.Scope.RustString,
+                writerScopedStream.Stream.RustString,
+                (value) => {
+                    task.SetResult(value);
+                }
+            );
+            return task.Task;
+        }
         /// <summary>
         ///  Gets this object's current offset.
         /// </summary>

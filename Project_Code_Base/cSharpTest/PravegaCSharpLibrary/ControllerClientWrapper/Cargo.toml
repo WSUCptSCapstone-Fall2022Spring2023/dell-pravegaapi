@@ -13,6 +13,7 @@ path = "./lib.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+async-std = { version = "1", features = ["attributes", "tokio1"] }
 interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
 utility_wrapper = { path = "../UtilityWrapper" } 

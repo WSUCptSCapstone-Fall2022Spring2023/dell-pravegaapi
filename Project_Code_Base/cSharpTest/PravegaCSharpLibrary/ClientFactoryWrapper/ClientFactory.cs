@@ -291,9 +291,9 @@ namespace Pravega.ClientFactoryModule
                     IntPtr runtimePointer = Interop.GetClientFactoryRuntime(this._rustStructPointer);
                     TokioRuntime runtimeObject = new TokioRuntime();
                     runtimeObject.RustStructPointer = runtimePointer;
-
+                    
                     // debug
-                    //Console.WriteLine("debug: runtime pointer = " + runtimeObject.RustStructPointer.ToString());
+                    Console.WriteLine("debug: runtime pointer = " + runtimeObject.RustStructPointer.ToString());
                     return runtimeObject;
                 }
             }
@@ -397,9 +397,42 @@ namespace Pravega.ClientFactoryModule
         /// </returns>
         public async Task<ByteWriter> CreateByteWriter(ScopedStream writerScopedStream){
 
-            ByteWriter returnWriter = new ByteWriter();
-            await returnWriter.InitializeByteWriter(this.ToAsync(), writerScopedStream);
-            return returnWriter;
+            if (this.IsNull())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            else
+            {
+                ByteWriter returnWriter = new ByteWriter();
+                await returnWriter.InitializeByteWriter(this, writerScopedStream);
+                return returnWriter;
+            }
+
+        }
+
+        /// <summary>
+        ///  Creates a new bytereader from a ScopedStream input and uses this object's
+        ///  ClientFactoryAsync.
+        ///  ClientFactoryAsync.
+        /// </summary>
+        /// <param name="readerScopedStream">
+        ///  ScopedStream to base the bytereader on.
+        /// </param>
+        /// <returns>
+        ///  Newly created bytereader running on this clientfactory's runtime.
+        /// </returns>
+        public async Task<ByteReader> CreateByteReader(ScopedStream readerScopedStream)
+        {
+            if (this.IsNull())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            else
+            {
+                ByteReader returnReader = new ByteReader();
+                await returnReader.InitializeByteReader(this, readerScopedStream);
+                return returnReader;
+            }
         }
     }
 

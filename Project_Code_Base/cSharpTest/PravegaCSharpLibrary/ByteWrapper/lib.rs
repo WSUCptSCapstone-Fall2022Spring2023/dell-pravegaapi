@@ -22,9 +22,43 @@ use std::ffi::c_void;
 use tokio::task::JoinHandle;
 use std::{thread, time};
 use std::time::Duration;
-
+use once_cell::sync::OnceCell;
 use tokio::runtime::{Builder, Runtime, EnterGuard};
 use tokio::task;
+
+// ByteReader default constructor
+#[no_mangle]
+pub extern "C" fn CreateByteReader(
+    client_factory_ptr: &'static ClientFactory,
+    scope: CustomRustString,
+    stream: CustomRustString,
+    callback: unsafe extern "C" fn(*const ByteReader)){
+
+
+        // Construct scopedstream and clientfactoryasync from function inputs
+        let scope_converted = Scope{
+            name: scope.as_string()
+        };
+        let stream_converted = Stream{
+            name: stream.as_string()
+        };
+        let ss: ScopedStream = ScopedStream{
+            scope: scope_converted,
+            stream: stream_converted  
+        };
+
+        // Set the execution of this function into the runtime pointer inputted
+        let spawn_factory: ClientFactoryAsync = client_factory_ptr.to_async();
+        
+        // Create the new bytewriter asynchronously with the inputted runtime and the
+        spawn_factory.runtime_handle().spawn( async move {
+            let result: ByteReader = spawn_factory.create_byte_reader(ss).await;
+            let result_box: Box<ByteReader> = Box::new(result);
+            let result_ptr: *const ByteReader = Box::into_raw(result_box);
+            unsafe { callback(result_ptr) };
+        }) ;
+        
+}
 
 // ByteReader.current_offset
 #[no_mangle]
@@ -36,7 +70,7 @@ pub extern "C" fn ByteReaderCurrentOffset(source_byte_reader: &mut ByteReader) -
 // ByteWriter default constructor
 #[no_mangle]
 pub extern "C" fn CreateByteWriter(
-    client_factory_async_ptr: &mut ClientFactoryAsync,
+    client_factory_ptr: &'static ClientFactory,
     scope: CustomRustString,
     stream: CustomRustString,
     callback: unsafe extern "C" fn(*const ByteWriter)){
@@ -55,26 +89,15 @@ pub extern "C" fn CreateByteWriter(
         };
 
         // Set the execution of this function into the runtime pointer inputted
-        let spawn_factory: ClientFactoryAsync = unsafe { std::ptr::read(client_factory_async_ptr) };
-        //let _runtime_handle: EnterGuard = spawn_factory.runtime_handle().enter();
-        let runtime: Runtime = Runtime::new().unwrap();
-        let _runtime_handle: EnterGuard = runtime.enter();
+        let spawn_factory: ClientFactoryAsync = client_factory_ptr.to_async();
 
         // Create the new bytewriter asynchronously with the inputted runtime and the
-        //let join_handle: JoinHandle<()> = runtime.spawn( async move { 
-        runtime.block_on( async {
-            println!("pre enter factory runtime");
-            //let _spawn_factory_runtime = spawn_factory.runtime_handle().enter();
-            //println!("entered factory runtime");
+        spawn_factory.runtime_handle().spawn( async move {
             let result: ByteWriter = spawn_factory.create_byte_writer(ss).await;
-            println!("finished operation");
             let result_box: Box<ByteWriter> = Box::new(result);
             let result_ptr: *const ByteWriter = Box::into_raw(result_box);
             unsafe { callback(result_ptr) };
         }) ;
-
-        //thread::sleep(time::Duration::from_secs(5));
-        //while !join_handle.is_finished() { println!("test"); thread::sleep(Duration::from_millis(10)) }
         
 }
 

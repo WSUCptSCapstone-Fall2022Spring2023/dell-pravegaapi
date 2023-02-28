@@ -22,3 +22,5 @@ pravega-client-shared = {path = "../../../pravega-client-rust-master/pravega-cli
 tokio = { version = "1", features = ["full"] }
 futures = "0.3.1"
 async-ffi = { version = "0.4.0" }
+once_cell = {version = "1.17.1"}
+debugless-unwrap = { version = "0.0.4" }
