@@ -27,25 +27,6 @@
             //Sets where to look for DllImport to find the Dll files
             Environment.CurrentDirectory = Pathgen.PathGen.CreateDllPath();
 
-            ClientFactory testFactory = new ClientFactory();
-            ControllerClient testClient = testFactory.FactoryControllerClient;
-            Console.Write(testFactory.Runtime);
-            Console.Write(testFactory.Runtime);
-
-            Console.Write(testFactory.Runtime);
-
-            
-            Scope testScope = new Scope();
-            testScope.NativeString = "test";
-            //Task<bool> task = testClient.CreateScope(testScope);
-            //task.GetAwaiter().GetResult();
-            ScopedStream testSS = new ScopedStream();
-            testSS.Scope.NativeString= "test";
-            testSS.Stream.NativeString= "test";
-
-            Task<ByteReader> newWriter = testFactory.CreateByteReader(testSS);
-            ByteReader result = newWriter.GetAwaiter().GetResult();
-
             Console.WriteLine("test");
             
 
