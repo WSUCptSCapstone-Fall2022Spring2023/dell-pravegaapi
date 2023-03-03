@@ -8,7 +8,7 @@
 ///     Provides definitions on the Rust side.
 ///
 use interoptopus::{Inventory, InventoryBuilder};
-use utility::{CustomU128, CustomRustString};
+use utility_wrapper::{CustomU128, CustomRustString};
 
 
 

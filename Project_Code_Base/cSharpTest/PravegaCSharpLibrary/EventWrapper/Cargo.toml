@@ -1,6 +1,6 @@
 [package]
 name = "event_wrapper"
-authors = ["John Sbur", "Brandon Cook", "Sam Lopez"]
+authors = ["Sam Lopez"]
 version = "0.14.14"
 edition = "2018"
 license = "Apache-2.0"
@@ -15,4 +15,4 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
-utility = { path = "../UtilityWrappers" } 
+utility_wrapper = { path = "../UtilityWrapper" } 

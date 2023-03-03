@@ -19,8 +19,9 @@ members = [
     "EventWrapper",
     "IndexWrapper",
     "RetryWrapper",
+    "SegmentWrapper",
     "SharedWrapper",
-    "UtilityWrappers",
+    "UtilityWrapper",
     "WireProtocolWrapper",
     "EventWrapper",
     "Sync"
@@ -31,6 +32,7 @@ path = "./src/conversion_file.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+async-std = { version = "1", features = ["attributes", "tokio1"] }
 tokio = { version = "1", features = ["full"] }
 pravega-client = { path = "../../pravega-client-rust-master/pravega-client-rust-master" }
 pravega-client-config = { path = "../../pravega-client-rust-master/pravega-client-rust-master/config" }
@@ -43,7 +45,7 @@ config_wrapper = { path = "./ConfigWrapper" }
 retry_wrapper = {path = "./RetryWrapper"}
 controller_client_wrapper = {path = "./ControllerClientWrapper"}
 shared_wrapper = {path = "./SharedWrapper"}
-utility = { path = "./UtilityWrappers" }
+utility_wrapper = { path = "./UtilityWrapper" }
 wire_protocol_wrapper = {path = "./WireProtocolWrapper"}
 event_wrapper = {path = "./EventWrapper"}
 sync = {path = "./Sync"}

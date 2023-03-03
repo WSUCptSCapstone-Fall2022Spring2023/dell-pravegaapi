@@ -27,19 +27,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\eveer\\.nuget\\packages\\": {}
+    "C:\\Users\\john_\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
       "projectName": "cSharpTest",
-      "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
-      "packagesPath": "C:\\Users\\eveer\\.nuget\\packages\\",
-      "outputPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
+      "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "packagesPath": "C:\\Users\\john_\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\eveer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\john_\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -53,8 +53,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
-              "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
+            "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
+              "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
             }
           }
         }

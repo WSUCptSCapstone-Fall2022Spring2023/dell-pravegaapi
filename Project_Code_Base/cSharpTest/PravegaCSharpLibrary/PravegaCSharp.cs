@@ -19,8 +19,11 @@ namespace Pravega {
 
         internal const string RustDllPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\PravegaCSharp.dll";
 
-        
-        
+        /// <summary>
+        /// Delegate function used for async callbacks from rust.
+        /// </summary>
+        internal delegate void rustCallback(IntPtr arg);
+
 
     }
 
@@ -42,6 +45,15 @@ namespace Pravega {
             get
             {
                 return "Pravega object not found exception.";
+            }
+        }
+
+        // For when a function is called with Client Factory, but client factory is not initialized
+        public static string ClientFactoryNotInitialized
+        {
+            get
+            {
+                return "Client Factory was not initialized, but a function requiring Client Factory to be initialized was called.";
             }
         }
     }
