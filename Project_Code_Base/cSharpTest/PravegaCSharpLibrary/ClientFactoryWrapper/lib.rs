@@ -71,7 +71,7 @@ extern "C" fn CreateClientFactoryTime() -> u64
 //  -Creates client factory with inputted config, generated runtime
 //  *Consumes ClientConfig
 #[no_mangle]
-extern "C" fn CreateClientFactoryFromConfig(source_config: *const ClientConfig) -> *const ClientFactory{
+extern "C" fn CreateClientFactoryFromConfig(source_config: *const ClientConfig) ->  &'static ClientFactory{
 
     unsafe{
         // Get config from raw pointer
@@ -113,7 +113,7 @@ extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 //  *Consumes ClientConfig
 //  *Consumes Runtime
 #[no_mangle]
-extern "C" fn CreateClientFactoryFromConfigAndRuntime(source_config_pointer: *const ClientConfig, source_runtime_pointer: *const Runtime) -> *const ClientFactory{
+extern "C" fn CreateClientFactoryFromConfigAndRuntime(source_config_pointer: *const ClientConfig, source_runtime_pointer: *const Runtime) ->  &'static ClientFactory{
 
     unsafe{
         // Get config from raw pointer
@@ -126,9 +126,11 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntime(source_config_pointer: *co
         let new_client_factory: ClientFactory = ClientFactory::new_with_runtime(source_config, source_runtime);
 
         // Box and return client factory
-        let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
-        let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
-        return box_pointer;
+        //let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
+        //let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
+        //return box_pointer;
+        INSTANCE.set(new_client_factory).debugless_unwrap();
+        return INSTANCE.get().unwrap();
     }
 }
 #[no_mangle]
@@ -227,7 +229,7 @@ extern "C" fn GetClientFactoryRuntimeHandleTime() -> u64
 
 // ClientFactory.config
 #[no_mangle]
-extern "C" fn GetClientFactoryConfig(source_client_factory: &mut ClientFactory) -> *const ClientConfig{
+extern "C" fn GetClientFactoryConfig(source_client_factory: &'static ClientFactory) -> *const ClientConfig{
 
     // Retrieve handle from client factory
     let factory_config: &ClientConfig = source_client_factory.config();
@@ -261,7 +263,7 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
 
 // ClientFactory.controller_client
 #[no_mangle]
-extern "C" fn GetClientFactoryControllerClient(source_client_factory: &mut ClientFactory) -> *const &dyn ControllerClient{
+extern "C" fn GetClientFactoryControllerClient(source_client_factory: &'static ClientFactory) -> *const &dyn ControllerClient{
 
     // Retrieve pointer and box
     let factory_controller_client: &dyn ControllerClient = source_client_factory.controller_client();
@@ -273,7 +275,7 @@ extern "C" fn GetClientFactoryControllerClient(source_client_factory: &mut Clien
 
 // ClientFactory.to_async
 #[no_mangle]
-extern "C" fn ClientFactoryToAsync(source_client_factory: &mut ClientFactory) -> *const ClientFactoryAsync{
+extern "C" fn ClientFactoryToAsync(source_client_factory: &'static ClientFactory) -> *const ClientFactoryAsync{
 
     // Retrieve handle from client factory
     let factory_client_async_clone: ClientFactoryAsync = source_client_factory.to_async();

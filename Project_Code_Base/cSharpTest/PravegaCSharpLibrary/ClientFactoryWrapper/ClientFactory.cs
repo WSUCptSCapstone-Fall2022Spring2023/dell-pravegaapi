@@ -191,11 +191,24 @@ namespace Pravega.ClientFactoryModule
     ///    environement that client factory will execute asynchronous functions from.
     ///     
     /// </summary>
-    public class ClientFactory : RustStructWrapper
+    public static class ClientFactory
     {
         /// <summary>
-        ///  Default Constructor. Initializes ClientFactory with a default ClientConfig and
-        ///  a generated config.
+        ///  Represents a reference to this static object's Rust object counterpart.
+        /// </summary>
+        private static IntPtr _rustStructPointer = IntPtr.Zero;
+
+        /// <summary>
+        ///  Represents whether this client factory has been initialized or not.
+        /// </summary>
+        private static bool initialized = false;
+
+        /// <summary>
+        ///  Initializer. 
+        ///  * Initializes the Static Client Factory only if it hasn't been initialized yet.
+        ///  
+        ///  - Initializes ClientFactory with a default ClientConfig and
+        ///  a generated config if no ClientConfig or Runtime is inputted.
         ///  LocalHost = 9090
         /// 
         ///  Default configuration:
@@ -208,63 +221,48 @@ namespace Pravega.ClientFactoryModule
         ///   IsTlsEnabled = (determined based on application)
         ///   IsAuthEnabled = false
         ///   RequestTimeout = (determined based on application)
-        /// </summary>
-        public ClientFactory(){
-            this._rustStructPointer = Interop.CreateClientFactory();
-        }
-
-        /// <summary>
-        ///  Constructor. Initializes with a ClientConfig.
-        ///     Consumes ClientConfig (sets to null after)
+        ///   
+        ///   - Initializes Client Factory with a ClientConfig if no Runtime is inputted
+        ///   Consumes ClientConfig (sets to null after)
+        ///   
+        ///   - Initializes Client Factory with a ClientConfig and Runtime if both are inputted
+        ///   Consumes both ClientConfig and Runtime (sets to null after)
+        ///   
+        ///   - If only a Runtime is inputted, an error will be thrown as only the previous 3 cases are valid
+        ///   initializers.
+        ///   
         /// </summary>
         /// <param name="factoryConfig">
         ///  Config to base the client factory on.
         /// </param>
-        /// <exception cref="PravegaException">
-        ///  This error is thrown when an object has a bad
-        ///     reference or no reference. In this case, the
-        ///     inputted clientconfig was set to null.
-        /// </exception>
-        public ClientFactory(ClientConfig factoryConfig){
-
-            // Grab pointer from factoryConfig. If it's null, then throw an exception
-            if (factoryConfig.IsNull()){
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+        public static void Initialize(ClientConfig? factoryConfig = null, TokioRuntime? factoryRuntime = null)
+        {
+            // If Client Factory is already initialized, then we don't need to reinitialize it
+            //  and can safely return.
+            if (ClientFactory.Initialized())
+            {
+                return;
             }
-            else{
+
+            if (factoryConfig == null && factoryRuntime == null)
+            {
+                ClientFactory._rustStructPointer = Interop.CreateClientFactory();
+            }
+            else if (factoryRuntime == null)
+            {
                 // Input pointer into constructor
-                this._rustStructPointer = Interop.CreateClientFactoryFromConfig(factoryConfig.RustStructPointer);
+                // Not possible by basic philosophy.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                ClientFactory._rustStructPointer = Interop.CreateClientFactoryFromConfig(factoryConfig.RustStructPointer);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
                 // Mark ClientConfig as null
                 factoryConfig.MarkAsNull();
             }
-        }
-
-        /// <summary>
-        ///  Constructor. Initializes with a ClientConfig.
-        ///     Consumes ClientConfig (sets to null after)
-        ///     Consumes Runtime (sets to null after)
-        /// </summary>
-        /// <param name="factoryConfig">
-        ///     Config to base the client factory on.
-        /// </param>
-        /// <param name="factoryRuntime">
-        ///     Runtime this factory will execute in.
-        /// </param>
-        /// <exception cref="PravegaException">
-        ///  This error is thrown when an object has a bad
-        ///     reference or no reference. In this case, the
-        ///     either one or more inputs were set to null.
-        /// </exception>        
-        public ClientFactory(ClientConfig factoryConfig, TokioRuntime factoryRuntime){
-
-            // Grab pointer from factoryConfig. If it's null, then throw an exception
-            if (factoryConfig.IsNull() || factoryRuntime.IsNull()){
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
-            }
-            else{
+            else if (factoryConfig != null)
+            {
                 // Input pointer into constructor
-                this._rustStructPointer = Interop.CreateClientFactoryFromConfigAndRuntime(
+                ClientFactory._rustStructPointer = Interop.CreateClientFactoryFromConfigAndRuntime(
                     factoryConfig.RustStructPointer,
                     factoryRuntime.RustStructPointer
                 );
@@ -273,27 +271,41 @@ namespace Pravega.ClientFactoryModule
                 factoryConfig.MarkAsNull();
                 factoryRuntime.MarkAsNull();
             }
+            else
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Set initialized to true when done.
+            ClientFactory.initialized = true;
         }
 
-
         // Setters and Getters
+        /// <summary>
+        ///  Allows internal code to get or set this object's internal pointer to a rust object.
+        /// </summary>
+        internal static IntPtr RustStructPointer
+        {
+            get { return ClientFactory._rustStructPointer; }
+            set { ClientFactory._rustStructPointer = value; }
+        }
         /// <summary>
         ///  Gets the runtime object that this clientfactory's asynchronous operations 
         ///  execute on.
         /// </summary>
-        public TokioRuntime Runtime{
+        public static TokioRuntime Runtime{
             get
             {
-                if (this.IsNull()){
-                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                if (ClientFactory.initialized == false){
+                    throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
                 }
                 else{
-                    IntPtr runtimePointer = Interop.GetClientFactoryRuntime(this._rustStructPointer);
+                    IntPtr runtimePointer = Interop.GetClientFactoryRuntime(ClientFactory._rustStructPointer);
                     TokioRuntime runtimeObject = new TokioRuntime();
                     runtimeObject.RustStructPointer = runtimePointer;
                     
                     // debug
-                    Console.WriteLine("debug: runtime pointer = " + runtimeObject.RustStructPointer.ToString());
+                    //Console.WriteLine("debug: runtime pointer = " + runtimeObject.RustStructPointer.ToString());
                     return runtimeObject;
                 }
             }
@@ -302,14 +314,16 @@ namespace Pravega.ClientFactoryModule
         ///  Gets the handle of the runtime object that this clientfactory's asynchronous
         ///  operations execute on.
         /// </summary>
-        public TokioHandle Handle{
+        public static TokioHandle Handle{
             get
             {
-                if (this.IsNull()){
-                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                if (ClientFactory.initialized == false)
+                {
+                    throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
                 }
-                else{
-                    IntPtr runtimePointer = Interop.GetClientFactoryRuntimeHandle(this._rustStructPointer);
+                else
+                {
+                    IntPtr runtimePointer = Interop.GetClientFactoryRuntimeHandle(ClientFactory._rustStructPointer);
                     TokioHandle runtimeObject = new TokioHandle();
                     runtimeObject.RustStructPointer = runtimePointer;
 
@@ -322,14 +336,16 @@ namespace Pravega.ClientFactoryModule
         /// <summary>
         /// Gets the configuration settings of this client factory.
         /// </summary>
-        public ClientConfig Config{
+        public static ClientConfig Config{
             get
             {
-                if (this.IsNull()){
-                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                if (ClientFactory.initialized == false)
+                {
+                    throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
                 }
-                else{
-                    IntPtr runtimePointer = Interop.GetClientFactoryConfig(this._rustStructPointer);
+                else
+                {
+                    IntPtr runtimePointer = Interop.GetClientFactoryConfig(ClientFactory._rustStructPointer);
                     ClientConfig runtimeObject = new ClientConfig();
                     runtimeObject.RustStructPointer = runtimePointer;
 
@@ -343,15 +359,17 @@ namespace Pravega.ClientFactoryModule
         /// Gets the controller client of this client factory. Responsible for creating streams and other fundamental operations
         /// in Pravega.
         /// </summary>
-        public ControllerClient FactoryControllerClient
+        public static ControllerClient FactoryControllerClient
         {
             get
             {
-                if (this.IsNull()){
-                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                if (ClientFactory.initialized == false)
+                {
+                    throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
                 }
-                else{
-                    IntPtr controllerClientPointer = Interop.GetClientFactoryControllerClient(this._rustStructPointer);
+                else
+                {
+                    IntPtr controllerClientPointer = Interop.GetClientFactoryControllerClient(ClientFactory._rustStructPointer);
                     ControllerClient controllerClientObject = new ControllerClient();
                     controllerClientObject.RustStructPointer = controllerClientPointer;
 
@@ -371,18 +389,52 @@ namespace Pravega.ClientFactoryModule
         /// <exception cref="PravegaException">
         ///   This error is thrown if this object is set to null or uninitialized.
         /// </exception>
-        public ClientFactoryAsync ToAsync()
+        public static ClientFactoryAsync ToAsync()
         {
-            if (this.IsNull()){
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            if (ClientFactory.initialized == false)
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
             }
-            else{
-                IntPtr clientFactoryAsyncClone = Interop.ClientFactoryToAsync(this._rustStructPointer);
+            else
+            {
+                IntPtr clientFactoryAsyncClone = Interop.ClientFactoryToAsync(ClientFactory._rustStructPointer);
                 ClientFactoryAsync newClientFactoryAsync = new ClientFactoryAsync();
                 newClientFactoryAsync.RustStructPointer = clientFactoryAsyncClone;
 
                 return newClientFactoryAsync;
             }
+        }
+
+        /// <summary>
+        ///  A method that determines whether this object is a null reference or not.
+        ///  
+        ///  Note: In rust, memory management is much different than C#. Unlike a 
+        ///     garbage collector in C#, Rust manages memory by ownership. What this 
+        ///     can lead to is portions of memory being deallocated after a function 
+        ///     is called using an object in Rust. To represent that in C#, an object
+        ///     may be set to null after being used in a function, showing that code
+        ///     in Rust deleted the object that this class refers to. More information:
+        ///     https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html
+        /// </summary>
+        /// <returns>
+        ///     -True if this object's reference is set to IntPtr.Zero, meaning it 
+        ///         either was not initialized, or it was deallocated at some point.
+        ///     -False if this object's reference is not set to IntPtr.Zero. This
+        ///         likely implies that this object is still allocated in unmanaged
+        ///         memory.
+        /// </returns>
+        public static bool Initialized()
+        {
+            return ClientFactory.initialized;
+        }
+
+        /// <summary>
+        ///  This method marks this object as being deallocated and therefore no longer accessible.
+        /// </summary>
+        public static void Destroy()
+        {
+            ClientFactory._rustStructPointer = IntPtr.Zero;
+            ClientFactory.initialized = false;
         }
 
         /// <summary>
@@ -395,16 +447,16 @@ namespace Pravega.ClientFactoryModule
         /// <returns>
         ///  Newly created bytewriter running on this clientfactory's runtime.
         /// </returns>
-        public async Task<ByteWriter> CreateByteWriter(ScopedStream writerScopedStream){
+        public static async Task<ByteWriter> CreateByteWriter(ScopedStream writerScopedStream){
 
-            if (this.IsNull())
+            if (!ClientFactory.Initialized())
             {
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
             }
             else
             {
                 ByteWriter returnWriter = new ByteWriter();
-                await returnWriter.InitializeByteWriter(this, writerScopedStream);
+                await returnWriter.InitializeByteWriter(writerScopedStream);
                 return returnWriter;
             }
 
@@ -421,16 +473,16 @@ namespace Pravega.ClientFactoryModule
         /// <returns>
         ///  Newly created bytereader running on this clientfactory's runtime.
         /// </returns>
-        public async Task<ByteReader> CreateByteReader(ScopedStream readerScopedStream)
+        public static async Task<ByteReader> CreateByteReader(ScopedStream readerScopedStream)
         {
-            if (this.IsNull())
+            if (!ClientFactory.Initialized())
             {
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
             }
             else
             {
                 ByteReader returnReader = new ByteReader();
-                await returnReader.InitializeByteReader(this, readerScopedStream);
+                await returnReader.InitializeByteReader(readerScopedStream);
                 return returnReader;
             }
         }

@@ -14,11 +14,9 @@ use pravega_client::{byte::ByteReader,byte::ByteWriter};
 use pravega_client_config::connection_type;
 use pravega_client_shared::{ScopedStream, Scope, Stream};
 use pravega_client::{client_factory::ClientFactory};
-use tokio;
 use futures::executor;
 use utility_wrapper::CustomRustString;
 
-use std::ffi::c_void;
 use tokio::task::JoinHandle;
 use std::{thread, time};
 use std::time::Duration;

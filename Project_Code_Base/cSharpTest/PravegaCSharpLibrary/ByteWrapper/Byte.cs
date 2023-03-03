@@ -67,13 +67,12 @@ namespace Pravega.ClientFactoryModule
         }
 
         internal async Task InitializeByteWriter(
-            ClientFactory spawnFactory,
             ScopedStream writerScopedStream
         )
         {
-            if (!spawnFactory.IsNull())
+            if (!ClientFactory.Initialized())
             {
-                IntPtr byteWriterPointer = await GenerateByteWriterHelper(spawnFactory, writerScopedStream);
+                IntPtr byteWriterPointer = await GenerateByteWriterHelper(writerScopedStream);
                 this._rustStructPointer = byteWriterPointer;
             }
             else
@@ -82,13 +81,12 @@ namespace Pravega.ClientFactoryModule
             }
         }
         private Task<IntPtr> GenerateByteWriterHelper(
-            ClientFactory spawnFactory,
             ScopedStream writerScopedStream
         )
         {
             TaskCompletionSource<IntPtr> task = new TaskCompletionSource<IntPtr>();
             Interop.CreateByteWriter(
-                spawnFactory.RustStructPointer,
+                ClientFactory.RustStructPointer,
                 writerScopedStream.Scope.RustString,
                 writerScopedStream.Stream.RustString,
                 (value) => {
@@ -126,28 +124,26 @@ namespace Pravega.ClientFactoryModule
         }
 
         internal async Task InitializeByteReader(
-            ClientFactory spawnFactory,
             ScopedStream writerScopedStream
         )
         {
-            if (!spawnFactory.IsNull())
+            if (!ClientFactory.Initialized())
             {
-                IntPtr byteWriterPointer = await GenerateByteReaderHelper(spawnFactory, writerScopedStream);
+                IntPtr byteWriterPointer = await GenerateByteReaderHelper(writerScopedStream);
                 this._rustStructPointer = byteWriterPointer;
             }
             else
             {
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
             }
         }
         private Task<IntPtr> GenerateByteReaderHelper(
-            ClientFactory spawnFactory,
             ScopedStream writerScopedStream
         )
         {
             TaskCompletionSource<IntPtr> task = new TaskCompletionSource<IntPtr>();
             Interop.CreateByteReader(
-                spawnFactory.RustStructPointer,
+                ClientFactory.RustStructPointer,
                 writerScopedStream.Scope.RustString,
                 writerScopedStream.Stream.RustString,
                 (value) => {

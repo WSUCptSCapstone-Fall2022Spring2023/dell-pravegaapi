@@ -47,5 +47,14 @@ namespace Pravega {
                 return "Pravega object not found exception.";
             }
         }
+
+        // For when a function is called with Client Factory, but client factory is not initialized
+        public static string ClientFactoryNotInitialized
+        {
+            get
+            {
+                return "Client Factory was not initialized, but a function requiring Client Factory to be initialized was called.";
+            }
+        }
     }
 }
