@@ -18,7 +18,7 @@ namespace Pravega.Retry
     {
 
         // Set path of Retry .dll specifically
-        public const string RetryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\retry_wrapper.dll";
+        public const string RetryDLLPath ="retry_wrapper.dll";
 
         ////////
         /// RetryWithBackoff
