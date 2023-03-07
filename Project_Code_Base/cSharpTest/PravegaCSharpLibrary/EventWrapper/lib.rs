@@ -4,7 +4,7 @@
 )]
 //// File: lib.rs
 /// File Creator: John Sbur
-/// Purpose: Contains methods transferred from the Event area. Not all methods are transferred, only necessary ones.
+/// Purpose: Contains methods transferred from the Index area. Not all methods are transferred, only necessary ones.
 ///     Provides definitions on the Rust side.
 ///
 use interoptopus::{Inventory, InventoryBuilder};

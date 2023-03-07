@@ -51,8 +51,8 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryDefaultConstructorTest()
         {
-            ClientFactory testFactory = new ClientFactory();
-            Assert.That(testFactory.IsNull(), Is.Not.EqualTo(true));
+            ClientFactory.Initialize();
+            Assert.That(ClientFactory.Initialized(), Is.Not.EqualTo(false));
         }
 
         // Unit Test. Client Factory default constructor time. Aims for C# being at least 85% efficient
@@ -84,14 +84,13 @@ namespace PravegaWrapperTestProject
         {
             ClientConfig testConfig = new ClientConfig();
             testConfig.MaxConnectionsInPool = 10;
-            ClientFactory testFactory = new ClientFactory(testConfig);
+            ClientFactory.Initialize(testConfig);
 
             // Make sure client factory was initiated
-            Assert.IsFalse(testFactory.IsNull());
+            Assert.IsTrue(ClientFactory.Initialized());
 
             // Make sure that the config information was stored
-
-            Assert.IsTrue(testFactory.Config.MaxConnectionsInPool == 10);
+            Assert.IsTrue(ClientFactory.Config.MaxConnectionsInPool == 10);
 
             // Make sure the config inputted was consumed
             Assert.IsTrue(testConfig.IsNull());
@@ -133,20 +132,21 @@ namespace PravegaWrapperTestProject
             testConfig.MaxConnectionsInPool = 10;
 
             // Create a factory and extract a runtime from it
-            ClientFactory testFactory = new ClientFactory();
-            TokioRuntime testRuntime = testFactory.Runtime;
+            ClientFactory.Initialize();
+            TokioRuntime testRuntime = ClientFactory.Runtime;
+            ClientFactory.Destroy();
 
             // Initialze factory with runtime and config created.
-            ClientFactory testFactory2 = new ClientFactory(testConfig, testRuntime);
+            ClientFactory.Initialize(testConfig, testRuntime);
 
             // Make sure client factory was initiated
-            Assert.IsFalse(testFactory2.IsNull());
+            Assert.IsFalse(ClientFactory.Initialized());
 
             // Make sure that the config information was stored
-            Assert.IsTrue(testFactory2.Config.MaxConnectionsInPool == 10);
+            Assert.IsTrue(ClientFactory.Config.MaxConnectionsInPool == 10);
 
             // Make sure that the client factory's runtime isn't null
-            Assert.IsFalse(testFactory2.Runtime.IsNull());
+            Assert.IsFalse(ClientFactory.Runtime.IsNull());
 
             // Make sure the config inputted was consumed
             Assert.IsTrue(testConfig.IsNull());
@@ -159,7 +159,6 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryConfigRuntimeConstructorTimeTest()
         {
-
 
             // C# time
             double totalTime = 0;
@@ -189,8 +188,8 @@ namespace PravegaWrapperTestProject
         [Test] 
         public void ClientFactoryRuntimeTest()
         {
-            ClientFactory testFactory = new ClientFactory();
-            TokioRuntime testRuntime = testFactory.Runtime;
+            ClientFactory.Initialize();
+            TokioRuntime testRuntime = ClientFactory.Runtime;
             Assert.IsFalse(testRuntime.IsNull());
         }
 
@@ -223,8 +222,8 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryHandleTest()
         {
-            ClientFactory testFactory = new ClientFactory();
-            TokioHandle testHandle = testFactory.Handle;
+            ClientFactory.Initialize();
+            TokioHandle testHandle = ClientFactory.Handle;
             Assert.IsFalse(testHandle.IsNull());
         }
 
@@ -257,8 +256,8 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryConfigTest()
         {
-            ClientFactory testFactory = new ClientFactory();
-            ClientConfig testConfig = testFactory.Config;
+            ClientFactory.Initialize();
+            ClientConfig testConfig = ClientFactory.Config;
             Assert.IsFalse(testConfig.IsNull());
         }
 
@@ -292,8 +291,8 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryToAsyncTest()
         {
-            ClientFactory testFactory = new ClientFactory();
-            ClientFactoryAsync testAsyncFactory = testFactory.ToAsync();
+            ClientFactory.Initialize();
+            ClientFactoryAsync testAsyncFactory = ClientFactory.ToAsync();
             Assert.IsFalse(testAsyncFactory.IsNull());
         }
 

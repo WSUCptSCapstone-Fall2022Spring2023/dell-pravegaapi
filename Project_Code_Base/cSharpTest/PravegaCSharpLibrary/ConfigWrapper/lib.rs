@@ -12,7 +12,7 @@ pub mod connection_type_wrapper;
 pub mod credentials_wrapper;
 
 use interoptopus::{Inventory, InventoryBuilder};
-use utility::{CustomRustString};
+use utility_wrapper::{CustomRustString};
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
 use pravega_client_retry::{retry_policy::{RetryWithBackoff}, retry_result::RetryError};
 use pravega_client_shared::{PravegaNodeUri};

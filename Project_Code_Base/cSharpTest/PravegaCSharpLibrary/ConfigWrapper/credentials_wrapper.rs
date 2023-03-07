@@ -5,5 +5,5 @@
 ///     Provides definitions on the Rust side.
 ///
 use interoptopus::{ffi_type};
-use utility::CustomRustString;
+use utility_wrapper::CustomRustString;
 

@@ -15,5 +15,5 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 interoptopus = { path = "../../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
-utility = { path = "../UtilityWrappers" } 
+utility_wrapper = { path = "../UtilityWrapper" } 
 pravega-client-retry = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/retry"}

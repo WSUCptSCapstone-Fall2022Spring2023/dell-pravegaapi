@@ -10,7 +10,7 @@
 use interoptopus::{ffi_type, extra_type, Inventory, InventoryBuilder, ffi_function, function, lang::rust};
 use pravega_client::{client_factory::ClientFactory};
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
-use utility::{CustomRustStringSlice, CustomRustString};
+use utility_wrapper::{CustomRustStringSlice, CustomRustString};
 
 
 // Used for interoptopus wrapping
