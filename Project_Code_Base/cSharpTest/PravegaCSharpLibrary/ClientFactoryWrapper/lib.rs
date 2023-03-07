@@ -57,7 +57,7 @@ extern "C" fn CreateClientFactoryTime() -> u64
     let time_elapsed = timer.elapsed();
 
     // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+    return time_elapsed.subsec_nanos() as u64;
 }
 
 // Constructor for Client Factory
@@ -96,7 +96,7 @@ extern "C" fn CreateClientFactoryFromConfigTime() -> u64
     let time_elapsed = timer.elapsed();
 
     // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+    return time_elapsed.subsec_nanos() as u64;
 }
 
 // Constructor for Client Factory
@@ -142,7 +142,7 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
     let time_elapsed = timer.elapsed();
 
     // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+    return time_elapsed.subsec_nanos() as u64;
 }
 
 // Getters and Setters for ClientFactory
@@ -177,7 +177,7 @@ extern "C" fn GetClientFactoryRuntimeTime() -> u64
     let time_elapsed = timer.elapsed();
 
     // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+    return time_elapsed.subsec_nanos() as u64;
 }
 
 // ClientFactory.runtime_handle
@@ -213,7 +213,7 @@ extern "C" fn GetClientFactoryRuntimeHandleTime() -> u64
     let time_elapsed = timer.elapsed();
 
     // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+    return time_elapsed.subsec_nanos() as u64;
 }
 
 // ClientFactory.config
@@ -247,7 +247,7 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
     let time_elapsed = timer.elapsed();
 
     // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+    return time_elapsed.subsec_nanos() as u64;
 }
 
 // ClientFactory.controller_client
@@ -297,7 +297,7 @@ extern "C" fn ClientFactoryToAsyncTime() -> u64
     let time_elapsed = timer.elapsed();
 
     // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+    return time_elapsed.subsec_nanos() as u64;
 }
 
 // Used for interoptopus wrapping
