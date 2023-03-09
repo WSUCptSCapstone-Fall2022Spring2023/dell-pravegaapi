@@ -43,7 +43,8 @@
 
             testClient.CreateStream(streamConfiguration).GetAwaiter().GetResult(); 
 
-
+            ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+            Console.WriteLine("test2");
         }
 
 

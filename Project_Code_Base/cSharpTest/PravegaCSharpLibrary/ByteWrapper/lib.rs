@@ -19,6 +19,7 @@ use utility_wrapper::CustomRustString;
 
 use tokio::task::JoinHandle;
 use std::{thread, time};
+use std::io::{Error, ErrorKind, SeekFrom};
 use std::time::Duration;
 use once_cell::sync::OnceCell;
 use tokio::runtime::{Builder, Runtime, EnterGuard};
@@ -62,6 +63,37 @@ pub extern "C" fn ByteReaderCurrentOffset(source_byte_reader: &mut ByteReader) -
     return source_byte_reader.current_offset();
 }
 
+// ByteReader.available
+#[no_mangle]
+pub extern "C" fn ByteReaderAvailable(source_byte_reader: &mut ByteReader) -> u64
+{
+    return source_byte_reader.available() as u64;
+}
+
+// ByteReader.seek
+#[no_mangle]
+pub extern "C" fn ByteReaderSeek(client_factory_ptr: &'static ClientFactory,
+    mode: u64,
+    number_of_bytes: u64,
+    callback: unsafe extern "C" fn(u64))
+{
+
+    // Initialize locals
+    let reader_seek_from: SeekFrom;
+    if mode == 0{
+        reader_seek_from = SeekFrom::Start(number_of_bytes);
+    }
+    else if mode == 1{
+        reader_seek_from = SeekFrom::Current(number_of_bytes as i64);
+    }
+    else if mode == 2{
+        reader_seek_from = SeekFrom::End(number_of_bytes as i64);
+    }
+    else{
+        panic!("Invalid seek mode inputted")
+    }
+}
+
 // ByteWriter default constructor
 #[no_mangle]
 pub extern "C" fn CreateByteWriter(
@@ -100,3 +132,4 @@ pub extern "C" fn ByteWriterCurrentOffset(source_byte_writer: &mut ByteWriter) -
 {
     return source_byte_writer.current_offset();
 }
+
