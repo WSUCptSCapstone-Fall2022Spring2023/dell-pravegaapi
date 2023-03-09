@@ -18,6 +18,7 @@ using Pravega.Shared;
 using Pravega.Event;
 using System.Runtime.CompilerServices;
 using static Pravega.Interop;
+using System.Drawing;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule
@@ -51,6 +52,9 @@ namespace Pravega.ClientFactoryModule
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
         internal static extern ulong ByteReaderCurrentOffset(IntPtr byteWriterPointer);
 
+        // ByteReader available getter
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderAvailable")]
+        internal static extern ulong ByteReaderAvailable(IntPtr byteWriterPointer);
     }
 
     
@@ -70,7 +74,7 @@ namespace Pravega.ClientFactoryModule
             ScopedStream writerScopedStream
         )
         {
-            if (!ClientFactory.Initialized())
+            if (ClientFactory.Initialized())
             {
                 IntPtr byteWriterPointer = await GenerateByteWriterHelper(writerScopedStream);
                 this._rustStructPointer = byteWriterPointer;
@@ -123,11 +127,23 @@ namespace Pravega.ClientFactoryModule
             this._rustStructPointer = IntPtr.Zero;
         }
 
+        /// <summary>
+        ///   ByteReader initializer. Creates a bytereader based on an inputted scopedstream.
+        /// </summary>
+        /// <param name="writerScopedStream">
+        ///     ScopedStream to base the ByteReader on
+        /// </param>
+        /// <returns>
+        ///     A task that marks when this object is successfully initialized. 
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///     Occurs if the ClientFactory isn't initialized when called.
+        /// </exception>
         internal async Task InitializeByteReader(
             ScopedStream writerScopedStream
         )
         {
-            if (!ClientFactory.Initialized())
+            if (ClientFactory.Initialized())
             {
                 IntPtr byteWriterPointer = await GenerateByteReaderHelper(writerScopedStream);
                 this._rustStructPointer = byteWriterPointer;
@@ -137,6 +153,12 @@ namespace Pravega.ClientFactoryModule
                 throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
             }
         }
+
+        /// <summary>
+        ///  Internal method that generates a byte reader using a dll call. Sets this object's pointer when initialized successfully.
+        /// </summary>
+        /// <param name="writerScopedStream"></param>
+        /// <returns></returns>
         private Task<IntPtr> GenerateByteReaderHelper(
             ScopedStream writerScopedStream
         )
@@ -152,6 +174,7 @@ namespace Pravega.ClientFactoryModule
             );
             return task.Task;
         }
+
         /// <summary>
         ///  Gets this object's current offset.
         /// </summary>
@@ -169,6 +192,70 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
+
+        /// <summary>
+        /// Return the bytes that are available to read instantly without fetching from server.
+        /// ByteReader has a buffer internally.This method returns the size of remaining data in that buffer.
+        /// </summary>
+        public ulong Available
+        {
+            get
+            {
+                if (!this.IsNull())
+                {
+                    return Interop.ByteReaderAvailable(this.RustStructPointer);
+                }
+                else
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+            }
+        }
+
+        /// <summary>
+        ///  The seek method for ByteReader allows seeking to a byte offset from the beginning
+        ///     of the stream or a byte offset relative to the current position in the stream.
+        ///     If the stream has been truncated, the byte offset will be relative to the original beginning of the stream.
+        /// </summary>
+        /// <param name="mode">
+        ///     Determines which direction to seek from
+        ///     0=from beginning stream
+        ///     1=from current position
+        ///     2=from end of stream
+        ///     
+        ///     *Inputting other modes not listed will result in the mode being set to 0
+        /// </param>
+        /// <param name="numberOfBytes">
+        ///     Amount to seek
+        /// </param>
+        /// <returns></returns>
+        /*
+        public Task<ulong> Seek(int mode=0, int numberOfBytes=0)
+        {
+            // If Client Factory isn't initialized, throw
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+
+            // If mode isn't 0, 1, or 2. Set to 0
+            if (mode < 0 || mode > 2)
+            {
+                mode = 0;
+            }
+
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+            Interop.CreateByteReader(
+                ClientFactory.RustStructPointer,
+                writerScopedStream.Scope.RustString,
+                writerScopedStream.Stream.RustString,
+                (value) => {
+                    task.SetResult(value);
+                }
+            );
+            return task.Task;
+        }
+        */
     }
 
 

@@ -65,8 +65,9 @@ namespace PravegaWrapperTestProject
                 // C# time
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                ClientFactory testFactory = new ClientFactory();
+                ClientFactory.Initialize();
                 timer.Stop();
+                ClientFactory.Destroy();
                 double ticks = timer.ElapsedTicks;
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
                 totalTime += timerNanoseconds;
@@ -104,14 +105,16 @@ namespace PravegaWrapperTestProject
             double totalTime = 0;
             for (int i = 0; i < TestingAmount; i++)
             {
-                ClientFactory testFactory = new ClientFactory();
-                ClientConfig testConfig = testFactory.Config;
+                ClientFactory.Initialize();
+                ClientConfig testConfig = ClientFactory.Config;
+                ClientFactory.Destroy();
 
                 // C# time
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                ClientFactory testFactory2 = new ClientFactory(testConfig);
+                ClientFactory.Initialize(testConfig);
                 timer.Stop();
+                ClientFactory.Destroy();
                 double ticks = timer.ElapsedTicks;
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
                 totalTime += timerNanoseconds;
@@ -165,14 +168,16 @@ namespace PravegaWrapperTestProject
             for (int i = 0; i < TestingAmount; i++)
             {
 
-                ClientFactory testFactory = new ClientFactory();
-                TokioRuntime testRuntime = testFactory.Runtime;
-                ClientConfig testConfig = testFactory.Config;
+                ClientFactory.Initialize();
+                TokioRuntime testRuntime = ClientFactory.Runtime;
+                ClientConfig testConfig = ClientFactory.Config;
+                ClientFactory.Destroy();
 
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                ClientFactory testFactory2 = new ClientFactory(testConfig, testRuntime);
+                ClientFactory.Initialize(testConfig, testRuntime);
                 timer.Stop();
+                ClientFactory.Destroy();
                 double ticks = timer.ElapsedTicks;
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
                 totalTime += timerNanoseconds;
@@ -198,14 +203,14 @@ namespace PravegaWrapperTestProject
         public void ClientFactoryRuntimeTimeTest()
         {
             double totalTime = 0;
+            ClientFactory.Initialize();
             for (int i = 0; i < TestingAmount; i++)
             {
-                ClientFactory testFactory = new ClientFactory();
 
                 // C# time
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                TokioRuntime testConfig = testFactory.Runtime;
+                TokioRuntime testConfig = ClientFactory.Runtime;
                 timer.Stop();
                 double ticks = timer.ElapsedTicks;
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
@@ -232,14 +237,15 @@ namespace PravegaWrapperTestProject
         public void ClientFactoryHandleTimeTest()
         {
             double totalTime = 0;
+            ClientFactory.Initialize();
+
             for (int i = 0; i < TestingAmount; i++)
             {
-                ClientFactory testFactory = new ClientFactory();
 
                 // C# time
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                TokioHandle testConfig = testFactory.Handle;
+                TokioHandle testConfig = ClientFactory.Handle;
                 timer.Stop();
                 double ticks = timer.ElapsedTicks;
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
@@ -267,14 +273,13 @@ namespace PravegaWrapperTestProject
         {
 
             double totalTime = 0;
+            ClientFactory.Initialize();
             for (int i = 0; i < TestingAmount; i++)
             {
-                ClientFactory testFactory = new ClientFactory();
-
                 // C# time
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                ClientConfig testConfig = testFactory.Config;
+                ClientConfig testConfig = ClientFactory.Config;
                 timer.Stop();
                 double ticks = timer.ElapsedTicks;
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
@@ -301,14 +306,13 @@ namespace PravegaWrapperTestProject
         public void ClientFactoryAsyncTimeTest()
         {
             double totalTime = 0;
+            ClientFactory.Initialize();
             for (int i = 0; i < TestingAmount; i++)
             {
-                ClientFactory testFactory = new ClientFactory();
-
                 // C# time
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                ClientFactoryAsync testAsyncFactory = testFactory.ToAsync();
+                ClientFactoryAsync testAsyncFactory = ClientFactory.ToAsync();
                 timer.Stop();
                 double ticks = timer.ElapsedTicks;
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
