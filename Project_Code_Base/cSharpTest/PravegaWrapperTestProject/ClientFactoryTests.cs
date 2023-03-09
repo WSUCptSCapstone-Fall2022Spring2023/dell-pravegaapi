@@ -15,11 +15,38 @@ namespace PravegaWrapperTestProject
     using Pravega.Utility;
     using System.Diagnostics;
 
+
     public partial class PravegaCSharpTest
     {
-        /// <summary>
-        ///  Client Factory Tests
-        /// </summary> 
+        //The number means how many times slower can the C# library be
+        const int ConversionLossLimit = 8;
+
+        const int TestingAmount = 10;
+
+        public static String CreateDllPath()
+        {
+           var cwd = System.IO.Directory.GetCurrentDirectory();
+           String code_base = "Project_Code_Base";
+           int indexTo = cwd.IndexOf(code_base);
+           String return_string;
+           // If IndexOf could not find code_base String
+           if (indexTo == -1)
+           {
+               return "";
+           }
+           return_string = cwd.Substring(0, indexTo + code_base.Length);
+           return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\";
+
+           return return_string;
+        }
+        [SetUp]
+        public void SetupEnvironment()
+        {
+           Environment.CurrentDirectory = CreateDllPath();
+        }
+        // / <summary>
+        // /  Client Factory Tests
+        // / </summary> 
         // Unit Test. Client Factory default constructor
         [Test]
         public void ClientFactoryDefaultConstructorTest()
@@ -32,15 +59,23 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryDefaultConstructorTimeTest()
         {
+            double totalTime = 0;
+            for (int i = 0; i < TestingAmount; i++)
+            {
+                // C# time
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                ClientFactory testFactory = new ClientFactory();
+                timer.Stop();
+                double ticks = timer.ElapsedTicks;
+                double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
+                totalTime += timerNanoseconds;
+            }
+            totalTime = totalTime / TestingAmount; 
+            Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.DefaultConstructorTime().ToString());
+            Console.WriteLine("C# Time: " + totalTime.ToString());
 
-            // C# time
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            ClientFactory.Initialize();
-            timer.Stop();
-
-            // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.DefaultConstructorTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue(ClientFactoryTestMethods.DefaultConstructorTime() > totalTime / ConversionLossLimit);
         }
 
         // Unit Test. Client Factory constructor from client config
@@ -65,18 +100,27 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryClientConfigConstructorTimeTest()
         {
-            ClientFactory.Initialize();
-            ClientConfig testConfig = ClientFactory.Config;
-            ClientFactory.Destroy();
 
-            // C# time
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            ClientFactory.Initialize(testConfig); 
-            timer.Stop();
+            double totalTime = 0;
+            for (int i = 0; i < TestingAmount; i++)
+            {
+                ClientFactory testFactory = new ClientFactory();
+                ClientConfig testConfig = testFactory.Config;
 
-            // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+                // C# time
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                ClientFactory testFactory2 = new ClientFactory(testConfig);
+                timer.Stop();
+                double ticks = timer.ElapsedTicks;
+                double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
+                totalTime += timerNanoseconds;
+            }
+            totalTime = totalTime / TestingAmount;
+            Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.ConstructorConfigTime().ToString());
+            Console.WriteLine("C# Time: " + totalTime.ToString());
+
+            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigTime() > totalTime / ConversionLossLimit));
         }
 
         // Unit Test. Client Factory constructor from client config and runtime
@@ -115,18 +159,29 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryConfigRuntimeConstructorTimeTest()
         {
-            ClientFactory.Initialize();
-            TokioRuntime testRuntime = ClientFactory.Runtime;
-            ClientConfig testConfig = ClientFactory.Config;
 
             // C# time
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            ClientFactory.Initialize(testConfig, testRuntime);
-            timer.Stop();
+            double totalTime = 0;
+            for (int i = 0; i < TestingAmount; i++)
+            {
 
-            // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigAndRuntimeTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+                ClientFactory testFactory = new ClientFactory();
+                TokioRuntime testRuntime = testFactory.Runtime;
+                ClientConfig testConfig = testFactory.Config;
+
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                ClientFactory testFactory2 = new ClientFactory(testConfig, testRuntime);
+                timer.Stop();
+                double ticks = timer.ElapsedTicks;
+                double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
+                totalTime += timerNanoseconds;
+            }
+            totalTime = totalTime / TestingAmount;
+            Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.ConstructorConfigAndRuntimeTime().ToString());
+            Console.WriteLine("C# Time: " + totalTime.ToString());
+
+            Assert.IsTrue((ClientFactoryTestMethods.ConstructorConfigAndRuntimeTime() > totalTime / ConversionLossLimit));
         }
 
         // Unit Test. Client Factory runtime
@@ -142,16 +197,25 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryRuntimeTimeTest()
         {
-            ClientFactory.Initialize(); 
+            double totalTime = 0;
+            for (int i = 0; i < TestingAmount; i++)
+            {
+                ClientFactory testFactory = new ClientFactory();
 
-            // C# time
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            TokioRuntime testConfig = ClientFactory.Runtime;
-            timer.Stop();
+                // C# time
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                TokioRuntime testConfig = testFactory.Runtime;
+                timer.Stop();
+                double ticks = timer.ElapsedTicks;
+                double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
+                totalTime += timerNanoseconds;
+            }
+            totalTime = totalTime / TestingAmount;
+            Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.RuntimeTime().ToString());
+            Console.WriteLine("C# Time: " + totalTime.ToString());
 
-            // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.RuntimeTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.RuntimeTime() > totalTime / ConversionLossLimit));
         }
 
         // Unit Test. Client Factory handle
@@ -167,16 +231,25 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryHandleTimeTest()
         {
-            ClientFactory.Initialize();
+            double totalTime = 0;
+            for (int i = 0; i < TestingAmount; i++)
+            {
+                ClientFactory testFactory = new ClientFactory();
 
-            // C# time
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            TokioHandle testConfig = ClientFactory.Handle;
-            timer.Stop();
+                // C# time
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                TokioHandle testConfig = testFactory.Handle;
+                timer.Stop();
+                double ticks = timer.ElapsedTicks;
+                double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
+                totalTime += timerNanoseconds;
+            }
+            totalTime = totalTime / TestingAmount;
+            Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.HandleTime().ToString());
+            Console.WriteLine("C# Time: " + totalTime.ToString());
 
-            // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.HandleTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.HandleTime() > totalTime / ConversionLossLimit));
         }
 
         // Unit Test. Client Factory config
@@ -192,16 +265,26 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryConfigTimeTest()
         {
-            ClientFactory.Initialize();
 
-            // C# time
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            ClientConfig testConfig = ClientFactory.Config;
-            timer.Stop();
+            double totalTime = 0;
+            for (int i = 0; i < TestingAmount; i++)
+            {
+                ClientFactory testFactory = new ClientFactory();
 
-            // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ConfigTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+                // C# time
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                ClientConfig testConfig = testFactory.Config;
+                timer.Stop();
+                double ticks = timer.ElapsedTicks;
+                double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
+                totalTime += timerNanoseconds;
+            }
+            totalTime = totalTime / TestingAmount;
+            Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.ConfigTime().ToString());
+            Console.WriteLine("C# Time: " + totalTime.ToString());
+
+            Assert.IsTrue((ClientFactoryTestMethods.ConfigTime() > totalTime / ConversionLossLimit));
         }
 
         // Unit Test. Client Factory to async
@@ -217,16 +300,25 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ClientFactoryAsyncTimeTest()
         {
-            ClientFactory.Initialize();
+            double totalTime = 0;
+            for (int i = 0; i < TestingAmount; i++)
+            {
+                ClientFactory testFactory = new ClientFactory();
 
-            // C# time
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            ClientFactoryAsync testAsyncFactory = ClientFactory.ToAsync();
-            timer.Stop();
+                // C# time
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                ClientFactoryAsync testAsyncFactory = testFactory.ToAsync();
+                timer.Stop();
+                double ticks = timer.ElapsedTicks;
+                double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
+                totalTime += timerNanoseconds;
+            }
+            totalTime = totalTime / TestingAmount;
+            Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.HandleTime().ToString());
+            Console.WriteLine("C# Time: " + totalTime.ToString());
 
-            // Rust time
-            Assert.IsTrue((ClientFactoryTestMethods.ToAsyncTime() * 0.85) < timer.Elapsed.TotalMilliseconds);
+            Assert.IsTrue((ClientFactoryTestMethods.ToAsyncTime() > totalTime / ConversionLossLimit));
         }
     }
 }

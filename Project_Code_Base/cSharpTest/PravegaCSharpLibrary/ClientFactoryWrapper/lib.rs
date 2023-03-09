@@ -26,6 +26,9 @@ static INSTANCE: OnceCell<ClientFactory> = OnceCell::new();
 
 // Default Constructor for Client Factory
 //  -Creates client factory with default config, generated runtime.
+
+const TESTING_AMOUNT: i32 = 10;
+
 #[no_mangle]
 extern "C" fn CreateClientFactory() -> &'static ClientFactory{
 
@@ -46,6 +49,7 @@ extern "C" fn CreateClientFactory() -> &'static ClientFactory{
 #[no_mangle]
 extern "C" fn CreateClientFactoryTime() -> u64
 {
+<<<<<<< HEAD
     // Start timer
     let timer = Instant::now();
 
@@ -62,6 +66,27 @@ extern "C" fn CreateClientFactoryTime() -> u64
 
     // Return seconds passed
     return time_elapsed.as_millis() as u64;
+=======
+    let mut total_time: u64 = 0;
+    //Repeat test multiple times to get an average
+    for _i in 0..TESTING_AMOUNT {
+        // Start timer
+        let timer = Instant::now();
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+        // Run function
+        let _new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+    
+        // End timer
+        let time_elapsed = timer.elapsed();
+        total_time += time_elapsed.subsec_nanos() as u64
+    }
+    //Calculate average time taken in nano seconds
+    return total_time / (TESTING_AMOUNT as u64);
+>>>>>>> 7925743efa271f90b46f237e1e4626f4fc144a6f
 }
 
 // Constructor for Client Factory
@@ -85,6 +110,7 @@ extern "C" fn CreateClientFactoryFromConfig(source_config: *const ClientConfig) 
 #[no_mangle]
 extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 {
+<<<<<<< HEAD
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
         .controller_uri("localhost:9090")
@@ -100,6 +126,27 @@ extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 
     // Return seconds passed
     return time_elapsed.as_millis() as u64;
+=======
+    let mut total_time: u64 = 0;
+    //Repeat test multiple times to get an average
+    for _i in 0..TESTING_AMOUNT {
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+    
+        // Start timer
+        let timer = Instant::now();
+        // Run function
+        let _new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+        // End timer
+        let time_elapsed = timer.elapsed();
+        total_time += time_elapsed.subsec_nanos() as u64
+    }
+    //Calculate average time taken in nano seconds
+    return total_time / (TESTING_AMOUNT as u64);
+>>>>>>> 7925743efa271f90b46f237e1e4626f4fc144a6f
 }
 
 // Constructor for Client Factory
@@ -130,6 +177,7 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntime(source_config_pointer: *co
 #[no_mangle]
 extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
 {
+<<<<<<< HEAD
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
         .controller_uri("localhost:9090")
@@ -138,16 +186,30 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
    
     // Create test runtime
     let rt: Runtime = tokio::runtime::Runtime::new().expect("create runtime");
+=======
+    let mut total_time: u64 = 0;
+    //Repeat test multiple times to get an average
+    for _i in 0..TESTING_AMOUNT {
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+    
+        // Create test runtime
+        let rt: Runtime = tokio::runtime::Runtime::new().expect("create runtime");
+>>>>>>> 7925743efa271f90b46f237e1e4626f4fc144a6f
 
-    // Start timer
-    let timer = Instant::now();
-    // Run function
-    let _new_client_factory: ClientFactory = ClientFactory::new_with_runtime(default_client_config, rt);
-    // End timer
-    let time_elapsed = timer.elapsed();
-
-    // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+        // Start timer
+        let timer = Instant::now();
+        // Run function
+        let _new_client_factory: ClientFactory = ClientFactory::new_with_runtime(default_client_config, rt);
+        // End timer
+        let time_elapsed = timer.elapsed();
+        total_time += time_elapsed.subsec_nanos() as u64
+    }
+    //Calculate average time taken in nano seconds
+    return total_time / (TESTING_AMOUNT as u64);
 }
 
 // Getters and Setters for ClientFactory
@@ -165,6 +227,7 @@ extern "C" fn GetClientFactoryRuntime(source_client_factory: &mut ClientFactory)
 #[no_mangle]
 extern "C" fn GetClientFactoryRuntimeTime() -> u64
 {
+<<<<<<< HEAD
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
         .controller_uri("localhost:9090")
@@ -173,16 +236,30 @@ extern "C" fn GetClientFactoryRuntimeTime() -> u64
    
     // Create new client factory
     let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+=======
+    let mut total_time: u64 = 0;
+    //Repeat test multiple times to get an average
+    for _i in 0..TESTING_AMOUNT {
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+    
+        // Create new client factory
+        let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+>>>>>>> 7925743efa271f90b46f237e1e4626f4fc144a6f
 
-    // Start timer
-    let timer = Instant::now();
-    // Run function
-    let _new_runtime: &Runtime = new_client_factory.runtime();
-    // End timer
-    let time_elapsed = timer.elapsed();
-
-    // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+        // Start timer
+        let timer = Instant::now();
+        // Run function
+        let _new_runtime: &Runtime = new_client_factory.runtime();
+        // End timer
+        let time_elapsed = timer.elapsed();
+        total_time += time_elapsed.subsec_nanos() as u64
+    }
+    //Calculate average time taken in nano seconds
+    return total_time / (TESTING_AMOUNT as u64);
 }
 
 // ClientFactory.runtime_handle
@@ -201,6 +278,7 @@ extern "C" fn GetClientFactoryRuntimeHandle(source_client_factory: &mut ClientFa
 #[no_mangle]
 extern "C" fn GetClientFactoryRuntimeHandleTime() -> u64
 {
+<<<<<<< HEAD
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
         .controller_uri("localhost:9090")
@@ -209,16 +287,30 @@ extern "C" fn GetClientFactoryRuntimeHandleTime() -> u64
    
     // Create new client factory
     let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+=======
+    let mut total_time: u64 = 0;
+    //Repeat test multiple times to get an average
+    for _i in 0..TESTING_AMOUNT {
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+    
+        // Create new client factory
+        let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+>>>>>>> 7925743efa271f90b46f237e1e4626f4fc144a6f
 
-    // Start timer
-    let timer = Instant::now();
-    // Run function
-    let _new_handle: Handle = new_client_factory.runtime_handle();
-    // End timer
-    let time_elapsed = timer.elapsed();
-
-    // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+        // Start timer
+        let timer = Instant::now();
+        // Run function
+        let _new_handle: Handle = new_client_factory.runtime_handle();
+        // End timer
+        let time_elapsed = timer.elapsed();
+        total_time += time_elapsed.subsec_nanos() as u64
+    }
+    //Calculate average time taken in nano seconds
+    return total_time / (TESTING_AMOUNT as u64);
 }
 
 // ClientFactory.config
@@ -235,6 +327,7 @@ extern "C" fn GetClientFactoryConfig(source_client_factory: &'static ClientFacto
 #[no_mangle]
 extern "C" fn GetClientFactoryConfigTime() -> u64
 {
+<<<<<<< HEAD
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
         .controller_uri("localhost:9090")
@@ -243,16 +336,30 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
    
     // Create new client factory
     let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+=======
+    let mut total_time: u64 = 0;
+    //Repeat test multiple times to get an average
+    for _i in 0..TESTING_AMOUNT {
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+    
+        // Create new client factory
+        let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+>>>>>>> 7925743efa271f90b46f237e1e4626f4fc144a6f
 
-    // Start timer
-    let timer = Instant::now();
-    // Run function
-    let _new_async_factory: &ClientConfig = new_client_factory.config();
-    // End timer
-    let time_elapsed = timer.elapsed();
-
-    // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+        // Start timer
+        let timer = Instant::now();
+        // Run function
+        let _new_async_factory: &ClientConfig = new_client_factory.config();
+        // End timer
+        let time_elapsed = timer.elapsed();
+        total_time += time_elapsed.subsec_nanos() as u64
+    }
+    //Calculate average time taken in nano seconds
+    return total_time / (TESTING_AMOUNT as u64);
 }
 
 // ClientFactory.controller_client
@@ -283,6 +390,7 @@ extern "C" fn ClientFactoryToAsync(source_client_factory: &'static ClientFactory
 #[no_mangle]
 extern "C" fn ClientFactoryToAsyncTime() -> u64
 {
+<<<<<<< HEAD
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
         .controller_uri("localhost:9090")
@@ -291,16 +399,30 @@ extern "C" fn ClientFactoryToAsyncTime() -> u64
    
     // Create new client factory
     let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+=======
+    let mut total_time: u64 = 0;
+    //Repeat test multiple times to get an average
+    for _i in 0..TESTING_AMOUNT {
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+    
+        // Create new client factory
+        let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+>>>>>>> 7925743efa271f90b46f237e1e4626f4fc144a6f
 
-    // Start timer
-    let timer = Instant::now();
-    // Run function
-    let _new_async_factory: ClientFactoryAsync = new_client_factory.to_async();
-    // End timer
-    let time_elapsed = timer.elapsed();
-
-    // Return seconds passed
-    return time_elapsed.as_millis() as u64;
+        // Start timer
+        let timer = Instant::now();
+        // Run function
+        let _new_async_factory: ClientFactoryAsync = new_client_factory.to_async();
+        // End timer
+        let time_elapsed = timer.elapsed();
+        total_time += time_elapsed.subsec_nanos() as u64
+    }
+    //Calculate average time taken in nano seconds
+    return total_time / (TESTING_AMOUNT as u64);
 }
 
 // Used for interoptopus wrapping
