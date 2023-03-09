@@ -48,7 +48,7 @@ namespace Pravega.Utility
         /// <summary>
         ///  Default constructor for RustStructWrapper. Initialized the internal pointer to be IntPtr.Zero.
         /// </summary>
-        public RustStructWrapper(){
+        internal RustStructWrapper(){
             this._rustStructPointer = IntPtr.Zero;
         }
 

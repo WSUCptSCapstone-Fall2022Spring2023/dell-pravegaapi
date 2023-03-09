@@ -45,12 +45,9 @@ pub extern "C" fn CreateByteReader(
             stream: stream_converted  
         };
 
-        // Set the execution of this function into the runtime pointer inputted
-        let spawn_factory: ClientFactoryAsync = client_factory_ptr.to_async();
-        
         // Create the new bytewriter asynchronously with the inputted runtime and the
-        spawn_factory.runtime_handle().spawn( async move {
-            let result: ByteReader = spawn_factory.create_byte_reader(ss).await;
+        client_factory_ptr.runtime().block_on( async move {
+            let result: ByteReader = client_factory_ptr.create_byte_reader(ss).await;
             let result_box: Box<ByteReader> = Box::new(result);
             let result_ptr: *const ByteReader = Box::into_raw(result_box);
             unsafe { callback(result_ptr) };
@@ -86,12 +83,9 @@ pub extern "C" fn CreateByteWriter(
             stream: stream_converted  
         };
 
-        // Set the execution of this function into the runtime pointer inputted
-        let spawn_factory: ClientFactoryAsync = client_factory_ptr.to_async();
-
         // Create the new bytewriter asynchronously with the inputted runtime and the
-        spawn_factory.runtime_handle().spawn( async move {
-            let result: ByteWriter = spawn_factory.create_byte_writer(ss).await;
+        client_factory_ptr.runtime().block_on( async move {
+            let result: ByteWriter = client_factory_ptr.create_byte_writer(ss).await;
             let result_box: Box<ByteWriter> = Box::new(result);
             let result_ptr: *const ByteWriter = Box::into_raw(result_box);
             unsafe { callback(result_ptr) };

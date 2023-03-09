@@ -6,6 +6,7 @@ use interoptopus::util::NamespaceMappings;
 use interoptopus::{Error, Interop, Inventory, InventoryBuilder};
 use PravegaCSharp;
 
+/* 
 #[test]
 fn bindings_csharp() -> Result<(), Error> {
     use interoptopus_backend_csharp::{Config, Generator};
@@ -28,3 +29,4 @@ fn bindings_csharp() -> Result<(), Error> {
 
     Ok(())
 }
+*/

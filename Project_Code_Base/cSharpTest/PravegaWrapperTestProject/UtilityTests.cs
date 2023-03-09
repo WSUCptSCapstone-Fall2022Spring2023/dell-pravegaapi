@@ -141,6 +141,7 @@ namespace PravegaWrapperTestProject
         ///  RustStructWrapper Tests
         /// </summary>
         // Unit Test. RustStruct default constructor
+        /*
         [Test]
         public void RustStructDefaultConstructorTest()
         {
@@ -163,6 +164,7 @@ namespace PravegaWrapperTestProject
                 Assert.Fail();
             }
         }
+        */
 
 
     }

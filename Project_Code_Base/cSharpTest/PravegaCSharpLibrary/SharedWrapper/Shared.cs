@@ -42,14 +42,14 @@ namespace Pravega.Shared
         private int minimumNumberOfSegments;
 
         /// <summary>
-        ///  Default constructor. Initializes all values to 0.
+        ///  Default constructor. Initializes all values to 0 escept minimumNumberOfSegments which is set to 1.
         /// </summary>
         public Scaling()
         {
             this.type = ScalingType.FixedNumSegments;
             this.targetRate = 0;
             this.scaleFactor = 0;
-            this.minimumNumberOfSegments = 0;
+            this.minimumNumberOfSegments = 1;
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Pravega.Shared
     public class Retention
     {
         private RetentionType policy;
-        private long retentionParameter;
+        private int retentionParameter;
 
         /// <summary>
         ///  Constructor for retention. Takes a policy and amount corresponding to that policy as an input
@@ -139,7 +139,7 @@ namespace Pravega.Shared
         /// <param name="retentionParameter">
         ///     The amount that the retention type should keep track of.
         /// </param>
-        public Retention(RetentionType policy, long retentionParameter)
+        public Retention(RetentionType policy, int retentionParameter)
         {
             this.policy = policy;
             this.retentionParameter = retentionParameter;
@@ -166,7 +166,7 @@ namespace Pravega.Shared
         /// <summary>
         ///  Gets or Sets the retention parameter for this object.
         /// </summary>
-        public long RetentionParameter
+        public int RetentionParameter
         {
             get { return this.retentionParameter; }
             set { this.retentionParameter = value;}
@@ -185,7 +185,7 @@ namespace Pravega.Shared
         private List<string>? tags;
 
         /// <summary>
-        ///  Default constructor. Initializes with null pointer.
+        ///  Default constructor. Initializes with null pointers.
         /// </summary>
         public StreamConfiguration()
         {

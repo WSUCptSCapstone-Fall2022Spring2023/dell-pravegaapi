@@ -27,10 +27,26 @@
             //Sets where to look for DllImport to find the Dll files
             Environment.CurrentDirectory = Pathgen.PathGen.CreateDllPath();
 
+            ClientFactory.Initialize();
+
+            ControllerClient testClient = ClientFactory.FactoryControllerClient;
+
+            Scope testScope = new Scope();
+            testScope.NativeString = "testScope";
+            testClient.CreateScope(testScope).GetAwaiter().GetResult();
+
             Console.WriteLine("test");
             
+            StreamConfiguration streamConfiguration = new StreamConfiguration();
+            streamConfiguration.ConfigScopedStream.Scope = testScope;
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream");
+
+            testClient.CreateStream(streamConfiguration).GetAwaiter().GetResult(); 
+
 
         }
+
+
 
     }
 }

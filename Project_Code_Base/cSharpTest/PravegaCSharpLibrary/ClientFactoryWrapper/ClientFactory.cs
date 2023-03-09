@@ -15,6 +15,7 @@ using Pravega.Utility;
 using Pravega.Config;
 using Pravega.ControllerCli;
 using Pravega.Shared;
+using Pravega.Event;
 #pragma warning restore 0105
 
 namespace Pravega.ClientFactoryModule
@@ -289,6 +290,7 @@ namespace Pravega.ClientFactoryModule
             get { return ClientFactory._rustStructPointer; }
             set { ClientFactory._rustStructPointer = value; }
         }
+        
         /// <summary>
         ///  Gets the runtime object that this clientfactory's asynchronous operations 
         ///  execute on.
@@ -310,6 +312,7 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
+        
         /// <summary>
         ///  Gets the handle of the runtime object that this clientfactory's asynchronous
         ///  operations execute on.
@@ -333,6 +336,7 @@ namespace Pravega.ClientFactoryModule
                 }
             }
         }
+        
         /// <summary>
         /// Gets the configuration settings of this client factory.
         /// </summary>
@@ -355,6 +359,7 @@ namespace Pravega.ClientFactoryModule
                 }
             }     
         }
+        
         /// <summary>
         /// Gets the controller client of this client factory. Responsible for creating streams and other fundamental operations
         /// in Pravega.
@@ -486,6 +491,7 @@ namespace Pravega.ClientFactoryModule
                 return returnReader;
             }
         }
+        
     }
 
 
@@ -500,5 +506,6 @@ namespace Pravega.ClientFactoryModule
             return "ClientFactoryAsync";
         }
     }
+        
 
 }

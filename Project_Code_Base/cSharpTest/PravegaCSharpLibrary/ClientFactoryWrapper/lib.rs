@@ -28,22 +28,19 @@ static INSTANCE: OnceCell<ClientFactory> = OnceCell::new();
 //  -Creates client factory with default config, generated runtime.
 #[no_mangle]
 extern "C" fn CreateClientFactory() -> &'static ClientFactory{
-//extern "C" fn CreateClientFactory() -> *const ClientFactory{
 
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8050")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
     // Create new client factory
     let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
 
-    // Box and return client factory
-    //let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
-    //let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);
-    //return box_pointer;
-    INSTANCE.set(new_client_factory).debugless_unwrap();
+    
+    // Set the once_cell and return
+    INSTANCE.set(new_client_factory).unwrap();
     return INSTANCE.get().unwrap();
 }
 #[no_mangle]
@@ -54,7 +51,7 @@ extern "C" fn CreateClientFactoryTime() -> u64
 
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8050")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
     // Run function
@@ -80,10 +77,7 @@ extern "C" fn CreateClientFactoryFromConfig(source_config: *const ClientConfig) 
         // Create new client factory
         let new_client_factory: ClientFactory = ClientFactory::new(source_config_pointer);
 
-        // Box and return client factory
-        //let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
-        //let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
-        //return box_pointer;
+        // Set and return client factory
         INSTANCE.set(new_client_factory).debugless_unwrap();
         return INSTANCE.get().unwrap();
     }
@@ -93,7 +87,7 @@ extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8050")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -138,7 +132,7 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8050")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -173,7 +167,7 @@ extern "C" fn GetClientFactoryRuntimeTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -209,7 +203,7 @@ extern "C" fn GetClientFactoryRuntimeHandleTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -243,7 +237,7 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8050")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
@@ -291,7 +285,7 @@ extern "C" fn ClientFactoryToAsyncTime() -> u64
 {
     // Create default ClientConfig
     let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:8000")
+        .controller_uri("localhost:9090")
         .build()
         .expect("create config");
    
