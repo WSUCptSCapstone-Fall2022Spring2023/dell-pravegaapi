@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {}
+    "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {}
   },
   "projects": {
-    "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
+    "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
+        "projectUniqueName": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
         "projectName": "PravegaCSharpLibrary",
-        "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
-        "packagesPath": "C:\\Users\\john_\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\obj\\",
+        "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
+        "packagesPath": "C:\\Users\\eveer\\.nuget\\packages\\",
+        "outputPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\john_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\eveer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

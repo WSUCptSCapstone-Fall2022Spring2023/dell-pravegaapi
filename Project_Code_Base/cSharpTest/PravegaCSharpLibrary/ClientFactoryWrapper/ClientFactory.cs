@@ -24,7 +24,7 @@ namespace Pravega.ClientFactoryModule
     public static partial class Interop {
 
         // Set path of ClientFactory .dll specifically
-        public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
+        public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
 
@@ -462,6 +462,7 @@ namespace Pravega.ClientFactoryModule
             {
                 ByteWriter returnWriter = new ByteWriter();
                 await returnWriter.InitializeByteWriter(writerScopedStream);
+                Console.WriteLine("lmao");
                 return returnWriter;
             }
 
@@ -491,7 +492,41 @@ namespace Pravega.ClientFactoryModule
                 return returnReader;
             }
         }
-        
+
+        /// <summary>
+        /// Creates the reader group from a scopedScream
+        /// </summary>
+        /// <param name="readerGroupScopedStream">The reader group scoped stream.</param>
+        /// <returns>A newly initialized Readergroup</returns>
+        /// <exception cref="Pravega.PravegaException"></exception>
+        public static async Task<ReaderGroup> CreateReaderGroup(ScopedStream readerGroupScopedStream)
+        {
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+            else
+            {
+                ReaderGroup newGroup = new ReaderGroup();
+                await newGroup.InitializeReaderGroup(readerGroupScopedStream);
+                return newGroup;
+            }
+        }
+
+        public static async Task<EventWriter> CreateEventWriter(ScopedStream readerGroupScopedStream)
+        {
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+            else
+            {
+                EventWriter newEW = new EventWriter();
+                await newEW.InitializeEventWriter(readerGroupScopedStream);
+                return newEW;
+            }
+        }
+
     }
 
 

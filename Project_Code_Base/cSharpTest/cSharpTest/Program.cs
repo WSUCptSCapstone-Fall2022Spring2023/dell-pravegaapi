@@ -44,7 +44,10 @@
             testClient.CreateStream(streamConfiguration).GetAwaiter().GetResult(); 
 
             ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-            Console.WriteLine("test2");
+            Console.WriteLine("test3");
+            ClientFactory.CreateEventWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+            Console.WriteLine("test3");
+            ClientFactory.CreateReaderGroup(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
         }
 
 

@@ -13,20 +13,63 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Pravega.ClientFactoryModule;
 using Pravega.Shared;
 using Pravega.Utility;
+using static Pravega.Interop;
 #pragma warning restore 0105
 
 namespace Pravega.Event
 {
+    public static partial class Interop
+    {
+        public const string EventDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\event_wrapper.dll";
+        [DllImport(EventDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateReaderGroup")]
+        internal static extern IntPtr CreateReaderGroup(IntPtr clientFactoryPointer, CustomRustString scope, CustomRustString stream, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
+
+        [DllImport(EventDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateEventWriter")]
+        internal static extern IntPtr CreateEventWriter(IntPtr clientFactoryPointer, CustomRustString scope, CustomRustString stream, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
+    }
 
     // ***** Wrapper for EventWriter *****
 
     public class EventWriter : RustStructWrapper {
 
-        internal EventWriter(ScopedStream s)
+        internal EventWriter()
         {
             this.RustStructPointer = IntPtr.Zero;
+        }
+
+        internal async Task InitializeEventWriter(
+            ScopedStream writerScopedStream
+        )
+        {
+            if (ClientFactory.Initialized())
+            {
+                IntPtr EWPointer = await GenerateEventWriterHelper(writerScopedStream);
+                this._rustStructPointer = EWPointer;
+                Console.WriteLine("From C#");
+                Console.WriteLine(this._rustStructPointer);
+            }
+            else
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+        }
+        private Task<IntPtr> GenerateEventWriterHelper(
+            ScopedStream writerScopedStream
+        )
+        {
+            TaskCompletionSource<IntPtr> task = new TaskCompletionSource<IntPtr>();
+            Interop.CreateEventWriter(
+                ClientFactory.RustStructPointer,
+                writerScopedStream.Scope.RustString,
+                writerScopedStream.Stream.RustString,
+                (value) => {
+                    task.SetResult(value);
+                }
+            );
+            return task.Task;
         }
     }
 
@@ -59,9 +102,40 @@ namespace Pravega.Event
     // ***** Wrapper for ReaderGroup *****
     public class ReaderGroup : RustStructWrapper{
 
-        internal ReaderGroup(ScopedStream s)
+        internal ReaderGroup()
         {
             this._rustStructPointer = IntPtr.Zero;
+        }
+
+        internal async Task InitializeReaderGroup(
+            ScopedStream writerScopedStream
+        )
+        {
+            if (ClientFactory.Initialized())
+            {
+                IntPtr ReaderGroupPointer = await GenerateReaderGroupHelper(writerScopedStream);
+                this._rustStructPointer = ReaderGroupPointer;
+                Console.WriteLine(this._rustStructPointer);
+            }
+            else
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+        }
+        private Task<IntPtr> GenerateReaderGroupHelper(
+            ScopedStream writerScopedStream
+        )
+        {
+            TaskCompletionSource<IntPtr> task = new TaskCompletionSource<IntPtr>();
+            Interop.CreateReaderGroup(
+                ClientFactory.RustStructPointer,
+                writerScopedStream.Scope.RustString,
+                writerScopedStream.Stream.RustString,
+                (value) => {
+                    task.SetResult(value);
+                }
+            );
+            return task.Task;
         }
     }    
 

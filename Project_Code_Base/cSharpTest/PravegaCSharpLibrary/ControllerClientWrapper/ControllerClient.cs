@@ -24,7 +24,7 @@ namespace Pravega.ControllerCli
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop
     {
-        public const string ControllerclientDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
+        public const string ControllerclientDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
 
         ////////
         /// Controller Client
