@@ -16,7 +16,7 @@ use pravega_client_shared::{ScopedStream, Scope, Stream};
 use pravega_client::{client_factory::ClientFactory};
 use futures::executor;
 use utility_wrapper::CustomRustString;
-
+use utility_wrapper::U8Slice;
 use tokio::task::JoinHandle;
 use std::{thread, time};
 use std::io::{Error, ErrorKind, SeekFrom};
@@ -31,7 +31,9 @@ pub extern "C" fn CreateByteReader(
     client_factory_ptr: &'static ClientFactory,
     scope: CustomRustString,
     stream: CustomRustString,
-    callback: unsafe extern "C" fn(*const ByteReader)){
+    key: u64,
+    callback: unsafe extern "C" fn(u64, *const ByteReader))
+    {
 
 
         // Construct scopedstream and clientfactoryasync from function inputs
@@ -51,7 +53,7 @@ pub extern "C" fn CreateByteReader(
             let result: ByteReader = client_factory_ptr.create_byte_reader(ss).await;
             let result_box: Box<ByteReader> = Box::new(result);
             let result_ptr: *const ByteReader = Box::into_raw(result_box);
-            unsafe { callback(result_ptr) };
+            unsafe { callback(key, result_ptr) };
         }) ;
         
 }
@@ -72,7 +74,9 @@ pub extern "C" fn ByteReaderAvailable(source_byte_reader: &mut ByteReader) -> u6
 
 // ByteReader.seek
 #[no_mangle]
-pub extern "C" fn ByteReaderSeek(client_factory_ptr: &'static ClientFactory,
+pub extern "C" fn ByteReaderSeek(
+    client_factory_ptr: &'static ClientFactory,
+    source_byte_reader: &mut ByteReader,
     mode: u64,
     number_of_bytes: u64,
     callback: unsafe extern "C" fn(u64))
@@ -92,7 +96,39 @@ pub extern "C" fn ByteReaderSeek(client_factory_ptr: &'static ClientFactory,
     else{
         panic!("Invalid seek mode inputted")
     }
+
+    // Seek from the reader seek from position
+    client_factory_ptr.runtime().block_on( async move {
+        let result: u64 = source_byte_reader.seek(reader_seek_from).await.unwrap();
+        unsafe { callback(result) };
+    }) ;
 }
+
+// ByteReader.read
+#[no_mangle]
+pub extern "C" fn ByteReaderRead(
+    client_factory_ptr: &'static ClientFactory,
+    source_byte_reader: &mut ByteReader, 
+    bytes_requested: u32,
+    callback: unsafe extern "C" fn(*mut &[u8], u32)
+) -> ()
+{
+    // Block on and read
+    client_factory_ptr.runtime_handle().block_on(async move{
+
+        // Create a buffer in Rust to use as storage for the read. Create at capacity
+        let mut buffer: Vec<u8> = vec![0; bytes_requested as usize];
+
+        // Read into buffer.
+        let result: usize = source_byte_reader.read(&mut buffer).await.unwrap();
+
+        // Box and then return.
+        let buffer_box: Box<&[u8]> = Box::new(buffer.as_slice());
+        let buffer_box_raw: *mut &[u8] = Box::into_raw(buffer_box);
+        unsafe { callback(buffer_box_raw, result as u32); }
+    })
+}
+
 
 // ByteWriter default constructor
 #[no_mangle]
@@ -100,7 +136,8 @@ pub extern "C" fn CreateByteWriter(
     client_factory_ptr: &'static ClientFactory,
     scope: CustomRustString,
     stream: CustomRustString,
-    callback: unsafe extern "C" fn(*const ByteWriter)){
+    key: u64,
+    callback: unsafe extern "C" fn(u64, *const ByteWriter)){
 
 
         // Construct scopedstream and clientfactoryasync from function inputs
@@ -120,7 +157,7 @@ pub extern "C" fn CreateByteWriter(
             let result: ByteWriter = client_factory_ptr.create_byte_writer(ss).await;
             let result_box: Box<ByteWriter> = Box::new(result);
             let result_ptr: *const ByteWriter = Box::into_raw(result_box);
-            unsafe { callback(result_ptr) };
+            unsafe { callback(key, result_ptr) };
         }) ;
         
 }
@@ -133,3 +170,25 @@ pub extern "C" fn ByteWriterCurrentOffset(source_byte_writer: &mut ByteWriter) -
     return source_byte_writer.current_offset();
 }
 
+// ByteWriter.write
+#[no_mangle]
+pub extern "C" fn ByteWriterWrite(
+    client_factory_ptr: &'static ClientFactory,
+    byte_writer_ptr: &mut ByteWriter,
+    buffer: *mut u8,
+    buffer_size: u32,
+    callback: unsafe extern "C" fn(u64)
+)
+{
+    // Initialize the buffer from the inputs
+    let buffer_slice: U8Slice = U8Slice { slice_pointer: buffer as *mut i32, length: buffer_size };
+    let buffer_array: &mut [u8] = buffer_slice.as_rust_u8_slice_mut();
+
+    // Block on the client factory's runtime
+    client_factory_ptr.runtime().block_on( async move {
+
+        // Write data to server
+        let result: usize = byte_writer_ptr.write(buffer_array).await.unwrap();
+        unsafe { callback(result as u64); }
+    });
+}

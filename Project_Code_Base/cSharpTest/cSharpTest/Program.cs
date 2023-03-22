@@ -41,10 +41,11 @@
             streamConfiguration.ConfigScopedStream.Scope = testScope;
             streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream");
 
-            testClient.CreateStream(streamConfiguration).GetAwaiter().GetResult(); 
+            testClient.CreateStream(streamConfiguration).GetAwaiter().GetResult();
 
-            ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-            Console.WriteLine("test2");
+            ByteWriter testReader = ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+
+            Console.WriteLine("finish");
         }
 
 

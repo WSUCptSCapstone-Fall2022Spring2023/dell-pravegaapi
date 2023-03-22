@@ -102,7 +102,8 @@ namespace PravegaWrapperTestProject
         public void ClientFactoryClientConfigConstructorTimeTest()
         {
 
-            double totalTime = 0;
+            double totalTime;
+            totalTime = 0;
             for (int i = 0; i < TestingAmount; i++)
             {
                 ClientFactory.Initialize();
