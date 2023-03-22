@@ -16,7 +16,11 @@ using Pravega.Config;
 using Pravega.ControllerCli;
 using Pravega.Shared;
 using Pravega.Event;
+using System.Runtime.CompilerServices;
 #pragma warning restore 0105
+
+// Make internals visible for testing
+[assembly: InternalsVisibleTo("PravegaWrapperTestProject")]
 
 namespace Pravega.ClientFactoryModule
 {
@@ -108,7 +112,7 @@ namespace Pravega.ClientFactoryModule
     ///   a clientfactory. The function ToAsyncTime() runs that function 
     ///   in a Rust .dll call and returns how long it took to execute.
     /// </summary>
-    public static class ClientFactoryTestMethods
+    internal static class ClientFactoryTestMethods
     {
         /// <summary>
         ///   Return time it takes in Rust to run "to_async"
@@ -436,7 +440,7 @@ namespace Pravega.ClientFactoryModule
         /// <summary>
         ///  This method marks this object as being deallocated and therefore no longer accessible.
         /// </summary>
-        public static void Destroy()
+        internal static void Destroy()
         {
             ClientFactory._rustStructPointer = IntPtr.Zero;
             ClientFactory.initialized = false;

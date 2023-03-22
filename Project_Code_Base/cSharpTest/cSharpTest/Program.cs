@@ -32,18 +32,27 @@
             ControllerClient testClient = ClientFactory.FactoryControllerClient;
 
             Scope testScope = new Scope();
-            testScope.NativeString = "testScope";
+            testScope.NativeString = "testScope2";
             testClient.CreateScope(testScope).GetAwaiter().GetResult();
 
             Console.WriteLine("test");
             
             StreamConfiguration streamConfiguration = new StreamConfiguration();
             streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream");
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream2");
 
             testClient.CreateStream(streamConfiguration).GetAwaiter().GetResult();
 
-            ByteWriter testReader = ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+            ByteWriter testWriter = ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+
+            List<byte> testBytes = new List<byte>();
+            testBytes.Add(0);
+            testBytes.Add(1);
+            testBytes.Add(2);
+            testBytes.Add(3);
+            Console.WriteLine(testWriter.Write(testBytes).GetAwaiter().GetResult().ToString());
+
+            ByteReader testReader = ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
 
             Console.WriteLine("finish");
         }

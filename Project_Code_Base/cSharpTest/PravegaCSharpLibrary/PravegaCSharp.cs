@@ -38,6 +38,17 @@ namespace Pravega {
         /// <summary>
         ///  Manages delegates allocated, keeping them from being collected from GC until they are removed.
         ///  Used as a way of pinning delegates and ensuring they aren't freed after a dll call until told specifically.
+        ///  
+        ///  This is implemented this way due to a problem we encountered. We wanted to preserve delegates so that they weren't
+        ///  garbage collected while also ensuring that the function pointer was safe to access and call from rust. Previous 
+        ///  implementations didn't account for if GC would move the delegate's reference when cycling. This method ensures that the
+        ///  delegate reference won't move since rust will always be calling a static reference if implemented correctly. This also
+        ///  solves the problem of delegates being garbage collected before rust can call them since rust will always call a
+        ///  static delegate. In addition, we are able to essentially pin delegates within the dictionaries which is something you
+        ///  can't normally do with delegates. Because there is a live reference to the delegate in the Dictionary, it won't be collected
+        ///  by GC and therefore always be able to be used by rust. All rust has to do is enter the arguments to it as well as a key to
+        ///  access the correct delegate assuming it exists at that point. An example of implementation can be found ing Byte.cs in 
+        ///  GenerateByteWriter.
         /// </summary>
         internal static class CallbackDelegateManager
         {
@@ -87,7 +98,7 @@ namespace Pravega {
             /// <param name="arg">
             /// Callback to be added
             /// </param>
-            internal static ulong AddToRustCallbackUArrayDictionary(rustCallbackArray arg)
+            internal static ulong AddToRustCallbackArrayDictionary(rustCallbackArray arg)
             {
                 ulong i = 0;
                 while (rustCallbackArrayDict.ContainsKey(i))
@@ -258,18 +269,6 @@ namespace Pravega {
                     rustCallbackArrayDict.Remove(key);
                 }
             }
-
-            internal static rustCallbackInvoke CallbackDictDelegateInvoke = (key, arg) => { CallbackDelegateManager.InvokeFromRustCallbackDict(key, arg); };
-            internal static rustCallbackU64Invoke CallbackU64DictDelegateInvoke = (key, arg) => { CallbackDelegateManager.InvokeFromRustCallbackU64Dict(key, arg); };
-            internal static rustCallbackArrayInvoke CallbackArrayDictDelegateInvoke = (key, arrayPtr, size) => { CallbackDelegateManager.InvokeFromRustCallbackArrayDict(key, arrayPtr, size); };
-
-            /// <summary>
-            ///  Delegates that can be marshalled to rust and called in order to remove a delegate from memory from rust.
-            /// </summary>
-            internal static rustCallbackU64 RemoveFromCallbackDictDelegate = (key) => { CallbackDelegateManager.RemoveFromRustCallbackDict(key); };
-            internal static rustCallbackU64 RemoveFromCallbackU64DictDelegate = (key) => { CallbackDelegateManager.RemoveFromRustCallbackU64Dict(key); };
-            internal static rustCallbackU64 RemoveFromCallbackArrayDictDelegate = (key) => { CallbackDelegateManager.RemoveFromRustCallbackArrayDict(key); };
-
         }
     }
 

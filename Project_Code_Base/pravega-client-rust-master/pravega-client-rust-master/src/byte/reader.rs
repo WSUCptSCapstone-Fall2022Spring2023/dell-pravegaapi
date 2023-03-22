@@ -90,6 +90,7 @@ impl ByteReader {
             stream: stream.stream.clone(),
             segment,
         };
+
         let async_reader = factory.create_async_segment_reader(scoped_segment.clone()).await;
         let async_reader_wrapper = PrefetchingAsyncSegmentReader::new(
             factory.runtime_handle(),
@@ -97,9 +98,11 @@ impl ByteReader {
             0,
             buffer_size,
         );
+
         let metadata_client = factory
             .create_segment_metadata_client(scoped_segment.clone())
             .await;
+
         ByteReader {
             reader_id: Uuid::new_v4(),
             segment: scoped_segment,

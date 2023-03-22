@@ -49,18 +49,65 @@ namespace Pravega.ClientFactoryModule
 
         // ByteWriter.write()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterWrite")]
-        internal static extern ulong ByteWriterWrite(IntPtr clientFactroyPointer, IntPtr byteWriterPointer, IntPtr bufferPointer, int bufferSize, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        internal static extern ulong ByteWriterWrite(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            IntPtr bufferPointer,
+            uint bufferSize,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        // ByteWriter.flush()
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterFlush")]
+        internal static extern ulong ByteWriterFlush(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        // ByteWriter.seal()
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeal")]
+        internal static extern ulong ByteWriterSeal(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        // ByteWriter.trunate_data_before
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterTruncateDataBefore")]
+        internal static extern ulong ByteWriterTruncateDataBefore(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            long offset,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        // ByteWriter.seek_to_tail()
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeekToTail")]
+        internal static extern ulong ByteWriterSeekToTail(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        // ByteWriter.reset()
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterReset")]
+        internal static extern ulong ByteWriterReset(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
 
         ////////
         /// Byte Reader
         ////////
         // ByteReader default constructor
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteReader")]
-        internal static extern IntPtr CreateByteReader(
+        internal static extern void CreateByteReader(
             IntPtr clientFactoryPointer,
             CustomRustString scope,
             CustomRustString stream,
-            ulong callbackDictKey,
+            ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback
         );
 
@@ -74,12 +121,38 @@ namespace Pravega.ClientFactoryModule
 
         // ByteReader.seek()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderSeek")]
-        internal static extern void ByteReaderSeek(IntPtr clientFactoryPointer, IntPtr byteReaderPointer, ulong mode, ulong nBytes, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        internal static extern void ByteReaderSeek(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
+            ulong mode,
+            ulong nBytes,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
 
         // ByteReader.read()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderRead")]
-        internal static extern void ByteReaderRead(IntPtr clientFactoryPointer, IntPtr byteReaderPointer, ulong bytesRequested, [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackArray callback);
+        internal static extern void ByteReaderRead(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
+            ulong bytesRequested,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackArrayInvoke callback);
 
+        // ByteReader.current_head
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentHead")]
+        internal static extern void ByteReaderCurrentHead(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        // ByteReader.current_tail
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentTail")]
+        internal static extern void ByteReaderCurrentTail(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
     }
 
 
@@ -111,14 +184,15 @@ namespace Pravega.ClientFactoryModule
             ScopedStream writerScopedStream
         )
         {
-            if (ClientFactory.Initialized())
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
             {
-                IntPtr byteWriterPointer = await GenerateByteWriterHelper(writerScopedStream);
-                this._rustStructPointer = byteWriterPointer;
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
             }
             else
             {
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                IntPtr byteWriterPointer = await GenerateByteWriterHelper(writerScopedStream);
+                this._rustStructPointer = byteWriterPointer;
             }
         }
 
@@ -154,7 +228,12 @@ namespace Pravega.ClientFactoryModule
         /// </summary>
         public ulong CurrentOffset{
             get{
-                if (!this.IsNull()){
+                // If ClientFactory isn't initialized, throw an exception.
+                if (!ClientFactory.Initialized())
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else if (!this.IsNull()){
                     return Interop.ByteWriterCurrentOffset(this.RustStructPointer);
                 }
                 else{
@@ -163,6 +242,21 @@ namespace Pravega.ClientFactoryModule
             }
         }
 
+        /// <summary>
+        ///  Writes the given data to the server asynchronously.
+        ///  It doesn’t mean the data is persisted on the server
+        ///  side when this method returns Ok, user should call
+        ///  flush to ensure all data has been acknowledged by the server.
+        /// </summary>
+        /// <param name="buffer">
+        ///  Buffer to write to the scoped stream
+        /// </param>
+        /// <returns>
+        ///  Number of bytes written
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///  Thrown when called and ClientFactory isn't initialized
+        /// </exception>
         public Task<ulong> Write(
             List<byte> buffer
         )
@@ -173,26 +267,226 @@ namespace Pravega.ClientFactoryModule
                 throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
             }
 
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
             // Split the list into local variables. 
             byte[] bufferArray = buffer.ToArray();
-            int bufferSize = bufferArray.Length;
+            uint bufferSize = (uint)bufferArray.Length;
 
             // Marshal the array to unmanaged memory.
             IntPtr unmanagedBufferArray = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte))
-                       * bufferSize);
-            Marshal.Copy(bufferArray, 0, unmanagedBufferArray, bufferSize);
+                       * (int)bufferSize);
+            Marshal.Copy(bufferArray, 0, unmanagedBufferArray, (int)bufferSize);
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
 
             // Write to stream the unmanaged buffer
-            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
             Interop.ByteWriterWrite(
                 ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 unmanagedBufferArray,
                 bufferSize,
-                (value) => {
-                    task.SetResult(value);
-                }
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            return task.Task;
+        }
+
+        /// <summary>
+        /// Flush data.
+        ///
+        /// It will wait until all pending appends have acknowledgment.
+        /// </summary>
+        /// <returns>
+        ///  Number of bytes written
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///  Thrown when called and ClientFactory isn't initialized
+        /// </exception>
+        public Task<ulong> Flush()
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Call bytewriter flush
+            Interop.ByteWriterFlush(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+
+            return task.Task;
+        }
+
+        /// <summary>
+        ///  Seal the segment and no further writes are allowed.
+        /// </summary>
+        /// <returns>
+        ///  A task. Result is set to 1 when complete
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///  Thrown when called and ClientFactory isn't initialized
+        /// </exception>
+        public Task<ulong> Seal()
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Call bytewriter seal
+            Interop.ByteWriterSeal(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+
+            return task.Task;
+        }
+
+        /// <summary>
+        ///  Truncate data before a given offset for the segment. No reads are allowed before
+        ///  truncation point after calling this method.
+        /// </summary>
+        /// <param name="offset">
+        ///  Offset to truncate before.
+        /// </param>
+        /// <returns>
+        ///  A task. Result is set to 1 when complete
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///  Thrown if called when no ClientFactory is in place.
+        /// </exception>        
+        public Task<ulong> TruncateDataBefore(long offset)
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Call bytewriter truncate data before
+            Interop.ByteWriterTruncateDataBefore(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                offset,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            return task.Task;
+        }
+
+        /// <summary>
+        /// Seek to the tail of the segment.
+        ///
+        /// This method is useful for tail reads.
+        /// </summary>
+        /// <returns>
+        ///  A task. Result is set to 1 when complete
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///  Thrown if called when no ClientFactory is in place.
+        /// </exception>
+        public Task<ulong> SeekToTail()
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Call bytewriter seek to tail
+            Interop.ByteWriterSeekToTail(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            return task.Task;
+        }
+
+        /// <summary>
+        /// Reset the internal Reactor, making it ready for new appends.
+        ///
+        /// Use this method if you want to continue to append after ConditionalCheckFailure error.
+        /// It will clear all pending events and set the Reactor ready.
+        /// 
+        /// </summary>
+        /// <returns>
+        ///  A task. Result is set to 1 when finished and 0 if an error occurred.
+        /// </returns>
+        public Task<ulong> Reset()
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Call bytewriter reset
+            Interop.ByteWriterReset(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+
             return task.Task;
         }
 
@@ -244,7 +538,6 @@ namespace Pravega.ClientFactoryModule
         ///  Internal method that generates a byte reader using a dll call. Sets this object's pointer when initialized successfully.
         /// </summary>
         /// <param name="writerScopedStream"></param>
-        /// <returns></returns>
         private Task<IntPtr> GenerateByteReaderHelper(
             ScopedStream writerScopedStream
         )
@@ -265,8 +558,6 @@ namespace Pravega.ClientFactoryModule
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackDict
             );
             return task.Task;
-
-
         }
 
         /// <summary>
@@ -276,7 +567,12 @@ namespace Pravega.ClientFactoryModule
         {
             get
             {
-                if (!this.IsNull())
+                // If ClientFactory isn't initialized, throw an exception.
+                if (!ClientFactory.Initialized())
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else if (!this.IsNull())
                 {
                     return Interop.ByteReaderCurrentOffset(this.RustStructPointer);
                 }
@@ -295,7 +591,12 @@ namespace Pravega.ClientFactoryModule
         {
             get
             {
-                if (!this.IsNull())
+                // If ClientFactory isn't initialized, throw an exception.
+                if (!ClientFactory.Initialized())
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else if (!this.IsNull())
                 {
                     return Interop.ByteReaderAvailable(this.RustStructPointer);
                 }
@@ -340,18 +641,24 @@ namespace Pravega.ClientFactoryModule
             }
 
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
             Interop.ByteReaderSeek(
                 ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 mode,
                 numberOfBytes,
-                (value) => {
-                    task.SetResult(value);
-                }
+                key,
+                CallbackDelegateManager.InvokeFromRustCallbackU64Dict
             );
             return task.Task;
         }
-        
+
         /// <summary>
         ///  Reads data from the ByteReader on the current offset, filling in as much as possible up to the amount requested. Returns the buffer read afterwards
         /// </summary>
@@ -361,6 +668,9 @@ namespace Pravega.ClientFactoryModule
         /// <returns>
         ///  Buffer containing bytes read
         /// </returns>
+        /// <exception cref="PravegaException">
+        ///     Occurs if the ClientFactory isn't initialized when called.
+        /// </exception>
         public Task<byte[]> Read(uint numberOfBytesRequested)
         {
             // If Client Factory isn't initialized, throw
@@ -381,20 +691,98 @@ namespace Pravega.ClientFactoryModule
                 byte[] bufferManaged = buffer.Copied;
                 task.SetResult(bufferManaged);
             };
-            GCHandle callbackAlloc = GCHandle.Alloc(callback, GCHandleType.Pinned);
-            IntPtr callbackAllocPtr = GCHandle.ToIntPtr(callbackAlloc);
+            ulong key = CallbackDelegateManager.AddToRustCallbackArrayDictionary(callback);
+
 
             // Create a task and call ByteReaderRead. Await array pointer passback
             Interop.ByteReaderRead(
                 ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 numberOfBytesRequested,
-                callback
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackArrayDict
             );
 
             return task.Task;
         }
-    
+
+        /// <summary>
+        ///  Return the head of current readable data in the segment asynchronously.
+        ///
+        ///  The ByteReader is initialized to read from the segment at offset 0. However, it might
+        ///  encounter the SegmentIsTruncated error due to the segment has been truncated. In this case,
+        ///  application should call this method to get the current readable head and read from it.
+        /// </summary>
+        /// <returns>
+        ///  A ulong task. Result is set once the next readeable head has been found.
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///     Occurs if the ClientFactory isn't initialized when called.
+        /// </exception>
+        public Task<ulong> CurrentHead()
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Call bytewriter reset
+            Interop.ByteReaderCurrentHead(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+
+            return task.Task;
+        }
+
+        /// <summary>
+        ///  Return the tail offset of the segment asynchronously.
+        /// </summary>
+        /// <returns>
+        ///  A ulong task. Result is set once the tail has been found.
+        /// </returns>
+        /// <exception cref="PravegaException">
+        ///     Occurs if the ClientFactory isn't initialized when called.
+        /// </exception>
+        public Task<ulong> CurrentTail()
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Call bytewriter reset
+            Interop.ByteReaderCurrentTail(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+
+            return task.Task;
+        }
     }
 
 
