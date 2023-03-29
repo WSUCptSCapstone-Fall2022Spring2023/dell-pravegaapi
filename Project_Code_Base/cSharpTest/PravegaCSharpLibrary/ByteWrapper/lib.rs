@@ -11,8 +11,8 @@
 use interoptopus::{Inventory, InventoryBuilder};
 use pravega_client::client_factory::ClientFactoryAsync;
 use pravega_client::{byte::ByteReader,byte::ByteWriter};
-use pravega_client_config::connection_type;
-use pravega_client_shared::{ScopedStream, Scope, Stream};
+use pravega_client_config::{connection_type, ClientConfig, ClientConfigBuilder};
+use pravega_client_shared::{ScopedStream, Scope, Stream, StreamConfiguration, Scaling, ScaleType, Retention, RetentionType};
 use pravega_client::{client_factory::ClientFactory};
 use futures::executor;
 use utility_wrapper::CustomRustString;
@@ -33,9 +33,7 @@ pub extern "C" fn CreateByteReader(
     stream: CustomRustString,
     key: u64,
     callback: unsafe extern "C" fn(u64, *const ByteReader))
-    {
-
-
+    {   
         // Construct scopedstream and clientfactoryasync from function inputs
         let scope_converted = Scope{
             name: scope.as_string()

@@ -12,6 +12,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Pravega;
+using Pravega.ClientFactoryModule;
 using Pravega.Utility;
 using Pravega.Config;
 using Pravega.Index;
@@ -22,7 +23,7 @@ using static Pravega.Interop;
 using System.Drawing;
 #pragma warning restore 0105
 
-namespace Pravega.ClientFactoryModule
+namespace Pravega.Byte
 {
     // Continues building the Interop class by adding method signatures found in Byte.
     public static partial class Interop
@@ -41,7 +42,7 @@ namespace Pravega.ClientFactoryModule
             CustomRustString scope, 
             CustomRustString stream, 
             ulong key,
-            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback);
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback); 
 
         // ByteWriter current offset getter
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterCurrentOffset")]

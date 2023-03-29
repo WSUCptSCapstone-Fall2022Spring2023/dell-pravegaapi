@@ -31,59 +31,49 @@ const TESTING_AMOUNT: i32 = 10;
 
 #[no_mangle]
 extern "C" fn CreateClientFactory() -> &'static ClientFactory{
-
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-   
-    // Create new client factory
-    let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-
     
-    // Set the once_cell and return
-    INSTANCE.set(new_client_factory).unwrap();
-    return INSTANCE.get().unwrap();
-}
-#[no_mangle]
-extern "C" fn CreateClientFactoryTime() -> u64
-{
-    // Start timer
-    let timer = Instant::now();
-
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-    // Run function
-    let _new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-
-    // End timer
-    let time_elapsed = timer.elapsed();
-
-    // Return seconds passed
-    return time_elapsed.as_millis() as u64;
-    let mut total_time: u64 = 0;
-    //Repeat test multiple times to get an average
-    for _i in 0..TESTING_AMOUNT {
-        // Start timer
-        let timer = Instant::now();
+    // Set and return client factory
+    if INSTANCE.get().is_none() == true{
         // Create default ClientConfig
         let default_client_config: ClientConfig = ClientConfigBuilder::default()
             .controller_uri("localhost:9090")
             .build()
             .expect("create config");
+
+        // Create new client factory
+        let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+
+        //Set INSTANCE to being the newly initialized client factory
+        INSTANCE.set(new_client_factory).unwrap();
+    }
+    INSTANCE.get().unwrap()
+}
+
+#[no_mangle]
+extern "C" fn CreateClientFactoryTime() -> u64
+{
+    // Start timer
+    let mut total_time: u64 = 0;
+
+    for _i in 0..TESTING_AMOUNT {
+
+        // Create default ClientConfig
+        let default_client_config: ClientConfig = ClientConfigBuilder::default()
+            .controller_uri("localhost:9090")
+            .build()
+            .expect("create config");
+    
+        // Start timer
+        let timer = Instant::now();
         // Run function
         let _new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-    
         // End timer
         let time_elapsed = timer.elapsed();
         total_time += time_elapsed.subsec_nanos() as u64
     }
     //Calculate average time taken in nano seconds
     return total_time / (TESTING_AMOUNT as u64);
+
 }
 
 // Constructor for Client Factory
@@ -93,35 +83,25 @@ extern "C" fn CreateClientFactoryTime() -> u64
 extern "C" fn CreateClientFactoryFromConfig(source_config: *const ClientConfig) ->  &'static ClientFactory{
 
     unsafe{
-        // Get config from raw pointer
-        let source_config_pointer: ClientConfig = std::ptr::read(source_config);
 
-        // Create new client factory
-        let new_client_factory: ClientFactory = ClientFactory::new(source_config_pointer);
+        // Set and return client factory if unintialized
+        if INSTANCE.get().is_none() == true{
+            // Get config from raw pointer
+            let source_config_pointer: ClientConfig = std::ptr::read(source_config);
 
-        // Set and return client factory
-        INSTANCE.set(new_client_factory).debugless_unwrap();
-        return INSTANCE.get().unwrap();
+            // Create new client factory
+            let new_client_factory: ClientFactory = ClientFactory::new(source_config_pointer);
+
+            // Set INSTANCE to initialized client factory.
+            INSTANCE.set(new_client_factory).unwrap();
+        }
+        INSTANCE.get().unwrap()
     }
 }
+
 #[no_mangle]
 extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 {
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-   
-    // Start timer
-    let timer = Instant::now();
-    // Run function
-    let _new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-    // End timer
-    let time_elapsed = timer.elapsed();
-
-    // Return seconds passed
-    return time_elapsed.as_millis() as u64;
 
     let mut total_time: u64 = 0;
     //Repeat test multiple times to get an average
@@ -152,35 +132,26 @@ extern "C" fn CreateClientFactoryFromConfigTime() -> u64
 extern "C" fn CreateClientFactoryFromConfigAndRuntime(source_config_pointer: *const ClientConfig, source_runtime_pointer: *const Runtime) ->  &'static ClientFactory{
 
     unsafe{
-        // Get config from raw pointer
-        let source_config: ClientConfig = std::ptr::read(source_config_pointer);
+        
+        if INSTANCE.get().is_none() == true{
+            // Get config from raw pointer
+            let source_config: ClientConfig = std::ptr::read(source_config_pointer);
 
-        // Get runtime from raw poitner
-        let source_runtime: Runtime = std::ptr::read(source_runtime_pointer);
+            // Get runtime from raw poitner
+            let source_runtime: Runtime = std::ptr::read(source_runtime_pointer);
 
-        // Create new client factory
-        let new_client_factory: ClientFactory = ClientFactory::new_with_runtime(source_config, source_runtime);
+            // Create new client factory
+            let new_client_factory: ClientFactory = ClientFactory::new_with_runtime(source_config, source_runtime);
 
-        // Box and return client factory
-        //let client_factory_box: Box<ClientFactory> = Box::new(new_client_factory);
-        //let box_pointer: *const ClientFactory = Box::into_raw(client_factory_box);     
-        //return box_pointer;
-        INSTANCE.set(new_client_factory).debugless_unwrap();
-        return INSTANCE.get().unwrap();
+            // Set client factory after initializing.
+            INSTANCE.set(new_client_factory).unwrap();
+        }
+        INSTANCE.get().unwrap()
     }
 }
 #[no_mangle]
 extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
 {
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-   
-    // Create test runtime
-    let rt: Runtime = tokio::runtime::Runtime::new().expect("create runtime");
-
     let mut total_time: u64 = 0;
     //Repeat test multiple times to get an average
     for _i in 0..TESTING_AMOUNT {
@@ -219,16 +190,7 @@ extern "C" fn GetClientFactoryRuntime(source_client_factory: &mut ClientFactory)
 }
 #[no_mangle]
 extern "C" fn GetClientFactoryRuntimeTime() -> u64
-{
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-   
-    // Create new client factory
-    let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-
+{ 
     let mut total_time: u64 = 0;
     //Repeat test multiple times to get an average
     for _i in 0..TESTING_AMOUNT {
@@ -269,15 +231,6 @@ extern "C" fn GetClientFactoryRuntimeHandle(source_client_factory: &mut ClientFa
 #[no_mangle]
 extern "C" fn GetClientFactoryRuntimeHandleTime() -> u64
 {
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-   
-    // Create new client factory
-    let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-
     let mut total_time: u64 = 0;
     //Repeat test multiple times to get an average
     for _i in 0..TESTING_AMOUNT {
@@ -316,15 +269,6 @@ extern "C" fn GetClientFactoryConfig(source_client_factory: &'static ClientFacto
 #[no_mangle]
 extern "C" fn GetClientFactoryConfigTime() -> u64
 {
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-   
-    // Create new client factory
-    let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-
     let mut total_time: u64 = 0;
     //Repeat test multiple times to get an average
     for _i in 0..TESTING_AMOUNT {
@@ -377,15 +321,6 @@ extern "C" fn ClientFactoryToAsync(source_client_factory: &'static ClientFactory
 #[no_mangle]
 extern "C" fn ClientFactoryToAsyncTime() -> u64
 {
-    // Create default ClientConfig
-    let default_client_config: ClientConfig = ClientConfigBuilder::default()
-        .controller_uri("localhost:9090")
-        .build()
-        .expect("create config");
-   
-    // Create new client factory
-    let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
-
     let mut total_time: u64 = 0;
     //Repeat test multiple times to get an average
     for _i in 0..TESTING_AMOUNT {

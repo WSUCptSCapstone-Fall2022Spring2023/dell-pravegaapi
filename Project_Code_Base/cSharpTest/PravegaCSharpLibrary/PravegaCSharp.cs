@@ -269,6 +269,7 @@ namespace Pravega {
                     rustCallbackArrayDict.Remove(key);
                 }
             }
+
         }
     }
 

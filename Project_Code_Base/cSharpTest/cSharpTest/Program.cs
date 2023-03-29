@@ -10,6 +10,7 @@
     using System.Threading.Tasks;
     using Pravega;
     using Pravega.ClientFactoryModule;
+    using Pravega.Byte;
     using Pravega.Config;
     using Pravega.Shared;
     using Pravega.Event;
@@ -26,8 +27,10 @@
         {
             //Sets where to look for DllImport to find the Dll files
             Environment.CurrentDirectory = Pathgen.PathGen.CreateDllPath();
+            TokioRuntime runtime = new TokioRuntime();
+            ClientConfig config = new ClientConfig();
 
-            ClientFactory.Initialize();
+            ClientFactory.Initialize(config, runtime);
 
             ControllerClient testClient = ClientFactory.FactoryControllerClient;
 
