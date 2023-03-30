@@ -480,7 +480,6 @@ impl ControllerClient for ControllerClientImpl {
     }
 
     async fn create_stream(&self, stream_config: &StreamConfiguration) -> ResultRetry<bool> {
-        println!("test0");
         wrap_with_async_retry!(
             self.config.retry_policy.max_tries(MAX_RETRIES),
             self.call_create_stream(stream_config)
@@ -953,7 +952,6 @@ impl ControllerClientImpl {
         use create_scope_status::Status;
         let operation_name = "CreateScope";
         let request: ScopeInfo = ScopeInfo::from(scope);
-
         let op_status: StdResult<tonic::Response<CreateScopeStatus>, tonic::Status> = self
             .get_controller_client()
             .await
@@ -1025,14 +1023,12 @@ impl ControllerClientImpl {
         use create_stream_status::Status;
 
         let request: StreamConfig = StreamConfig::from(stream_config);
-        println!("test1");
         let op_status: StdResult<tonic::Response<CreateStreamStatus>, tonic::Status> = self
             .get_controller_client()
             .await
             .create_stream(tonic::Request::new(request))
             .await;
         let operation_name = "CreateStream";
-        println!("test2");
         match op_status {
             Ok(code) => match code.into_inner().status() {
                 Status::Success => Ok(true),

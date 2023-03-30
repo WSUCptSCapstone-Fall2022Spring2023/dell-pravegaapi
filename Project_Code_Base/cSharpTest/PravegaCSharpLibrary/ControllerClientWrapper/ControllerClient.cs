@@ -34,13 +34,30 @@ namespace Pravega.ControllerCli
         internal static extern IntPtr CreateControllerCliDefault(IntPtr clientFactoryPointer, IntPtr clientConfigPointer);
 
         // ControllerClient.create_scope()
+        /*
         [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
+        internal static extern void ControllerClientImplCreateScope(
+            IntPtr clientFactoryPointer,
+            IntPtr controllerClientPointer,
+            CustomRustString newScope,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
+        */
+
+        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
+        internal static extern void ControllerClientImplCreateScope(
+            IntPtr clientFactoryPointer,
+            IntPtr controllerClientPointer,
+            CustomRustString newScope,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
         internal static extern void ControllerClientImplCreateScope(
             IntPtr clientFactoryPointer,
             IntPtr controllerClientPointer,
             CustomRustString newScope,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
+
 
         // ControllerClient.create_stream()
         [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateStream")]
@@ -55,8 +72,23 @@ namespace Pravega.ControllerCli
             int scalingMinNumSegments,
             int retentionType,
             int retentionParam,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateStream")]
+        internal static extern void ControllerClientImplCreateStream(
+            IntPtr clientFactoryPointer,
+            IntPtr controllerClientPointer,
+            CustomRustString newStream,
+            CustomRustString targetScope,
+            int scalingType,
+            int scalingTargetRate,
+            int scalingFactor,
+            int scalingMinNumSegments,
+            int retentionType,
+            int retentionParam,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
     }
 
     /// <summary>
@@ -116,6 +148,15 @@ namespace Pravega.ControllerCli
 
             // Create and pin the callback so it isn't garbage collected.
             TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
+            Interop.ControllerClientImplCreateScope(
+                ClientFactory.RustStructPointer,
+                this.RustStructPointer,
+                newScope.RustString,
+                (value) => {
+                    task.SetResult(true);
+                }
+            );
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(true);
             };
@@ -128,6 +169,7 @@ namespace Pravega.ControllerCli
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
             return task.Task;
         }
         
@@ -149,6 +191,22 @@ namespace Pravega.ControllerCli
             }
 
             TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
+            Interop.ControllerClientImplCreateStream(
+                ClientFactory.RustStructPointer,
+                this.RustStructPointer,
+                streamConfiguration.ConfigScopedStream.Stream.RustString,
+                streamConfiguration.ConfigScopedStream.Scope.RustString,
+                (int)streamConfiguration.ConfigScaling.Type,
+                streamConfiguration.ConfigScaling.TargetRate,
+                streamConfiguration.ConfigScaling.ScaleFactor,
+                streamConfiguration.ConfigScaling.MinimumNumberOfSegments,
+                (int)streamConfiguration.ConfigRetention.Policy,
+                streamConfiguration.ConfigRetention.RetentionParameter,
+                (value) => {
+                    task.SetResult(true);
+                }
+            );
+            /*
             rustCallbackU64 callback = (value) => {
                 if (value == 1)
                 {
@@ -160,7 +218,7 @@ namespace Pravega.ControllerCli
                 }
             };
             ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
-
+            
             Interop.ControllerClientImplCreateStream(
                 ClientFactory.RustStructPointer,
                 this.RustStructPointer,
@@ -175,6 +233,7 @@ namespace Pravega.ControllerCli
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
             return task.Task;
         }
     }

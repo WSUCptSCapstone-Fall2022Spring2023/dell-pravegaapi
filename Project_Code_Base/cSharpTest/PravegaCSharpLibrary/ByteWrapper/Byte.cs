@@ -39,10 +39,17 @@ namespace Pravega.Byte
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteWriter")]
         internal static extern IntPtr CreateByteWriter(
             IntPtr clientFactoryPointer,
+            CustomRustString scope,
+            CustomRustString stream,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
+        /*
+        internal static extern IntPtr CreateByteWriter(
+            IntPtr clientFactoryPointer,
             CustomRustString scope, 
             CustomRustString stream, 
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback); 
+        */
 
         // ByteWriter current offset getter
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterCurrentOffset")]
@@ -55,49 +62,88 @@ namespace Pravega.Byte
             IntPtr byteWriterPointer,
             IntPtr bufferPointer,
             uint bufferSize,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern ulong ByteWriterWrite(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            IntPtr bufferPointer,
+            uint bufferSize,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         // ByteWriter.flush()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterFlush")]
         internal static extern ulong ByteWriterFlush(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern ulong ByteWriterFlush(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         // ByteWriter.seal()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeal")]
         internal static extern ulong ByteWriterSeal(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern ulong ByteWriterSeal(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         // ByteWriter.trunate_data_before
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterTruncateDataBefore")]
+                internal static extern ulong ByteWriterTruncateDataBefore(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            long offset,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
         internal static extern ulong ByteWriterTruncateDataBefore(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
             long offset,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         // ByteWriter.seek_to_tail()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeekToTail")]
         internal static extern ulong ByteWriterSeekToTail(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern ulong ByteWriterSeekToTail(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         // ByteWriter.reset()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterReset")]
         internal static extern ulong ByteWriterReset(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern ulong ByteWriterReset(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         ////////
         /// Byte Reader
@@ -108,9 +154,17 @@ namespace Pravega.Byte
             IntPtr clientFactoryPointer,
             CustomRustString scope,
             CustomRustString stream,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback
+        );
+        /*
+        internal static extern void CreateByteReader(
+            IntPtr clientFactoryPointer,
+            CustomRustString scope,
+            CustomRustString stream,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback
         );
+        */
 
         // ByteReader current offset getter
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
@@ -127,8 +181,16 @@ namespace Pravega.Byte
             IntPtr byteReaderPointer,
             ulong mode,
             ulong nBytes,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern void ByteReaderSeek(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
+            ulong mode,
+            ulong nBytes,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         // ByteReader.read()
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderRead")]
@@ -136,24 +198,43 @@ namespace Pravega.Byte
             IntPtr clientFactoryPointer,
             IntPtr byteReaderPointer,
             ulong bytesRequested,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackArray callback);
+        /*
+        internal static extern void ByteReaderRead(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
+            ulong bytesRequested,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackArrayInvoke callback);
+        */
 
         // ByteReader.current_head
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentHead")]
         internal static extern void ByteReaderCurrentHead(
             IntPtr clientFactoryPointer,
             IntPtr byteReaderPointer,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern void ByteReaderCurrentHead(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
 
         // ByteReader.current_tail
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentTail")]
         internal static extern void ByteReaderCurrentTail(
             IntPtr clientFactoryPointer,
             IntPtr byteReaderPointer,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+        /*
+        internal static extern void ByteReaderCurrentTail(
+            IntPtr clientFactoryPointer,
+            IntPtr byteReaderPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+        */
     }
 
 
@@ -209,6 +290,7 @@ namespace Pravega.Byte
             TaskCompletionSource<IntPtr> task = new TaskCompletionSource<IntPtr>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallback callback = (value) => {
                 task.SetResult(value);
             };
@@ -220,6 +302,17 @@ namespace Pravega.Byte
                 writerScopedStream.Stream.RustString,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackDict
+            );
+            */
+
+            Interop.CreateByteWriter(
+                ClientFactory.RustStructPointer,
+                writerScopedStream.Scope.RustString,
+                writerScopedStream.Stream.RustString,
+                (value) =>
+                {
+                    task.SetResult(value);
+                }
             );
             return task.Task;
         }
@@ -281,6 +374,7 @@ namespace Pravega.Byte
             Marshal.Copy(bufferArray, 0, unmanagedBufferArray, (int)bufferSize);
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -295,6 +389,15 @@ namespace Pravega.Byte
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
+            Interop.ByteWriterWrite(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                unmanagedBufferArray,
+                bufferSize,
+                (value) => {
+                    task.SetResult(value);
+                });
             return task.Task;
         }
 
@@ -321,6 +424,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -333,7 +437,14 @@ namespace Pravega.Byte
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
 
+            Interop.ByteWriterFlush(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                (value) => {
+                    task.SetResult(value);
+                });
             return task.Task;
         }
 
@@ -358,6 +469,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -370,7 +482,16 @@ namespace Pravega.Byte
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
 
+            // Call bytewriter seal
+            Interop.ByteWriterSeal(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                (value) => {
+                    task.SetResult(value);
+                }            
+            );
             return task.Task;
         }
 
@@ -399,6 +520,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -411,6 +533,17 @@ namespace Pravega.Byte
                 offset,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            */
+
+            // Call bytewriter truncate data before
+            Interop.ByteWriterTruncateDataBefore(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                offset,
+                (value) => {
+                    task.SetResult(value);
+                }
             );
             return task.Task;
         }
@@ -438,6 +571,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -449,6 +583,16 @@ namespace Pravega.Byte
                 this._rustStructPointer,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            */
+
+            // Call bytewriter seek to tail
+            Interop.ByteWriterSeekToTail(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                (value) => {
+                    task.SetResult(value);
+                }
             );
             return task.Task;
         }
@@ -475,6 +619,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -487,7 +632,16 @@ namespace Pravega.Byte
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
 
+            // Call bytewriter reset
+            Interop.ByteWriterReset(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                (value) => {
+                    task.SetResult(value);
+                }
+            );
             return task.Task;
         }
 
@@ -546,6 +700,7 @@ namespace Pravega.Byte
             TaskCompletionSource<IntPtr> task = new TaskCompletionSource<IntPtr>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallback callback = (value) => {
                 task.SetResult(value);
             };
@@ -557,6 +712,16 @@ namespace Pravega.Byte
                 writerScopedStream.Stream.RustString,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackDict
+            );
+            */
+
+            Interop.CreateByteReader(
+                ClientFactory.RustStructPointer,
+                writerScopedStream.Scope.RustString,
+                writerScopedStream.Stream.RustString,
+                (value) => {
+                    task.SetResult(value);
+                }
             );
             return task.Task;
         }
@@ -644,6 +809,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -656,6 +822,17 @@ namespace Pravega.Byte
                 numberOfBytes,
                 key,
                 CallbackDelegateManager.InvokeFromRustCallbackU64Dict
+            );
+            */
+
+            Interop.ByteReaderSeek(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                mode,
+                numberOfBytes,
+                (value) => {
+                    task.SetResult(value);
+                }
             );
             return task.Task;
         }
@@ -683,6 +860,7 @@ namespace Pravega.Byte
             TaskCompletionSource<byte[]> task = new TaskCompletionSource<byte[]>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackArray callback = (arrPointer, numberOfBytesRead)
             =>
             {
@@ -703,7 +881,23 @@ namespace Pravega.Byte
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackArrayDict
             );
+            */
 
+            // Create a task and call ByteReaderRead. Await array pointer passback
+            Interop.ByteReaderRead(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                numberOfBytesRequested,
+                (arrPointer, numberOfBytesRead)
+                =>
+                {
+                    U8Slice buffer = new U8Slice();
+                    buffer.slice_pointer = arrPointer;
+                    buffer.length = numberOfBytesRead;
+                    byte[] bufferManaged = buffer.Copied;
+                    task.SetResult(bufferManaged);
+                }
+            );
             return task.Task;
         }
 
@@ -732,6 +926,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -744,7 +939,16 @@ namespace Pravega.Byte
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
 
+            // Call bytewriter reset
+            Interop.ByteReaderCurrentHead(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                (value) => {
+                    task.SetResult(value);
+                }
+            );
             return task.Task;
         }
 
@@ -769,6 +973,7 @@ namespace Pravega.Byte
             TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
 
             // Create and pin the callback so it isn't garbage collected.
+            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(value);
             };
@@ -781,7 +986,16 @@ namespace Pravega.Byte
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
+            */
 
+            // Call bytewriter reset
+            Interop.ByteReaderCurrentTail(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                (value) => {
+                    task.SetResult(value);
+                }
+            );
             return task.Task;
         }
     }

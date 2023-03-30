@@ -31,8 +31,7 @@ pub extern "C" fn CreateByteReader(
     client_factory_ptr: &'static ClientFactory,
     scope: CustomRustString,
     stream: CustomRustString,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, *const ByteReader))
+    callback: unsafe extern "C" fn(*const ByteReader))
     {   
         // Construct scopedstream and clientfactoryasync from function inputs
         let scope_converted = Scope{
@@ -51,7 +50,7 @@ pub extern "C" fn CreateByteReader(
             let result: ByteReader = client_factory_ptr.create_byte_reader(ss).await;
             let result_box: Box<ByteReader> = Box::new(result);
             let result_ptr: *const ByteReader = Box::into_raw(result_box);
-            unsafe { callback(key, result_ptr) };
+            unsafe { callback(result_ptr) };
         }) ;
         
 }
@@ -77,8 +76,7 @@ pub extern "C" fn ByteReaderSeek(
     source_byte_reader: &mut ByteReader,
     mode: u64,
     number_of_bytes: u64,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64))
+    callback: unsafe extern "C" fn(u64))
 {
 
     // Initialize locals
@@ -99,7 +97,7 @@ pub extern "C" fn ByteReaderSeek(
     // Seek from the reader seek from position
     client_factory_ptr.runtime().block_on( async move {
         let result: u64 = source_byte_reader.seek(reader_seek_from).await.unwrap();
-        unsafe { callback(key, result) };
+        unsafe { callback(result) };
     }) ;
 }
 
@@ -109,8 +107,7 @@ pub extern "C" fn ByteReaderRead(
     client_factory_ptr: &'static ClientFactory,
     source_byte_reader: &mut ByteReader, 
     bytes_requested: u32,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, *mut &[u8], u32)
+    callback: unsafe extern "C" fn(*mut &[u8], u32)
 ) -> ()
 {
     // Block on and read
@@ -125,7 +122,7 @@ pub extern "C" fn ByteReaderRead(
         // Box and then return.
         let buffer_box: Box<&[u8]> = Box::new(buffer.as_slice());
         let buffer_box_raw: *mut &[u8] = Box::into_raw(buffer_box);
-        unsafe { callback(key, buffer_box_raw, result as u32); }
+        unsafe { callback(buffer_box_raw, result as u32); }
     })
 }
 
@@ -134,8 +131,7 @@ pub extern "C" fn ByteReaderRead(
 pub extern "C" fn ByteReaderCurrentHead(
     client_factory_ptr: &'static ClientFactory,
     source_byte_reader: &mut ByteReader, 
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn(u64)
 ) -> ()
 {
     // Block on the client factory's runtime
@@ -143,7 +139,7 @@ pub extern "C" fn ByteReaderCurrentHead(
 
         // Write data to server
         let result = source_byte_reader.current_head().await.unwrap();
-        unsafe { callback(key, result); }
+        unsafe { callback(result); }
     });
 }
 
@@ -152,8 +148,7 @@ pub extern "C" fn ByteReaderCurrentHead(
 pub extern "C" fn ByteReaderCurrentTail(
     client_factory_ptr: &'static ClientFactory,
     source_byte_reader: &mut ByteReader, 
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn(u64)
 ) -> ()
 {
     // Block on the client factory's runtime
@@ -161,7 +156,7 @@ pub extern "C" fn ByteReaderCurrentTail(
 
         // Write data to server
         let result = source_byte_reader.current_tail().await.unwrap();
-        unsafe { callback(key, result); }
+        unsafe { callback(result); }
     });
 }
 
@@ -171,8 +166,7 @@ pub extern "C" fn CreateByteWriter(
     client_factory_ptr: &'static ClientFactory,
     scope: CustomRustString,
     stream: CustomRustString,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, *const ByteWriter)){
+    callback: unsafe extern "C" fn(*const ByteWriter)){
 
 
         // Construct scopedstream and clientfactoryasync from function inputs
@@ -192,7 +186,7 @@ pub extern "C" fn CreateByteWriter(
             let result: ByteWriter = client_factory_ptr.create_byte_writer(ss).await;
             let result_box: Box<ByteWriter> = Box::new(result);
             let result_ptr: *const ByteWriter = Box::into_raw(result_box);
-            unsafe { callback(key, result_ptr) };
+            unsafe { callback(result_ptr) };
         }) ;
         
 }
@@ -212,8 +206,7 @@ pub extern "C" fn ByteWriterWrite(
     byte_writer_ptr: &mut ByteWriter,
     buffer: *mut u8,
     buffer_size: u32,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn(u64)
 )
 {
     // Initialize the buffer from the inputs
@@ -225,7 +218,7 @@ pub extern "C" fn ByteWriterWrite(
 
         // Write data to server
         let result: usize = byte_writer_ptr.write(buffer_array).await.unwrap();
-        unsafe { callback(key, result as u64); }
+        unsafe { callback(result as u64); }
     });
 }
 
@@ -234,8 +227,7 @@ pub extern "C" fn ByteWriterWrite(
 pub extern "C" fn ByteWriterFlush(
     client_factory_ptr: &'static ClientFactory,
     byte_writer_ptr: &mut ByteWriter,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn (u64)
 )
 {
     // Block on the client factory's runtime
@@ -243,7 +235,7 @@ pub extern "C" fn ByteWriterFlush(
 
         // Write data to server
         byte_writer_ptr.flush().await.unwrap();
-        unsafe { callback(key, 1); }
+        unsafe { callback(1); }
     });
 }
 
@@ -252,8 +244,7 @@ pub extern "C" fn ByteWriterFlush(
 pub extern "C" fn ByteWriterSeal(
     client_factory_ptr: &'static ClientFactory,
     byte_writer_ptr: &mut ByteWriter,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn(u64)
 )
 {
     // Block on the client factory's runtime
@@ -261,7 +252,7 @@ pub extern "C" fn ByteWriterSeal(
 
         // Write data to server
         byte_writer_ptr.seal().await.unwrap();
-        unsafe { callback(key, 1); }
+        unsafe { callback(1); }
     });
 }
 
@@ -271,8 +262,7 @@ pub extern "C" fn ByteWriterTruncateDataBefore(
     client_factory_ptr: &'static ClientFactory,
     byte_writer_ptr: &mut ByteWriter,
     offset: i64,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn (u64)
 )
 {
     // Block on the client factory's runtime
@@ -280,7 +270,7 @@ pub extern "C" fn ByteWriterTruncateDataBefore(
 
         // Write data to server
         byte_writer_ptr.truncate_data_before(offset).await.unwrap();
-        unsafe { callback(key, 1); }
+        unsafe { callback(1); }
     });
 }
 
@@ -289,8 +279,7 @@ pub extern "C" fn ByteWriterTruncateDataBefore(
 pub extern "C" fn ByteWriterSeekToTail(
     client_factory_ptr: &'static ClientFactory,
     byte_writer_ptr: &mut ByteWriter,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn(u64)
 )
 {
     // Block on the client factory's runtime
@@ -298,7 +287,7 @@ pub extern "C" fn ByteWriterSeekToTail(
 
         // Write data to server
         byte_writer_ptr.seek_to_tail().await;
-        unsafe { callback(key, 1); }
+        unsafe { callback(1); }
     });
 }
 
@@ -307,8 +296,7 @@ pub extern "C" fn ByteWriterSeekToTail(
 pub extern "C" fn ByteWriterReset(
     client_factory_ptr: &'static ClientFactory,
     byte_writer_ptr: &mut ByteWriter,
-    key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn(u64)
 )
 {
     // Block on the client factory's runtime
@@ -316,6 +304,6 @@ pub extern "C" fn ByteWriterReset(
 
         // Write data to server
         byte_writer_ptr.reset().await.unwrap();
-        unsafe { callback(key, 1); }
+        unsafe { callback(1); }
     });
 }

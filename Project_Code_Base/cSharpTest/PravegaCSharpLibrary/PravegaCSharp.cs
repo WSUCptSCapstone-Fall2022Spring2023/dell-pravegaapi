@@ -49,14 +49,28 @@ namespace Pravega {
         ///  by GC and therefore always be able to be used by rust. All rust has to do is enter the arguments to it as well as a key to
         ///  access the correct delegate assuming it exists at that point. An example of implementation can be found ing Byte.cs in 
         ///  GenerateByteWriter.
+        ///  
+        ///  *NOTE: During development, after having a successful proof of concept with ByteWriter, implementing this architecture
+        ///  into other objects failed to show results. ByteReader and ControllerClient caused memory access violation errors and 
+        ///  were not able to run successfully under this architecture. While nothing was changed in the rust code besides the inputs 
+        ///  and callback, the only notable thing that was changed was the new architecture with static methods in C#. We therefore
+        ///  believe that static methods may be the root cause behind the error, though strangely, the system threw inside of a pravega
+        ///  source code call. In CreateScope's case in ControllerClient, it threw at the "create_scope()" call to pravega source code 
+        ///  instead of the callback whereas before, the rust code didn't throw at that point. Little documentation online about the 
+        ///  subject leads us to concluding that this is a dead end and there are only theories instead of firm explanations about
+        ///  why this happens.
+        ///  
+        ///  Because of the architecture's potential, but immediate flaws, we have put it on the back burner for now and commented out the
+        ///  sections where they once where instead of deleting them completely so future developers may be able to pick up where we 
+        ///  left off.
         /// </summary>
         internal static class CallbackDelegateManager
         {
             // Private lists used to keep track of delegates in GC memory.
             // Dictionaries are populated with keys starting from 0 and filling in counting up.
-            private static Dictionary<ulong, rustCallback> rustCallbackDict = new Dictionary<ulong, rustCallback>();
-            private static Dictionary<ulong, rustCallbackU64> rustCallbackU64Dict = new Dictionary<ulong, rustCallbackU64>();
-            private static Dictionary<ulong, rustCallbackArray> rustCallbackArrayDict = new Dictionary<ulong, rustCallbackArray>();
+            internal static Dictionary<ulong, rustCallback> rustCallbackDict = new Dictionary<ulong, rustCallback>();
+            internal static Dictionary<ulong, rustCallbackU64> rustCallbackU64Dict = new Dictionary<ulong, rustCallbackU64>();
+            internal static Dictionary<ulong, rustCallbackArray> rustCallbackArrayDict = new Dictionary<ulong, rustCallbackArray>();
 
             /// <summary>
             /// Adds a member to the rustCallbackList, returning the key of the callback
