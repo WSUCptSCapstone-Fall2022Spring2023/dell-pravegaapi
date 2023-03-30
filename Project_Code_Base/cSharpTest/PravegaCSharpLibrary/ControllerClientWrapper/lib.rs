@@ -49,7 +49,7 @@ extern "C" fn ControllerClientImplCreateScope(
     client_factory_pointer: &'static ClientFactory,
     source_controller_client_impl: &mut &dyn ControllerClient, 
     source_scope: CustomRustString,
-    callback: unsafe extern "C" fn(u64))
+    callback: unsafe extern "C" fn(*const i32))
     -> ()
     {
         unsafe { 
@@ -69,10 +69,11 @@ extern "C" fn ControllerClientImplCreateScope(
                     .await
                     .expect("create scope");
                 //println!("test create scope end");
-                callback(1);
+                callback(1 as *const i32);
             });        
         }
 }
+
 // ControllerClientImpl.create_stream()
 #[no_mangle]
 extern "C" fn ControllerClientImplCreateStream(
@@ -86,7 +87,7 @@ extern "C" fn ControllerClientImplCreateStream(
     scaling_min_num_segments: i32,
     retention_type: i32,
     retention_param: i32,
-    callback: unsafe extern "C" fn(u64))
+    callback: unsafe extern "C" fn(*const i32))
     -> ()
 {
 
@@ -99,7 +100,7 @@ extern "C" fn ControllerClientImplCreateStream(
         let st_unwrapped: ScaleType;
         if st == None{
             println!("Invalid Scale Type inputted");
-            callback(0);
+            callback(0 as *const i32);
             return;
         }
         else{
@@ -110,7 +111,7 @@ extern "C" fn ControllerClientImplCreateStream(
         let rt_unwrapped: RetentionType;
         if rt == None{
             println!("Invalid Retention Type inputted");
-            callback(0);
+            callback(0 as *const i32);
             return;
         }
         else{
@@ -135,32 +136,19 @@ extern "C" fn ControllerClientImplCreateStream(
             tags: None,
         };
         // ControllerClient
-        //let raw_pointer: usize = source_controller_client_impl as *const &dyn ControllerClient as usize;
+        let raw_pointer: usize = source_controller_client_impl as *const &dyn ControllerClient as usize;
 
         // Create the new stream asynchronously
         client_factory_pointer.runtime().block_on( async move {
 
             // Move a controllerclient reference into memory and clone it so we don't worry about its lifetime.
-            //let controller_client: &dyn ControllerClient = std::ptr::read(raw_pointer as *const &dyn ControllerClient);
+            let controller_client: &dyn ControllerClient = std::ptr::read(raw_pointer as *const &dyn ControllerClient);
 
-            source_controller_client_impl
+            controller_client
                 .create_stream(&stream_config)
                 .await
                 .expect("create stream");
-            callback(1);
+            callback(1 as *const i32);
         });      
-    }
-    
-
-
-}
-
-
-
-// Used for interoptopus wrapping
-pub fn my_inventory() -> Inventory {
-    {
-        InventoryBuilder::new()
-        .inventory()
     }
 }

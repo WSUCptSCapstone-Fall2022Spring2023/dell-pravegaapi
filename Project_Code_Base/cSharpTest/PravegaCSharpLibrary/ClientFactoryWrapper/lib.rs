@@ -142,7 +142,7 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntime(source_config_pointer: *co
 
             // Create new client factory
             let new_client_factory: ClientFactory = ClientFactory::new_with_runtime(source_config, source_runtime);
-
+            
             // Set client factory after initializing.
             INSTANCE.set(new_client_factory).unwrap();
         }

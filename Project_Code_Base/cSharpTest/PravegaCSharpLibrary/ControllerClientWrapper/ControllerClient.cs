@@ -48,7 +48,7 @@ namespace Pravega.ControllerCli
             IntPtr clientFactoryPointer,
             IntPtr controllerClientPointer,
             CustomRustString newScope,
-            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
         /*
         internal static extern void ControllerClientImplCreateScope(
             IntPtr clientFactoryPointer,
@@ -72,7 +72,7 @@ namespace Pravega.ControllerCli
             int scalingMinNumSegments,
             int retentionType,
             int retentionParam,
-            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64 callback);
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
         /*
         [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateStream")]
         internal static extern void ControllerClientImplCreateStream(
