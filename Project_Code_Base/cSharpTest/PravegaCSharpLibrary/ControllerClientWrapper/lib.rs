@@ -49,7 +49,7 @@ extern "C" fn ControllerClientImplCreateScope(
     client_factory_pointer: &'static ClientFactory,
     source_controller_client_impl: &mut &dyn ControllerClient, 
     source_scope: CustomRustString,
-    callback: unsafe extern "C" fn(*const i32))
+    callback: unsafe extern "C" fn(u64))
     -> ()
     {
         unsafe { 
@@ -69,7 +69,7 @@ extern "C" fn ControllerClientImplCreateScope(
                     .await
                     .expect("create scope");
                 //println!("test create scope end");
-                callback(1 as *const i32);
+                callback(1);
             });        
         }
 }
@@ -87,7 +87,8 @@ extern "C" fn ControllerClientImplCreateStream(
     scaling_min_num_segments: i32,
     retention_type: i32,
     retention_param: i32,
-    callback: unsafe extern "C" fn(*const i32))
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64))
     -> ()
 {
 
@@ -100,7 +101,7 @@ extern "C" fn ControllerClientImplCreateStream(
         let st_unwrapped: ScaleType;
         if st == None{
             println!("Invalid Scale Type inputted");
-            callback(0 as *const i32);
+            callback(key, 0);
             return;
         }
         else{
@@ -111,7 +112,7 @@ extern "C" fn ControllerClientImplCreateStream(
         let rt_unwrapped: RetentionType;
         if rt == None{
             println!("Invalid Retention Type inputted");
-            callback(0 as *const i32);
+            callback(key, 0);
             return;
         }
         else{
@@ -148,20 +149,7 @@ extern "C" fn ControllerClientImplCreateStream(
                 .create_stream(&stream_config)
                 .await
                 .expect("create stream");
-            callback(1 as *const i32);
+            callback(key, 1);
         });      
-    }
-    
-
-
-}
-
-
-
-// Used for interoptopus wrapping
-pub fn my_inventory() -> Inventory {
-    {
-        InventoryBuilder::new()
-        .inventory()
     }
 }

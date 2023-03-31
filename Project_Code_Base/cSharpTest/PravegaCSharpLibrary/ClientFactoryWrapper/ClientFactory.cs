@@ -11,6 +11,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Pravega;
+using Pravega.Byte;
 using Pravega.Utility;
 using Pravega.Config;
 using Pravega.ControllerCli;
@@ -20,7 +21,7 @@ using System.Runtime.CompilerServices;
 #pragma warning restore 0105
 
 // Make internals visible for testing
-[assembly: InternalsVisibleTo("PravegaWrapperTestProject")]
+[assembly: InternalsVisibleTo("PravegaCSharpTestProject")]
 
 namespace Pravega.ClientFactoryModule
 {
