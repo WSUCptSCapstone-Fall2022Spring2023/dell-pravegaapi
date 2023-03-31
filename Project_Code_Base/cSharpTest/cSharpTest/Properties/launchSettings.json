@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "cSharpTest": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

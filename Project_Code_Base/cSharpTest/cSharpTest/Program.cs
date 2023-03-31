@@ -13,46 +13,92 @@
     using Pravega.Config;
     using Pravega.Shared;
     using Pravega.Event;
+    using Pravega.Byte;
     using Pravega.ControllerCli;
-
-
     using Pathgen;
     using Pravega.Utility;
+    using PravegaWrapperTestProject;
+    using System.Security.Cryptography.X509Certificates;
 
     public static class Program
     {
 
         static void Main()
         {
-            //Sets where to look for DllImport to find the Dll files
+
+            // ********* Sets where to look for DllImport to find the Dll files
             Environment.CurrentDirectory = Pathgen.PathGen.CreateDllPath();
 
-            ClientFactory.Initialize();
 
-            ControllerClient testClient = ClientFactory.FactoryControllerClient;
 
-            Scope testScope = new Scope();
-            testScope.NativeString = "testScope2";
-            testClient.CreateScope(testScope).GetAwaiter().GetResult();
 
-            Console.WriteLine("test");
-            
-            StreamConfiguration streamConfiguration = new StreamConfiguration();
-            streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream2");
-
-            testClient.CreateStream(streamConfiguration).GetAwaiter().GetResult();
-
-            ByteWriter testWriter = ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-
+            // ********* Testing variables           
+            const string testScopeName = "testScope";
+            const string testStreamName = "testStream";
             List<byte> testBytes = new List<byte>();
+            ScopedStream testScopedStream= new ScopedStream();
+            ulong testResultHolderU64 = 0;
+
+
+
+            // ********* Initialize local variables  
+            //  -testBytes
+            testBytes.Clear();
             testBytes.Add(0);
             testBytes.Add(1);
             testBytes.Add(2);
             testBytes.Add(3);
-            Console.WriteLine(testWriter.Write(testBytes).GetAwaiter().GetResult().ToString());
+            testBytes.Add(4);
+            //  -testScopedStream
+            testScopedStream.Scope = new CustomCSharpString(testScopeName);
+            testScopedStream.Stream = new CustomCSharpString(testStreamName);
 
-            ByteReader testReader = ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+
+            ClientFactory.Initialize();
+            ControllerClient testController = new ControllerClient(ClientFactory.Config);
+
+            // Create a scope and verify signs of life.
+            Scope testScope = new Scope();
+            testScope.NativeString = testScopeName;
+            testController.CreateScope(testScope).GetAwaiter().GetResult();
+
+            // ********* ControllerClient Tests
+            Console.WriteLine("Begin ControllerClient Tests:");
+
+            //  -Create Scope
+            if (PravegaCSharpTest.ControllerClientCreateScope(testScopeName) != true)
+            {
+                Console.WriteLine(" Create Scope Fail");
+                throw new Exception();
+            }
+            Console.WriteLine(" Create Scope Pass");
+
+            //  -Create Stream
+            if (PravegaCSharpTest.ControllerClientCreateStream(testScopeName, testStreamName) != true){
+                Console.WriteLine(" Create Stream Fail");
+                throw new Exception();
+            }
+            Console.WriteLine(" Create Stream Pass");
+
+
+
+
+            // ********* ByteWriter tests
+            Console.WriteLine(Environment.NewLine + "Begin ControllerClient Tests:");
+
+            //  -Constructor
+            ByteWriter testWriter = PravegaCSharpTest.ByteWriterConstructorTest(testScopedStream);
+            Console.WriteLine(" Create ByteWriter Pass");
+
+            //  -Write
+            testResultHolderU64 = testWriter.Write(testBytes).GetAwaiter().GetResult();
+            Console.WriteLine(" Write Pass");
+
+            //  -  
+
+
+
+            ByteReader testReader = ClientFactory.CreateByteReader(testScopedStream).GetAwaiter().GetResult();
 
             Console.WriteLine("finish");
         }

@@ -11,8 +11,8 @@
 use interoptopus::{Inventory, InventoryBuilder};
 use pravega_client::client_factory::ClientFactoryAsync;
 use pravega_client::{byte::ByteReader,byte::ByteWriter};
-use pravega_client_config::connection_type;
-use pravega_client_shared::{ScopedStream, Scope, Stream};
+use pravega_client_config::{connection_type, ClientConfig, ClientConfigBuilder};
+use pravega_client_shared::{ScopedStream, Scope, Stream, StreamConfiguration, Scaling, ScaleType, Retention, RetentionType};
 use pravega_client::{client_factory::ClientFactory};
 use futures::executor;
 use utility_wrapper::CustomRustString;
@@ -33,9 +33,7 @@ pub extern "C" fn CreateByteReader(
     stream: CustomRustString,
     key: u64,
     callback: unsafe extern "C" fn(u64, *const ByteReader))
-    {
-
-
+    {   
         // Construct scopedstream and clientfactoryasync from function inputs
         let scope_converted = Scope{
             name: scope.as_string()
@@ -79,7 +77,7 @@ pub extern "C" fn ByteReaderSeek(
     source_byte_reader: &mut ByteReader,
     mode: u64,
     number_of_bytes: u64,
-    key: u64,
+    key: u64, 
     callback: unsafe extern "C" fn(u64, u64))
 {
 
@@ -153,8 +151,8 @@ pub extern "C" fn ByteReaderCurrentHead(
 #[no_mangle]
 pub extern "C" fn ByteReaderCurrentTail(
     client_factory_ptr: &'static ClientFactory,
-    source_byte_reader: &mut ByteReader, 
-    key: u64,
+    source_byte_reader: &mut ByteReader,
+    key: u64,  
     callback: unsafe extern "C" fn(u64, u64)
 ) -> ()
 {
@@ -214,7 +212,7 @@ pub extern "C" fn ByteWriterWrite(
     byte_writer_ptr: &mut ByteWriter,
     buffer: *mut u8,
     buffer_size: u32,
-    key: u64,
+    key: u64, 
     callback: unsafe extern "C" fn(u64, u64)
 )
 {
@@ -237,7 +235,7 @@ pub extern "C" fn ByteWriterFlush(
     client_factory_ptr: &'static ClientFactory,
     byte_writer_ptr: &mut ByteWriter,
     key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn (u64, u64)
 )
 {
     // Block on the client factory's runtime
@@ -274,7 +272,7 @@ pub extern "C" fn ByteWriterTruncateDataBefore(
     byte_writer_ptr: &mut ByteWriter,
     offset: i64,
     key: u64,
-    callback: unsafe extern "C" fn(u64, u64)
+    callback: unsafe extern "C" fn (u64, u64)
 )
 {
     // Block on the client factory's runtime

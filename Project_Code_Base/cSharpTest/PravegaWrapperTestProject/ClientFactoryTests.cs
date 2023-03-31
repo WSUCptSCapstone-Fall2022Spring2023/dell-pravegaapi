@@ -25,24 +25,24 @@ namespace PravegaWrapperTestProject
 
         public static String CreateDllPath()
         {
-           var cwd = System.IO.Directory.GetCurrentDirectory();
-           String code_base = "Project_Code_Base";
-           int indexTo = cwd.IndexOf(code_base);
-           String return_string;
-           // If IndexOf could not find code_base String
-           if (indexTo == -1)
-           {
-               return "";
-           }
-           return_string = cwd.Substring(0, indexTo + code_base.Length);
-           return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\";
+            var cwd = System.IO.Directory.GetCurrentDirectory();
+            String code_base = "Project_Code_Base";
+            int indexTo = cwd.IndexOf(code_base);
+            String return_string;
+            // If IndexOf could not find code_base String
+            if (indexTo == -1)
+            {
+                return "";
+            }
+            return_string = cwd.Substring(0, indexTo + code_base.Length);
+            return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\";
 
-           return return_string;
+            return return_string;
         }
         [SetUp]
         public void SetupEnvironment()
         {
-           Environment.CurrentDirectory = CreateDllPath();
+            Environment.CurrentDirectory = CreateDllPath();
         }
         // / <summary>
         // /  Client Factory Tests
@@ -72,7 +72,7 @@ namespace PravegaWrapperTestProject
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
                 totalTime += timerNanoseconds;
             }
-            totalTime = totalTime / TestingAmount; 
+            totalTime = totalTime / TestingAmount;
             Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.DefaultConstructorTime().ToString());
             Console.WriteLine("C# Time: " + totalTime.ToString());
 
@@ -191,7 +191,7 @@ namespace PravegaWrapperTestProject
         }
 
         // Unit Test. Client Factory runtime
-        [Test] 
+        [Test]
         public void ClientFactoryRuntimeTest()
         {
             ClientFactory.Initialize();

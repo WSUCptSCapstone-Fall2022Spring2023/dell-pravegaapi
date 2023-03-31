@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PravegaCSharpLibrary\PravegaCSharpLibrary.csproj" />
+    <ProjectReference Include="..\PravegaWrapperTestProject\PravegaWrapperTestProject.csproj" />
   </ItemGroup>
 
 </Project>
