@@ -29,3 +29,8 @@ E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.csproj.CoreCompileInputs.cache
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.dll
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\refint\PravegaCSharpLibrary.dll
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.deps.json
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.dll
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.pdb
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.pdb
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\ref\PravegaCSharpLibrary.dll

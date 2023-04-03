@@ -303,3 +303,4 @@ c:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\P
 c:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaWrapperTestProject\obj\Debug\net6.0\PravegaWrapperTestProject.pdb
 c:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaWrapperTestProject\obj\Debug\net6.0\PravegaWrapperTestProject.genruntimeconfig.cache
 c:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaWrapperTestProject\obj\Debug\net6.0\ref\PravegaWrapperTestProject.dll
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaWrapperTestProject\bin\Debug\net6.0\PravegaCSharpLibrary.pdb
