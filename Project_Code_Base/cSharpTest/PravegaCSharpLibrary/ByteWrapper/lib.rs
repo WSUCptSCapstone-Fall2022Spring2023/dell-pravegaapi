@@ -374,12 +374,19 @@ pub extern "C" fn TestEverything()
             scope: Scope::from("testScope2".to_owned()),
             stream: Stream::from("testStream2".to_owned())
         }; 
-        let bw = cfp.create_byte_writer(ss.clone()).await;
+        let mut bw = cfp.create_byte_writer(ss.clone()).await;
         println!("Created Writer");
+        let testArr = "ThisIsAtestString".to_string().into_bytes();
+        let arrsize = testArr.capacity();
+        println!("TestArr has {} bytes",arrsize);
+        let size = bw.write(&testArr).await.unwrap();
+        println!("Write concluded, wrote {} bytes",size);
         
         let br = cfp.create_byte_reader(ss).await;
         println!("Creater Reader w/await");
 
 
     }) ;
+
+    
 }
