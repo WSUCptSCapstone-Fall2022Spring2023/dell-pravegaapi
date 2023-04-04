@@ -11,8 +11,8 @@
 use interoptopus::{Inventory, InventoryBuilder};
 use pravega_client::client_factory::ClientFactoryAsync;
 use pravega_client::{byte::ByteReader,byte::ByteWriter};
-use pravega_client_config::connection_type;
-use pravega_client_shared::{ScopedStream, Scope, Stream};
+use pravega_client_config::{connection_type, ClientConfig, ClientConfigBuilder};
+use pravega_client_shared::{ScopedStream, Scope, Stream, StreamConfiguration, Scaling, Retention, ScaleType, RetentionType};
 use pravega_client::{client_factory::ClientFactory};
 use futures::executor;
 use utility_wrapper::CustomRustString;
@@ -320,4 +320,66 @@ pub extern "C" fn ByteWriterReset(
         byte_writer_ptr.reset().await.unwrap();
         unsafe { callback(key, 1); }
     });
+}
+
+#[no_mangle]
+pub extern "C" fn TestEverything()
+{
+    let default_client_config: ClientConfig = ClientConfigBuilder::default()
+    .controller_uri("localhost:9090")
+    .build()
+    .expect("create config");
+    let new_client_factory: ClientFactory = ClientFactory::new(default_client_config);
+    let controller_client = new_client_factory.controller_client();
+    let cfp = &new_client_factory;
+    println!("Created clientFactory");
+
+    new_client_factory.runtime().block_on(  async move {
+
+
+        // create a scope
+        let scope = Scope::from("testScope2".to_owned());
+        controller_client
+            .create_scope(&scope)
+            .await
+            .expect("create scope");
+        println!("scope created");
+
+        // create a stream containing only one segment
+        let stream = Stream::from("testStream2".to_owned());
+        let stream_config = StreamConfiguration {
+            scoped_stream: ScopedStream {
+                scope: scope.clone(),
+                stream: stream.clone(),
+            },
+            scaling: Scaling {
+                scale_type: ScaleType::FixedNumSegments,
+                target_rate: 0,
+                scale_factor: 0,
+                min_num_segments: 1,
+            },
+            retention: Retention {
+                retention_type: RetentionType::None,
+                retention_param: 0,
+            },
+            tags: None,
+        };
+        controller_client
+            .create_stream(&stream_config)
+            .await
+            .expect("create stream");
+        println!("stream created");
+
+        let ss: ScopedStream = ScopedStream{
+            scope: Scope::from("testScope2".to_owned()),
+            stream: Stream::from("testStream2".to_owned())
+        }; 
+        let bw = cfp.create_byte_writer(ss.clone()).await;
+        println!("Created Writer");
+        
+        let br = cfp.create_byte_reader(ss).await;
+        println!("Creater Reader w/await");
+
+
+    }) ;
 }
