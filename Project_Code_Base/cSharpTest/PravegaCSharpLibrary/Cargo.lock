@@ -941,8 +941,16 @@ checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
 name = "event_wrapper"
 version = "0.14.14"
 dependencies = [
+ "async-ffi",
+ "debugless-unwrap",
+ "futures 0.3.25",
  "interoptopus",
  "interoptopus_backend_csharp",
+ "once_cell",
+ "pravega-client",
+ "pravega-client-config",
+ "pravega-client-shared",
+ "tokio 1.24.2",
  "utility_wrapper",
 ]
 
