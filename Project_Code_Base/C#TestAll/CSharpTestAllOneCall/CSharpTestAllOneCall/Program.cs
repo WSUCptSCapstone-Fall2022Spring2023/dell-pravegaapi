@@ -9,7 +9,7 @@ namespace CSharpTestAllOneCall
         public static extern void TestEverything();
         static void Main(string[] args)
         {
-            Console.WriteLine("Beginning Rust Test");
+            Console.WriteLine("Beginning Rust Test, y read no work");
             TestEverything();
             Console.WriteLine("Test Concluded");
         }

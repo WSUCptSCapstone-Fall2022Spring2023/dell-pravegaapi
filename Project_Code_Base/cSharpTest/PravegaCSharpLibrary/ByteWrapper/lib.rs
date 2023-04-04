@@ -382,8 +382,16 @@ pub extern "C" fn TestEverything()
         let size = bw.write(&testArr).await.unwrap();
         println!("Write concluded, wrote {} bytes",size);
         
-        let br = cfp.create_byte_reader(ss).await;
+        let mut br = cfp.create_byte_reader(ss).await;
         println!("Creater Reader w/await");
+
+        let mut buf: Vec<u8> = vec![0; 20];
+        println!("Starting read");
+        let rsize = br.read(&mut buf).await.unwrap();
+        println!("read {} bytes",rsize);
+        let newstring = String::from_utf8_lossy(&buf);
+        println!("Recovered string: {}",newstring);
+
 
 
     }) ;
