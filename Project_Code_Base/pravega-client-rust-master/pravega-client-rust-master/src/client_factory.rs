@@ -87,7 +87,6 @@ use tracing::info;
 /// }
 /// ```
 /// [`ClientFactoryAsync`]: ClientFactoryAsync
-#[derive(Debug)]
 pub struct ClientFactory {
     runtime: Runtime,
     client_factory_async: ClientFactoryAsync,
@@ -275,7 +274,6 @@ impl ClientFactory {
         .await
     }
 }
-
 
 #[derive(Clone)]
 pub struct ClientFactoryAsync {

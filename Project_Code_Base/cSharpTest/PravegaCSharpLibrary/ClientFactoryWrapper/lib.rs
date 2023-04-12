@@ -43,7 +43,7 @@ extern "C" fn CreateClientFactory() -> &'static ClientFactory{
 
     
     // Set the once_cell and return
-    INSTANCE.set(new_client_factory).unwrap();
+    INSTANCE.set(new_client_factory).debugless_unwrap();
     return INSTANCE.get().unwrap();
 }
 #[no_mangle]

@@ -381,8 +381,11 @@ pub extern "C" fn TestEverything()
         println!("TestArr has {} bytes",arrsize);
         let size = bw.write(&testArr).await.unwrap();
         println!("Write concluded, wrote {} bytes",size);
+        println!("Flushing Writer");
+        bw.flush().await.unwrap();
         
-        let mut br = cfp.create_byte_reader(ss).await;
+        let mut br = cfp.create_byte_reader(ss.clone()).await;
+        println!("{}",ss.scope.name);
         println!("Creater Reader w/await");
 
         let mut buf: Vec<u8> = vec![0; 20];
