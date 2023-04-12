@@ -295,13 +295,10 @@ extern "C" fn GetClientFactoryConfigTime() -> u64
 
 // ClientFactory.controller_client
 #[no_mangle]
-extern "C" fn GetClientFactoryControllerClient(source_client_factory: &'static ClientFactory) -> *const &dyn ControllerClient{
+extern "C" fn GetClientFactoryControllerClient(source_client_factory: &'static ClientFactory) -> &dyn ControllerClient{
 
     // Retrieve pointer and box
-    let factory_controller_client: &dyn ControllerClient = source_client_factory.controller_client();
-    let controller_box: Box<&dyn ControllerClient> = Box::new(factory_controller_client);
-    let return_pointer: *const &dyn ControllerClient = Box::into_raw(controller_box);
-    return return_pointer;
+    return source_client_factory.controller_client();
 }
 
 

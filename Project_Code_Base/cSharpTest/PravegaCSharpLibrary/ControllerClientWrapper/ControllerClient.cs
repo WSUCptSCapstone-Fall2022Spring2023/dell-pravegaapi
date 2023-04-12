@@ -35,21 +35,12 @@ namespace Pravega.ControllerCli
 
         // ControllerClient.create_scope()
         [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
-        /*
         internal static extern void ControllerClientImplCreateScope(
             IntPtr clientFactoryPointer,
             IntPtr controllerClientPointer,
             CustomRustString newScope,
             ulong key,
-            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
-        */
-        internal static extern void ControllerClientImplCreateScope(
-            IntPtr clientFactoryPointer,
-            IntPtr controllerClientPointer,
-            CustomRustString newScope,
-            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
-        
-        
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);   
 
         // ControllerClient.create_stream()
         [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateStream")]
@@ -134,9 +125,9 @@ namespace Pravega.ControllerCli
                 ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 newScope.RustString,
-                (value) => {
-                    task.SetResult(true);
-                });
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
             
             return task.Task;
         }

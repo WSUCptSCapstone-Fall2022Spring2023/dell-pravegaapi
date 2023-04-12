@@ -120,7 +120,7 @@ namespace PravegaWrapperTestProject
                 double timerNanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
                 totalTime += timerNanoseconds;
             }
-            totalTime = totalTime / TestingAmount;
+            //totalTime = totalTime / TestingAmount;
             Console.WriteLine("Rust Time: " + ClientFactoryTestMethods.ConstructorConfigTime().ToString());
             Console.WriteLine("C# Time: " + totalTime.ToString());
 

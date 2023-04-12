@@ -47,29 +47,26 @@ extern "C" fn CreateControllerCliDefault(
 #[no_mangle]
 extern "C" fn ControllerClientImplCreateScope(
     client_factory_pointer: &'static ClientFactory,
-    source_controller_client_impl: &mut &dyn ControllerClient, 
+    source_controller_client_impl: &dyn ControllerClient, 
     source_scope: CustomRustString,
-    callback: unsafe extern "C" fn(u64))
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64))
     -> ()
     {
         unsafe { 
 
-            let raw_pointer: usize = source_controller_client_impl as *const &dyn ControllerClient as usize;
             let newScope: Scope = Scope::from(source_scope.as_string());
             
             // Create the new scope asynchronously 
             client_factory_pointer.runtime().block_on( async move {
 
-                // Move a controllerclient reference into memory and clone it so we don't worry about its lifetime.
-                let controller_client: &dyn ControllerClient = std::ptr::read(raw_pointer as *const &dyn ControllerClient);
-
                 //println!("test create scope begin");
-                controller_client
+                source_controller_client_impl
                     .create_scope(&newScope)
                     .await
                     .expect("create scope");
                 //println!("test create scope end");
-                callback(1);
+                callback(key, 1);
             });        
         }
 }
@@ -78,7 +75,7 @@ extern "C" fn ControllerClientImplCreateScope(
 #[no_mangle]
 extern "C" fn ControllerClientImplCreateStream(
     client_factory_pointer: &'static ClientFactory,
-    source_controller_client_impl: &mut &dyn ControllerClient, 
+    source_controller_client_impl: &dyn ControllerClient, 
     newStream: CustomRustString,
     targetScope: CustomRustString,
     scaling_type: i32,
@@ -136,16 +133,11 @@ extern "C" fn ControllerClientImplCreateStream(
             },
             tags: None,
         };
-        // ControllerClient
-        let raw_pointer: usize = source_controller_client_impl as *const &dyn ControllerClient as usize;
 
         // Create the new stream asynchronously
         client_factory_pointer.runtime().block_on( async move {
 
-            // Move a controllerclient reference into memory and clone it so we don't worry about its lifetime.
-            let controller_client: &dyn ControllerClient = std::ptr::read(raw_pointer as *const &dyn ControllerClient);
-
-            controller_client
+            source_controller_client_impl
                 .create_stream(&stream_config)
                 .await
                 .expect("create stream");

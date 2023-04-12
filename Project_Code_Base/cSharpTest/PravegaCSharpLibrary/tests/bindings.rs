@@ -4,7 +4,7 @@
 )]
 use interoptopus::util::NamespaceMappings;
 use interoptopus::{Error, Interop, Inventory, InventoryBuilder};
-use PravegaCSharp;
+use PravegaCSharpWrapper;
 
 /* 
 #[test]

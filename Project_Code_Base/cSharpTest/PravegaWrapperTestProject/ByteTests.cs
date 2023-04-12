@@ -46,6 +46,26 @@ namespace PravegaWrapperTestProject
         }
 
         /// <summary>
+        ///  ByteWriter Constructor Time Test. Create ByteWriter from inputted ScopedStream
+        ///  
+        ///  Prereq. 
+        ///  -Scope is initialized and Stream is initialized on that scope
+        ///  -Pravega Server is running.
+        ///  -Client Factory is initialized.
+        /// </summary>
+        /// <param name="testScopedStream">
+        ///  ScopedStream to test on.
+        /// </param>
+        /// <returns>
+        ///  ByteWriter generated. If a byteWriter is generated, it means that
+        ///  the test passed.
+        /// </returns>
+        /// <summary>
+        public static ByteWriter ByteWriterConstructorTimeTest(ScopedStream testScopedStream)
+        {
+            return ClientFactory.CreateByteWriter(testScopedStream).GetAwaiter().GetResult();
+        }
+
         ///  ByteWriter Write Test. Write bytes inputted in test list to byte writer inputted
         ///  
         ///  Prereq. 

@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "PravegaCSharp"
+name = "PravegaCSharpWrapper"
 version = "0.14.14"
 dependencies = [
  "async-std",

@@ -1,5 +1,5 @@
 [package]
-name = "PravegaCSharp"
+name = "PravegaCSharpWrapper"
 authors = ["John Sbur"]
 version = "0.14.14"
 edition = "2018"
