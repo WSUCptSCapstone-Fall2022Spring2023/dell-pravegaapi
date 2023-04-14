@@ -375,22 +375,23 @@ pub extern "C" fn TestEverything()
             stream: Stream::from("testStream2".to_owned())
         }; 
         let mut bw = cfp.create_byte_writer(ss.clone()).await;
-        println!("Created Writer");
-        let testArr = "ThisIsAtestString".to_string().into_bytes();
+        println!("Created Writer Redid String");
+        let testArr = "What do you call a well-balanced horse? Stable.".to_string().into_bytes();
         let arrsize = testArr.capacity();
         println!("TestArr has {} bytes",arrsize);
         let size = bw.write(&testArr).await.unwrap();
         println!("Write concluded, wrote {} bytes",size);
-        println!("Flushing Writer");
-        bw.flush().await.unwrap();
+        //println!("Flushing Writer");
+        //bw.flush().await.unwrap();
         
         let mut br = cfp.create_byte_reader(ss.clone()).await;
         println!("{}",ss.scope.name);
         println!("Creater Reader w/await");
 
-        let mut buf: Vec<u8> = vec![0; 20];
+        let mut buf: Vec<u8> = vec![0; 100];
         println!("Starting read");
-        let rsize = br.read(&mut buf).await.unwrap();
+        let mut rsize = br.read(&mut buf).await.unwrap();
+        //rsize = br.read(&mut buf).await.unwrap();
         println!("read {} bytes",rsize);
         let newstring = String::from_utf8_lossy(&buf);
         println!("Recovered string: {}",newstring);
