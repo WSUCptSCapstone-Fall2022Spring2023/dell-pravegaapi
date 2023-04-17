@@ -16,9 +16,10 @@ use pravega_client::{client_factory::ClientFactory};
 use pravega_client::event::ReaderGroup;
 use pravega_client::event::EventWriter;
 use futures::executor;
-use utility_wrapper::CustomRustString;
+use utility_wrapper::{CustomRustString, U8Slice};
 
 use tokio::task::JoinHandle;
+use std::ops::Deref;
 use std::{thread, time};
 use std::io::{Error, ErrorKind, SeekFrom};
 use std::time::Duration;
@@ -105,4 +106,57 @@ pub extern "C" fn CreateEventWriter(
             unsafe { callback(key,result_ptr) };
         }) ;
         
+}
+
+
+#[no_mangle]
+pub extern "C" fn EventWriterDrop(EW: &mut EventWriter)
+{
+    drop(EW);
+}
+
+#[no_mangle]
+pub extern "C" fn EventWriterFlush(client_factory_ptr: &'static ClientFactory,
+event_writer_ptr: &mut EventWriter,
+key: u64,
+callback: unsafe extern "C" fn (u64, u64)
+)
+{
+// Block on the client factory's runtime
+client_factory_ptr.runtime().block_on( async move {
+
+    // Write data to server
+    event_writer_ptr.flush().await.unwrap();
+    unsafe { callback(key, 1); }
+});
+}
+
+#[no_mangle]
+pub extern "C" fn ByteWriterWrite(
+    client_factory_ptr: &'static ClientFactory,
+    event_writer_ptr: &mut EventWriter,
+    buffer: *mut u8,
+    buffer_size: u32,
+    key: u64, 
+    callback: unsafe extern "C" fn(u64, u64)
+)
+{
+    // Initialize the buffer from the inputs
+    let buffer_slice: U8Slice = U8Slice { slice_pointer: buffer as *mut i32, length: buffer_size };
+    let buffer_array: &mut [u8] = buffer_slice.as_rust_u8_slice_mut();
+
+    // Block on the client factory's runtime
+    client_factory_ptr.runtime().block_on( async move {
+
+        // Write data to server
+        let mut result: tokio::sync::oneshot::Receiver<Result<(), pravega_client::error::Error>> = event_writer_ptr.write_event(buffer_array.to_vec()).await;
+        let reviever_value: () = result.try_recv().unwrap().unwrap();
+        let mut return_value =-1;
+        if reviever_value==()
+        {
+            return_value =0;
+        }
+
+        unsafe { callback(key, return_value as u64); }
+    });
 }

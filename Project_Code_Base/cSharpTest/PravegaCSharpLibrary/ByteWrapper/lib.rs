@@ -24,6 +24,8 @@ use std::time::Duration;
 use once_cell::sync::OnceCell;
 use tokio::runtime::{Builder, Runtime, EnterGuard};
 use tokio::task;
+use tracing_subscriber;
+use tracing;
 
 // ByteReader default constructor
 #[no_mangle]
@@ -56,6 +58,40 @@ pub extern "C" fn CreateByteReader(
         
 }
 
+#[no_mangle]
+pub extern "C" fn CreateByteReaderNoDelegate(
+    client_factory_ptr: &'static ClientFactory,
+    scope: CustomRustString,
+    stream: CustomRustString,)-> *const ByteReader
+    {
+        
+        println!("{}",scope.as_string());
+        println!("{}",stream.as_string());
+        let scope_converted = Scope{
+            name: scope.as_string()
+        };
+        let stream_converted = Stream{
+            name: stream.as_string()
+        };
+        let ss: ScopedStream = ScopedStream{
+            scope: scope_converted,
+            stream: stream_converted  
+        };
+        println!("Above Block on");
+       let RP = client_factory_ptr.runtime().block_on( async move {
+        let subscriber = tracing_subscriber::FmtSubscriber::new();
+    
+        tracing::subscriber::set_global_default(subscriber);
+            let result: ByteReader = client_factory_ptr.create_byte_reader(ss).await;
+            println!("Below Await");
+            let result_box: Box<ByteReader> = Box::new(result);
+            let result_ptr: *const ByteReader = Box::into_raw(result_box);
+            return result_ptr;
+            
+        }) ;
+        return RP;
+
+    }
 // ByteReader.current_offset
 #[no_mangle]
 pub extern "C" fn ByteReaderCurrentOffset(source_byte_reader: &mut ByteReader) -> u64

@@ -24,8 +24,8 @@ namespace Pravega.ControllerCli
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop
     {
-        //public const string ControllerclientDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
-        public const string ControllerclientDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
+        public const string ControllerclientDLLPath = "controller_client_wrapper.dll";
+        //public const string ControllerclientDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
         ////////
         /// Controller Client
         ////////
@@ -34,7 +34,6 @@ namespace Pravega.ControllerCli
         internal static extern IntPtr CreateControllerCliDefault(IntPtr clientFactoryPointer, IntPtr clientConfigPointer);
 
         // ControllerClient.create_scope()
-        /*
         [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
         internal static extern void ControllerClientImplCreateScope(
             IntPtr clientFactoryPointer,
@@ -42,15 +41,6 @@ namespace Pravega.ControllerCli
             CustomRustString newScope,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
-        */
-        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
-        internal static extern void ControllerClientImplCreateScope(
-            IntPtr clientFactoryPointer,
-            IntPtr controllerClientPointer,
-            CustomRustString newScope,
-            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallback callback);
-        
-        
 
         // ControllerClient.create_stream()
         [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateStream")]
@@ -86,6 +76,7 @@ namespace Pravega.ControllerCli
         /// <summary>
         ///  Constructor for controller client. Creates using a client config and runtime handle inputted.
         /// </summary>
+        /*
         public ControllerClient(ClientConfig sourceConfig)
         {
             // Verify ClientFactory is initialized. If not, throw.
@@ -106,7 +97,7 @@ namespace Pravega.ControllerCli
                 sourceConfig.MarkAsNull();
             }
         }
-
+        */
         
         /// <summary>
         ///  Creates a scope within the controller client's handle with the newScope's name.
@@ -127,7 +118,6 @@ namespace Pravega.ControllerCli
 
             // Create and pin the callback so it isn't garbage collected.
             TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
-            /*
             rustCallbackU64 callback = (value) => {
                 task.SetResult(true);
             };
@@ -139,16 +129,7 @@ namespace Pravega.ControllerCli
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
-            */
-            
-            Interop.ControllerClientImplCreateScope(
-                ClientFactory.RustStructPointer,
-                this._rustStructPointer,
-                newScope.RustString,
-                (value) => {
-                    task.SetResult(true);
-                }
-                );
+           
             
             return task.Task;
         }

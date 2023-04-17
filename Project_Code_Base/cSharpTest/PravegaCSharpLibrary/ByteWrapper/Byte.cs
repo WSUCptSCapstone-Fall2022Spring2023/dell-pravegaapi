@@ -30,8 +30,8 @@ namespace Pravega.Byte
     {
 
         // Set path of byte .dll specifically
-        //public const string ByteDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\byte_wrapper.dll";
-        public const string ByteDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\byte_wrapper.dll";
+        public const string ByteDLLPath = "byte_wrapper.dll";
+
         ////////
         /// Byte Writer
         ////////
@@ -118,7 +118,15 @@ namespace Pravega.Byte
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback
         );
-        
+
+        //CreateByteReaderNoDelegate
+        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteReaderNoDelegate")]
+        internal static extern IntPtr CreateByteReaderNoDelegate(
+            IntPtr clientFactoryPointer,
+            CustomRustString scope,
+            CustomRustString stream
+          );
+
 
         // ByteReader current offset getter
         [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
@@ -538,6 +546,21 @@ namespace Pravega.Byte
             }
         }
 
+        internal void InitializeBRNoDelegate(ScopedStream writerScopedStream)
+        {
+            if (ClientFactory.Initialized())
+            {
+
+                this._rustStructPointer = Interop.CreateByteReaderNoDelegate(ClientFactory.RustStructPointer,
+                writerScopedStream.Scope.RustString,
+                writerScopedStream.Stream.RustString);
+            }
+            else
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+        }
+
         /// <summary>
         ///  Internal method that generates a byte reader using a dll call. Sets this object's pointer when initialized successfully.
         /// </summary>
@@ -674,7 +697,7 @@ namespace Pravega.Byte
         /// <exception cref="PravegaException">
         ///     Occurs if the ClientFactory isn't initialized when called.
         /// </exception>
-        public Task<byte[]> Read(uint numberOfBytesRequested)
+        public Task<byte[]> Read(ulong numberOfBytesRequested)
         {
             // If Client Factory isn't initialized, throw
             if (!ClientFactory.Initialized())

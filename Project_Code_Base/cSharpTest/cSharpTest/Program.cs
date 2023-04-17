@@ -18,6 +18,9 @@
     using Pathgen;
     using Pravega.Utility;
     using PravegaWrapperTestProject;
+    using NUnit.Framework;
+    using System.Security.Cryptography.X509Certificates;
+
     public static class Program
     {
 
@@ -26,83 +29,25 @@
 
             // ********* Sets where to look for DllImport to find the Dll files
             Environment.CurrentDirectory = Pathgen.PathGen.CreateDllPath();
-
-
-
-
-            // ********* Testing variables           
-            const string testScopeName = "testScope";
-            const string testStreamName = "testStream";
-            List<byte> testBytes = new List<byte>();
-            ScopedStream testScopedStream= new ScopedStream();
-            ulong testResultHolderU64 = 0;
-
-
-
-            // ********* Initialize local variables  
-            //  -testBytes
-            testBytes.Clear();
-            testBytes.Add(0);
-            testBytes.Add(1);
-            testBytes.Add(2);
-            testBytes.Add(3);
-<<<<<<< HEAD
-            testBytes.Add(4);
-            //  -testScopedStream
-            testScopedStream.Scope = new CustomCSharpString(testScopeName);
-            testScopedStream.Stream = new CustomCSharpString(testStreamName);
-
-
-
-
-            // ********* ControllerClient Tests
-            Console.WriteLine("Begin ControllerClient Tests:");
-
-            //  -Create Scope
-            if (PravegaCSharpTest.ControllerClientCreateScope(testScopeName) != true)
-            {
-                Console.WriteLine(" Create Scope Fail");
-                throw new Exception();
-            }
-            Console.WriteLine(" Create Scope Pass");
-
-            //  -Create Stream
-            if (PravegaCSharpTest.ControllerClientCreateStream(testScopeName, testStreamName) != true){
-                Console.WriteLine(" Create Stream Fail");
-                throw new Exception();
-            }
-            Console.WriteLine(" Create Stream Pass");
-
-
-
-
-            // ********* ByteWriter tests
-            Console.WriteLine(Environment.NewLine + "Begin ControllerClient Tests:");
-
-            //  -Constructor
-            ByteWriter testWriter = PravegaCSharpTest.ByteWriterConstructorTest(testScopedStream);
-            Console.WriteLine(" Create ByteWriter Pass");
-
-            //  -Write
-            testResultHolderU64 = testWriter.Write(testBytes).GetAwaiter().GetResult();
-            Console.WriteLine(" Write Pass");
-
-            //  -  
-
-
-
-            ByteReader testReader = ClientFactory.CreateByteReader(testScopedStream).GetAwaiter().GetResult();
-=======
-            Console.WriteLine(testWriter.Write(testBytes).GetAwaiter().GetResult().ToString());
-            Console.WriteLine("Testing EventWriter");
-            EventWriter e = ClientFactory.CreateEventWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-            Console.WriteLine("Testing ReaderGroup");
-            ReaderGroup r = ClientFactory.CreateReaderGroup(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-            Console.WriteLine("Testing ByteReader");
-            ByteReader testReader = ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
->>>>>>> 96b5d09ea0cac550d4fef156d2bae8176d8cbd54
-
             Console.WriteLine("finish");
+            ClientFactory.Initialize();
+            ControllerClient testController = ClientFactory.FactoryControllerClient;
+
+            // Create a scope to base the stream on.
+            Scope testScope = new Scope();
+            testScope.NativeString = "testScope";
+            testController.CreateScope(testScope).GetAwaiter().GetResult();
+
+            // Create a stream config to control the stream
+            StreamConfiguration streamConfiguration = new StreamConfiguration();
+            streamConfiguration.ConfigScopedStream.Scope = testScope;
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream");
+
+            // Create the stream
+            testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
+            Console.WriteLine("Above reader");
+            // Create the ByteWriter
+            ClientFactory.CreateByteReaderNoDelegate(streamConfiguration.ConfigScopedStream);
         }
 
 

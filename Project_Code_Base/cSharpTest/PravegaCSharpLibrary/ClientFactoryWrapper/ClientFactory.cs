@@ -29,10 +29,10 @@ namespace Pravega.ClientFactoryModule
     public static partial class Interop {
 
         // Set path of ClientFactory .dll specifically
-        public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
+        //public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         // public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
         //public const string ClientFactoryDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
-        //public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
+        public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
 
         ////////
         /// Client Factory
@@ -496,6 +496,21 @@ namespace Pravega.ClientFactoryModule
                 await returnReader.InitializeByteReader(readerScopedStream);
                 return returnReader;
             }
+        }
+
+        public static ByteReader CreateByteReaderNoDelegate(ScopedStream readerScopedStream)
+        {
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+            else
+            {
+                ByteReader BR = new ByteReader();
+                BR.InitializeBRNoDelegate(readerScopedStream);
+                return BR;
+            }
+
         }
 
         /// <summary>

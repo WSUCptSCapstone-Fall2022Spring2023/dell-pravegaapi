@@ -1,3 +1,15 @@
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.deps.json
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.dll
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.pdb
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.csproj.AssemblyReference.cache
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.AssemblyInfoInputs.cache
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.AssemblyInfo.cs
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.csproj.CoreCompileInputs.cache
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.dll
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\refint\PravegaCSharpLibrary.dll
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.pdb
+C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\ref\PravegaCSharpLibrary.dll
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.deps.json
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.dll
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.pdb
@@ -10,8 +22,6 @@ C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pra
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\refint\PravegaCSharpLibrary.dll
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.pdb
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\ref\PravegaCSharpLibrary.dll
-<<<<<<< HEAD
-=======
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.csproj.AssemblyReference.cache
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.GeneratedMSBuildEditorConfig.editorconfig
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.AssemblyInfoInputs.cache
@@ -24,4 +34,15 @@ E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.pdb
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.pdb
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\ref\PravegaCSharpLibrary.dll
->>>>>>> 96b5d09ea0cac550d4fef156d2bae8176d8cbd54
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.deps.json
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.dll
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\bin\Debug\net6.0\PravegaCSharpLibrary.pdb
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.csproj.AssemblyReference.cache
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.AssemblyInfoInputs.cache
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.AssemblyInfo.cs
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.csproj.CoreCompileInputs.cache
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.dll
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\refint\PravegaCSharpLibrary.dll
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\PravegaCSharpLibrary.pdb
+C:\Users\Layne Padelford\source\repos\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\obj\Debug\net6.0\ref\PravegaCSharpLibrary.dll
