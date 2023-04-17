@@ -46,6 +46,7 @@
             testBytes.Add(1);
             testBytes.Add(2);
             testBytes.Add(3);
+<<<<<<< HEAD
             testBytes.Add(4);
             //  -testScopedStream
             testScopedStream.Scope = new CustomCSharpString(testScopeName);
@@ -91,6 +92,15 @@
 
 
             ByteReader testReader = ClientFactory.CreateByteReader(testScopedStream).GetAwaiter().GetResult();
+=======
+            Console.WriteLine(testWriter.Write(testBytes).GetAwaiter().GetResult().ToString());
+            Console.WriteLine("Testing EventWriter");
+            EventWriter e = ClientFactory.CreateEventWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+            Console.WriteLine("Testing ReaderGroup");
+            ReaderGroup r = ClientFactory.CreateReaderGroup(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+            Console.WriteLine("Testing ByteReader");
+            ByteReader testReader = ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+>>>>>>> 96b5d09ea0cac550d4fef156d2bae8176d8cbd54
 
             Console.WriteLine("finish");
         }

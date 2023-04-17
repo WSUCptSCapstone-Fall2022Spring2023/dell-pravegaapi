@@ -41,6 +41,7 @@ E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.CoreCompileInputs.cache
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.dll
 E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\refint\cSharpTest.dll
+<<<<<<< HEAD
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\testhost.dll
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\PravegaCSharpTestProject.deps.json
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\PravegaCSharpTestProject.runtimeconfig.json
@@ -129,3 +130,16 @@ C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pra
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\PravegaCSharpTestProject.dll
 C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\PravegaCSharpTestProject.pdb
+=======
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.exe
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.deps.json
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.runtimeconfig.json
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.dll
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\cSharpTest.pdb
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\PravegaCSharpLibrary.dll
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\bin\Debug\net6.0\PravegaCSharpLibrary.pdb
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.csproj.CopyComplete
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.pdb
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\cSharpTest.genruntimeconfig.cache
+E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\cSharpTest\obj\Debug\net6.0\ref\cSharpTest.dll
+>>>>>>> 96b5d09ea0cac550d4fef156d2bae8176d8cbd54

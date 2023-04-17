@@ -1,5 +1,6 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "9YkN1LBbAJxgcenxM4rK5UrXi376/qT5AUtKMWxEX6C6M6NYQSpp19CCh/TYYBEcCTg+wWneXHe6WYGDI6kYEA==",
   "success": true,
   "projectFilePath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
@@ -52,5 +53,11 @@
     "C:\\Users\\john_\\.nuget\\packages\\system.xml.readerwriter\\4.0.11\\system.xml.readerwriter.4.0.11.nupkg.sha512",
     "C:\\Users\\john_\\.nuget\\packages\\system.xml.xdocument\\4.0.11\\system.xml.xdocument.4.0.11.nupkg.sha512"
   ],
+=======
+  "dgSpecHash": "p2zrcFNKN1sD9Jpd40MW6j+lvAkmNfnhk682khGygCnDfcxtc/BJ9iEiT5eXWqwMqZT7xiW+4R9hvfqzooyDYg==",
+  "success": true,
+  "projectFilePath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+  "expectedPackageFiles": [],
+>>>>>>> 96b5d09ea0cac550d4fef156d2bae8176d8cbd54
   "logs": []
 }
