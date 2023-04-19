@@ -16,17 +16,16 @@ namespace Pravega.Utility
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop
     {
-        public const string UtilityDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\utility_wrapper.dll";
 
         ////////
         /// Utility Methods
         ////////
         // Create a runtime
-        [DllImport(UtilityDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SpawnRuntime")]
+        [DllImport(Pravega.Interop.UtilityDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SpawnRuntime")]
         internal static extern IntPtr SpawnRuntime();
         
         // Kill a runtime
-        [DllImport(UtilityDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "KillRuntime")]
+        [DllImport(Pravega.Interop.UtilityDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "KillRuntime")]
         internal static extern void KillRuntime(IntPtr target_runtime);
     }
 

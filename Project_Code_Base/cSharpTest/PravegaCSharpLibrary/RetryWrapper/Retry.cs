@@ -18,13 +18,12 @@ namespace Pravega.Retry
     {
 
         // Set path of Retry .dll specifically
-        public const string RetryDLLPath ="retry_wrapper.dll";
 
         ////////
         /// RetryWithBackoff
         ////////
         // Default constructor
-        [DllImport(RetryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateDefaultRetryWithBackOff")]
+        [DllImport(Pravega.Interop.RetryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateDefaultRetryWithBackOff")]
         internal static extern IntPtr CreateDefaultRetryWithBackOff();
         
     }

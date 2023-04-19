@@ -24,69 +24,59 @@ namespace Pravega.Config
      // Continues building the Interop class by adding method signatures found in the Config para-module.
     public static partial class Interop {
 
-        // Set path of ClientFactory .dll specifically
-
-        public const string ConfigDLLPath = "config_wrapper.dll";
-
         ////////
         /// Client Config
         ////////
         // Default constructor
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientConfig")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientConfig")]
         internal static extern IntPtr CreateClientConfig();
 
         // Getters and Setters
         // MaxConnectionsInPool
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMaxConnectionsInPool")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMaxConnectionsInPool")]
         internal static extern uint GetClientConfigMaxConnectionsInPool(IntPtr sourceClientConfig);
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxConnectionsInPool")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxConnectionsInPool")]
         internal static extern void SetClientConfigMaxConnectionsInPool(IntPtr sourceClientConfig, uint newValue);
 
         // MaxControllerConnections
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMaxControllerConnections")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMaxControllerConnections")]
         internal static extern uint GetClientConfigMaxControllerConnections(IntPtr sourceClientConfig);
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxControllerConnections")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMaxControllerConnections")]
         internal static extern void SetClientConfigMaxControllerConnections(IntPtr sourceClientConfig, uint newValue);
 
         // RetryPolicy
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigRetryPolicy")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigRetryPolicy")]
         internal static extern IntPtr GetClientConfigRetryPolicy(IntPtr sourceClientConfig);
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigRetryPolicy")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigRetryPolicy")]
         internal static extern void SetClientConfigRetryPolicy(IntPtr sourceClientConfig, IntPtr newPolicy);
 
         // ControllerUri
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigControllerUri")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigControllerUri")]
         internal static extern IntPtr GetClientConfigControllerUri(IntPtr sourceClientConfig);
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigControllerUri")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigControllerUri")]
         internal static extern void SetClientConfigControllerUri(IntPtr sourceClientConfig, IntPtr newUri);
 
         // TransactionTimeoutTime
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigTransactionTimeoutTime")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigTransactionTimeoutTime")]
         internal static extern ulong GetClientConfigTransactionTimeoutTime(IntPtr sourceClientConfig);
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigTransactionTimeoutTime")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigTransactionTimeoutTime")]
         internal static extern void SetClientConfigTransactionTimeoutTime(IntPtr sourceClientConfig, ulong newValue);
         
         // Mock
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMock")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigMock")]
         internal static extern uint GetClientConfigMock(IntPtr sourceClientConfig);
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMock")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigMock")]
         internal static extern void SetClientConfigMock(IntPtr sourceClientConfig, uint newValue);
 
         // IsTlsEnabled
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigIsTlsEnabled")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientConfigIsTlsEnabled")]
         internal static extern uint GetClientConfigIsTlsEnabled(IntPtr sourceClientConfig);
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigIsTlsEnabled")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetClientConfigIsTlsEnabled")]
         internal static extern void SetClientConfigIsTlsEnabled(IntPtr sourceClientConfig, uint newValue);
 
         // TrustCerts
-        [DllImport(ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientExtractTrustCert")]
+        [DllImport(Pravega.Interop.ConfigDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientExtractTrustCert")]
         internal static extern CustomRustString GetClientExtractTrustCert(IntPtr sourceClientConfig, uint index);
-
-        
-        ////////
-        ///
-        ////////
-
 
     }
 

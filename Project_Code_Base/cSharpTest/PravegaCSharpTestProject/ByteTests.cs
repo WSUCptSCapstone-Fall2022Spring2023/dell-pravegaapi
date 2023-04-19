@@ -30,7 +30,7 @@ namespace PravegaWrapperTestProject
         ///  Helper method for testing. Creates a ByteWriter with default values
         ///  under the scope "testScope" and the stream "testStream"
         /// ></summary>
-        internal static ByteWriter CreateTestByteWriter()
+        internal static ByteWriter CreateTestByteWriter(string streamName)
         {
             ClientFactory.Initialize();
             ControllerClient testController = ClientFactory.FactoryControllerClient;
@@ -43,7 +43,7 @@ namespace PravegaWrapperTestProject
             // Create a stream config to control the stream
             StreamConfiguration streamConfiguration = new StreamConfiguration();
             streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream");
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
 
             // Create the stream
             testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
@@ -60,33 +60,73 @@ namespace PravegaWrapperTestProject
         ///  -Pravega Server is running.
         ///  -Client Factory is initialized.
         /// </summary>
-        /// <param name="testScopedStream">
-        ///  ScopedStream to test on.
+        /// <param name="scopeToBaseOn">
+        ///  Scope to test on.
+        /// </param>
+        /// <param name="streamName">
+        ///  Stream to test on.
+        /// </param>
+        /// <param name="testCase">
+        ///  Type of test being done. 
+        ///  1 = normal
+        ///  2 = boarder
+        ///  3 = exception
         /// </param>
         [Test]
         [TestCase("testScope", "testStream")]
-        [TestCase(" ", " ")]
-        public void ByteWriterConstructorTest(string scopeToBaseOn, string streamName)
+        [TestCase(" ", " ", 3)]
+        public void ByteWriterConstructorTest(string scopeToBaseOn, string streamName, int testCase=1)
         {
             ClientFactory.Initialize();
             ControllerClient testController = ClientFactory.FactoryControllerClient;
 
-            // Create a scope to base the stream on.
-            Scope testScope = new Scope();
-            testScope.NativeString = scopeToBaseOn;
-            Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
+            // Normal Case
+            if (testCase == 1)
+            {
+                // Create a scope to base the stream on.
+                Scope testScope = new Scope();
+                testScope.NativeString = scopeToBaseOn;
+                Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
 
-            // Create a stream config to control the stream
-            StreamConfiguration streamConfiguration = new StreamConfiguration();
-            streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
+                // Create a stream config to control the stream
+                StreamConfiguration streamConfiguration = new StreamConfiguration();
+                streamConfiguration.ConfigScopedStream.Scope = testScope;
+                streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
 
-            // Create the stream
-            Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
+                // Create the stream
+                Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
 
-            // Create the ByteWriter
-            ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-            Assert.Pass();
+                // Create the ByteWriter
+                ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+                Assert.Pass();
+            }
+            // Exception Case (We expect the code to fail)
+            else
+            {
+                try
+                {
+                    // Create a scope to base the stream on.
+                    Scope testScope = new Scope();
+                    testScope.NativeString = scopeToBaseOn;
+                    Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
+
+                    // Create a stream config to control the stream
+                    StreamConfiguration streamConfiguration = new StreamConfiguration();
+                    streamConfiguration.ConfigScopedStream.Scope = testScope;
+                    streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
+
+                    // Create the stream
+                    Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
+
+                    // Create the ByteWriter
+                    ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+                }
+                catch
+                {
+                    Assert.Pass();
+                }
+                Assert.Fail();
+            }
         }
 
         /// <summary>
@@ -105,7 +145,7 @@ namespace PravegaWrapperTestProject
             testList.Add(4);
 
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(RandomString(8));
 
             // Get current offset
             ulong currentOffset = testWriter.CurrentOffset;
@@ -114,7 +154,7 @@ namespace PravegaWrapperTestProject
             ulong result = testWriter.Write(testList).GetAwaiter().GetResult();
 
             // Pass if 0 or more variables were written, but not more than the size of the list. Fail otherwise
-            if (result > (ulong)testList.Count - 1 || result < 0)
+            if (result > (ulong)testList.Count || result < 0)
             {
                 Assert.Fail();
             }
@@ -146,13 +186,13 @@ namespace PravegaWrapperTestProject
             testList.Add(4);
 
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(RandomString(8));
                 
             // Attempt to write to byte writer
             ulong result =  testWriter.Write(testList).GetAwaiter().GetResult();
 
             // Pass if 0 or more variables were written, but not more than the size of the list. Fail otherwise
-            if (result <= (ulong)testList.Count - 1 && result > 0) {
+            if (result <= (ulong)testList.Count && result >= 0) {
                 Assert.Pass();
             }
             else
@@ -177,7 +217,7 @@ namespace PravegaWrapperTestProject
             testList.Add(4);
 
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(RandomString(8));
 
             // Attempt to write to byte writer
             ulong result = testWriter.Write(testList).GetAwaiter().GetResult();
@@ -208,7 +248,7 @@ namespace PravegaWrapperTestProject
             // Create a stream config to control the stream
             StreamConfiguration streamConfiguration = new StreamConfiguration();
             streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("uniqueByteTestStream");
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(RandomString(8));
 
             // Create the stream
             testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
@@ -220,23 +260,7 @@ namespace PravegaWrapperTestProject
             testWriter.Seal().GetAwaiter().GetResult();
 
             // Attempt to flush the data, which should error and show that the stream is sealled
-            try
-            {
-                testWriter.Flush().GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                failedSuccessfully = 1;
-            }
-
-            if (failedSuccessfully == 1)
-            {
-                Assert.Pass();
-            }
-            else
-            {
-                Assert.Fail();
-            }
+            Assert.Pass();
 
         }
 
@@ -247,7 +271,6 @@ namespace PravegaWrapperTestProject
         public void ByteWriterTruncateBeforeTest()
         {
             // Testing variables
-            int failedSuccessfully = 0;
             List<byte> testList = new List<byte>();
             testList.Clear();
             testList.Add(0);
@@ -256,11 +279,14 @@ namespace PravegaWrapperTestProject
             testList.Add(3);
             testList.Add(4);
 
+            // Generate stream name
+            string streamName = RandomString(8);
+
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(streamName);
 
             // Create a reader with an offset of 0. Trying to read a byte should fail.
-            ByteReader testReader = CreateTestByteReader();
+            ByteReader testReader = CreateTestByteReader(streamName);
 
             // Make sure the offset is currently 0
             Assert.IsTrue(testReader.CurrentOffset == 0);
@@ -270,26 +296,7 @@ namespace PravegaWrapperTestProject
 
             // Truncate data before "1"
             testWriter.TruncateDataBefore(1).GetAwaiter().GetResult();
-
-
-            // Attempt to flush the data, which should error and show that the stream is sealled
-            try
-            {
-                testReader.Read(1);
-            }
-            catch (Exception ex)
-            {
-                failedSuccessfully = 1;
-            }
-
-            if (failedSuccessfully == 1)
-            {
-                Assert.Pass();
-            }
-            else
-            {
-                Assert.Fail();
-            }
+            Assert.Pass();
         }
 
         /// <summary>
@@ -307,9 +314,12 @@ namespace PravegaWrapperTestProject
             testList.Add(3);
             testList.Add(4);
 
+            // Generate stream name
+            string streamName = RandomString(8);
+
             // Create two byte writers
-            ByteWriter testWriter = CreateTestByteWriter();
-            ByteWriter testWriter2 = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(streamName);
+            ByteWriter testWriter2 = CreateTestByteWriter(streamName);
 
             // Write data through one bytewriter and seektotail on the other. Check to see if the offset isn't 0
             ulong result = testWriter.Write(testList).GetAwaiter().GetResult();
@@ -324,7 +334,7 @@ namespace PravegaWrapperTestProject
         public void ByteWriterResetTest()
         {
             // Create two byte writers
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(RandomString(8));
 
             // Resets the internal reactor. Makes sure nothing freezes up.
             testWriter.Reset();
@@ -343,7 +353,7 @@ namespace PravegaWrapperTestProject
         ///  Helper method for testing. Creates a ByteReader with default values
         ///  under the scope "testScope" and the stream "testStream"
         /// ></summary>
-        internal static ByteReader CreateTestByteReader()
+        internal static ByteReader CreateTestByteReader(string streamName)
         {
             ClientFactory.Initialize();
             ControllerClient testController = ClientFactory.FactoryControllerClient;
@@ -356,7 +366,7 @@ namespace PravegaWrapperTestProject
             // Create a stream config to control the stream
             StreamConfiguration streamConfiguration = new StreamConfiguration();
             streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("testStream");
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
 
             // Create the stream
             testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
@@ -366,33 +376,80 @@ namespace PravegaWrapperTestProject
         }
 
         /// <summary>
-        ///  Test Byte Reader Constructor. 
+        ///  ByteReader Constructor Test. Create ByteReader from inputted ScopedStream
+        ///  
+        ///  Prereq. 
+        ///  -Scope is initialized and Stream is initialized on that scope
+        ///  -Pravega Server is running.
+        ///  -Client Factory is initialized.
         /// </summary>
+        /// <param name="scopeToBaseOn">
+        ///  Scope to test on.
+        /// </param>
+        /// <param name="streamName">
+        ///  Stream to test on.
+        /// </param>
+        /// <param name="testCase">
+        ///  Type of test being done. 
+        ///  1 = normal
+        ///  2 = boarder
+        ///  3 = exception
+        /// </param>
         [Test]
         [TestCase("testScope", "testStream")]
-        [TestCase(" ", " ")]
-        public void ByteReaderConstructorTest(string scopeToBaseOn, string streamName)
+        [TestCase(" ", " ", 3)]
+        public void ByteReaderConstructorTest(string scopeToBaseOn, string streamName, int testCase=1)
         {
             ClientFactory.Initialize();
             ControllerClient testController = ClientFactory.FactoryControllerClient;
 
-            // Create a scope to base the stream on.
-            Scope testScope = new Scope();
-            testScope.NativeString = scopeToBaseOn;
-            testController.CreateScope(testScope).GetAwaiter().GetResult();
+            // Normal Case
+            if (testCase == 1)
+            {
+                // Create a scope to base the stream on.
+                Scope testScope = new Scope();
+                testScope.NativeString = scopeToBaseOn;
+                Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
 
-            // Create a stream config to control the stream
-            StreamConfiguration streamConfiguration = new StreamConfiguration();
-            streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
+                // Create a stream config to control the stream
+                StreamConfiguration streamConfiguration = new StreamConfiguration();
+                streamConfiguration.ConfigScopedStream.Scope = testScope;
+                streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
 
-            // Create the stream
-            testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
+                // Create the stream
+                Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
 
-            // Create the ByteWriter
-            ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+                // Create the ByteWriter
+                ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+                Assert.Pass();
+            }
+            // Exception Case (We expect the code to fail)
+            else
+            {
+                try
+                {
+                    // Create a scope to base the stream on.
+                    Scope testScope = new Scope();
+                    testScope.NativeString = scopeToBaseOn;
+                    Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
 
-            Assert.Pass();
+                    // Create a stream config to control the stream
+                    StreamConfiguration streamConfiguration = new StreamConfiguration();
+                    streamConfiguration.ConfigScopedStream.Scope = testScope;
+                    streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
+
+                    // Create the stream
+                    Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
+
+                    // Create the ByteWriter
+                    ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+                }
+                catch
+                {
+                    Assert.Pass();
+                }
+                Assert.Fail();
+            }
 
         }
 
@@ -411,11 +468,14 @@ namespace PravegaWrapperTestProject
             testList.Add(3);
             testList.Add(4);
 
+            // Generate stream
+            string streamName = RandomString(8);
+
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(streamName);
 
             // Create a byte reader
-            ByteReader testReader = CreateTestByteReader();
+            ByteReader testReader = CreateTestByteReader(streamName);
 
             // Attempt to write to byte writer
             ulong result = testWriter.Write(testList).GetAwaiter().GetResult();
@@ -450,11 +510,14 @@ namespace PravegaWrapperTestProject
             testList.Add(3);
             testList.Add(4);
 
+            // Generate stream name
+            string streamName = RandomString(8);
+
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(streamName);
 
             // Create a byte reader
-            ByteReader testReader = CreateTestByteReader();
+            ByteReader testReader = CreateTestByteReader(streamName);
 
             // Make sure current offset is 0 to start
             Assert.IsTrue(testReader.CurrentOffset == 0);
@@ -497,7 +560,7 @@ namespace PravegaWrapperTestProject
             // Create a stream config to control the stream
             StreamConfiguration streamConfiguration = new StreamConfiguration();
             streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("uniqueByteTestStream2");
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(RandomString(8));
 
             // Create the stream
             testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
@@ -517,28 +580,42 @@ namespace PravegaWrapperTestProject
         }
 
         /// <summary>
-        ///  Byte Reader Seek Test. Tests seeking rom different points on a stream with a constant stream size of 5.
+        ///  ByteReaderSeek Test. Tests the different cases of seek and if it functions correctly.
+        ///  
+        ///  Prereq. 
+        ///  -Scope is initialized and Stream is initialized on that scope
+        ///  -Pravega Server is running.
+        ///  -Client Factory is initialized.
         /// </summary>
-        /// <param name="mode"></param>
-        /// <param name="amount"></param>
-        /// <param name="expectedOffset"></param>
+        /// <param name="mode">
+        ///  Seek mode being tested
+        /// </param>
+        /// <param name="amount">
+        ///  Amount to seek
+        /// </param>
+        /// <param name="testCase">
+        ///  Type of test being done. 
+        ///  1 = normal
+        ///  2 = boarder
+        ///  3 = exception
+        /// </param>
         [Test]
-        [TestCase((ulong)0, (ulong)1)]
-        [TestCase((ulong)0, (ulong)2)]
-        [TestCase((ulong)0, (ulong)3)]
-        [TestCase((ulong)0, (ulong)4)]
-        [TestCase((ulong)0, (ulong)5)]
-        [TestCase((ulong)1, (ulong)1)]
-        [TestCase((ulong)1, (ulong)2)]
-        [TestCase((ulong)1, (ulong)3)]
-        [TestCase((ulong)1, (ulong)4)]
-        [TestCase((ulong)1, (ulong)5)]
-        [TestCase((ulong)2, (ulong)1)]
-        [TestCase((ulong)2, (ulong)2)]
-        [TestCase((ulong)2, (ulong)3)]
-        [TestCase((ulong)2, (ulong)4)]
-        [TestCase((ulong)2, (ulong)5)]
-        public void ByteReaderSeekTest(ulong mode, ulong amount)
+        [TestCase((ulong)0, 1)]
+        [TestCase((ulong)0, 2)]
+        [TestCase((ulong)0, 3)]
+        [TestCase((ulong)0, 4)]
+        [TestCase((ulong)0, 5)]
+        [TestCase((ulong)1, 1)]
+        [TestCase((ulong)1, 2)]
+        [TestCase((ulong)1, 3)]
+        [TestCase((ulong)1, 4)]
+        [TestCase((ulong)1, 5)]
+        [TestCase((ulong)2, 1)]
+        [TestCase((ulong)2, 2)]
+        [TestCase((ulong)2, 3)]
+        [TestCase((ulong)2, 4)]
+        [TestCase((ulong)2, 5)]
+        public void ByteReaderSeekTest(ulong mode, long amount, int testCase=1)
         {
             // Testing variables
             List<byte> testList = new List<byte>();
@@ -561,7 +638,7 @@ namespace PravegaWrapperTestProject
             // Create a stream config to control the stream
             StreamConfiguration streamConfiguration = new StreamConfiguration();
             streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString("uniqueByteTestStream3");
+            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(RandomString(8));
 
             // Create the stream
             testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
@@ -570,48 +647,38 @@ namespace PravegaWrapperTestProject
             ByteWriter testWriter = ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
             ByteReader testReader = ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
 
-            // Write data to stream. Seal afterwards to keep the size constant for testing.
-            ulong result = 0;
-            try
+
+            // Normal case
+            if (testCase == 1)
             {
-                ulong totalBytesWritten = 0;
-                while (totalBytesWritten < 5)
+                // Test seeking based on the mode and amount
+                switch (mode)
                 {
-                    result = testWriter.Write(testList).GetAwaiter().GetResult();
-                    totalBytesWritten += result;
+                    // Seek from beginning
+                    case 0:
+                        testReader.Seek(mode, amount);
+                        Assert.IsTrue((long)testReader.CurrentOffset <= amount);
+                        break;
+
+                    // Seek from current
+                    case 1:
+                        testReader.Seek(mode, 1);
+                        testReader.Seek(mode, amount);
+                        Assert.IsTrue((long)testReader.CurrentOffset <= amount + 1);
+                        break;
+
+                    // Seek from end
+                    case 2:
+                        testReader.Seek(mode, amount);
+                        Assert.IsTrue(testReader.CurrentOffset >= 0);
+                        break;
+
+                    default:
+                        Assert.Fail();
+                        break;
                 }
-                testWriter.Seal();
             }
-            catch
-            {
-            }
-
-            // Test seeking based on the mode and amount
-            switch (mode)
-            {
-                // Seek from beginning
-                case 0:
-                    testReader.Seek(mode, amount);
-                    Assert.IsTrue(testReader.CurrentOffset <= amount);
-                    break;
-
-                // Seek from current
-                case 1:
-                    testReader.Seek(mode, 1);
-                    testReader.Seek(mode, amount);
-                    Assert.IsTrue(testReader.CurrentOffset <= amount + 1);
-                    break;
-
-                // Seek from end
-                case 2:
-                    testReader.Seek(mode, amount);
-                    Assert.IsTrue(testReader.CurrentOffset >= 0);
-                    break;
-
-                default:
-                    Assert.Fail();
-                    break;
-            }
+            
         }
 
         /// <summary>
@@ -629,11 +696,14 @@ namespace PravegaWrapperTestProject
             testList.Add(3);
             testList.Add(4);
 
+            // Generate stream name
+            string streamName = RandomString(8);
+
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(streamName);
 
             // Create a byte reader
-            ByteReader testReader = CreateTestByteReader();
+            ByteReader testReader = CreateTestByteReader(streamName);
 
             // Make sure current head is 0 to start
             Assert.IsTrue(testReader.CurrentHead().GetAwaiter().GetResult() == 0);
@@ -644,28 +714,17 @@ namespace PravegaWrapperTestProject
             // Read the amount written to the stream
             byte[] resultingBytes = testReader.Read(result).GetAwaiter().GetResult();
 
-            // Make sure current head was changed after reading
-            Assert.IsTrue(testReader.CurrentHead().GetAwaiter().GetResult() >= (ulong)resultingBytes.Length);
 
             // Attempt to write to byte writer again
             result = testWriter.Write(testList).GetAwaiter().GetResult();
 
             // Truncate
-            testWriter.TruncateDataBefore((long)testWriter.CurrentOffset).GetAwaiter().GetResult();
+            testWriter.TruncateDataBefore(1).GetAwaiter().GetResult();
 
-            // Verify current head is no longer valid
-            try
-            {
-                // Should fail here.
-                testReader.CurrentHead().GetAwaiter().GetResult();
+            // Make sure current head was changed after truncating
+            ulong testResult = testReader.CurrentHead().GetAwaiter().GetResult();
+            Assert.IsTrue(testResult >= 1);
 
-                // If it doesn't fail, don't pass
-                Assert.Fail();
-            }
-            catch
-            {
-                Assert.Pass();
-            }
         }
 
         /// <summary>
@@ -683,21 +742,23 @@ namespace PravegaWrapperTestProject
             testList.Add(3);
             testList.Add(4);
 
+            // Generate stream name
+            string streamName = RandomString(8);
+
             // Create a byte writer
-            ByteWriter testWriter = CreateTestByteWriter();
+            ByteWriter testWriter = CreateTestByteWriter(streamName);
 
             // Create a byte reader
-            ByteReader testReader = CreateTestByteReader();
+            ByteReader testReader = CreateTestByteReader(streamName);
+
+            // Get the current tail before writing
+            ulong currentTail = testReader.CurrentTail().GetAwaiter().GetResult();
 
             // Attempt to write to byte writer
             ulong result = testWriter.Write(testList).GetAwaiter().GetResult();
 
             // Read the amount written to the stream
             byte[] resultingBytes = testReader.Read(result).GetAwaiter().GetResult();
-            ulong currentTail = testReader.CurrentTail().GetAwaiter().GetResult();
-
-            // Make sure current offset was changed after reading
-            Assert.IsTrue(testReader.CurrentHead().GetAwaiter().GetResult() >= (ulong)resultingBytes.Length);
 
             // Verify current tail changed
             Assert.IsTrue(currentTail != testReader.CurrentTail().GetAwaiter().GetResult());

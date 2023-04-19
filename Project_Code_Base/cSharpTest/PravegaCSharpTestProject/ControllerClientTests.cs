@@ -21,38 +21,31 @@ namespace PravegaWrapperTestProject
         /// <summary>
         ///  Controller Client Tests
         /// </summary>
-        // Unit Test. Controller Client Constructor
-        /*
-        [Test]
-        public void ControllerClientConstructor()
-        {
-            // Initialize Client Factory and grab its configuration
-            ClientFactory.Initialize();
-            ClientConfig testConfig = ClientFactory.Config;
-
-            // Attempt to create a new controller
-            ControllerClient testController = new ControllerClient(testConfig);
-
-            // Verify the controller was initialized
-            Assert.IsTrue(testController.IsNull() == false);
-        }
-        */
 
         /// <summary>
-        /// Unit Test. Create Stream
-        /// Requires a running Pravega server.
-        /// Cannot be ran in NUnit 
+        ///  ControllerClient Create Stream Test. Tests the ability to create streams on a Pravega server from C#
+        ///  
+        ///  Prereq. 
+        ///  -Scope is initialized and Stream is initialized on that scope
+        ///  -Pravega Server is running.
+        ///  -Client Factory is initialized.
         /// </summary>
-        /// <param name="streamName">
-        ///  Testing name of the stream
+        /// <param name="scopeToBaseOn">
+        ///  Scope the stream is to be based on
         /// </param>
-        /// <returns>
-        ///  A bool signifying if the test was successful.
-        /// </returns>
+        /// <param name="streamName">
+        ///  Stream being tested
+        /// </param>
+        /// <param name="testCase">
+        ///  Type of test being done. 
+        ///  1 = normal
+        ///  2 = boarder
+        ///  3 = exception
+        /// </param>
         [Test]
+        [TestCase("testScope", " ", 3)]
         [TestCase("testScope", "testStream")]
-        [TestCase(" ", " ")]
-        public void ControllerClientCreateStream(string scopeToBaseOn, string streamName)
+        public void ControllerClientCreateStream(string scopeToBaseOn, string streamName, int testCase=1)
         {
             ClientFactory.Initialize();
             ControllerClient testController = ClientFactory.FactoryControllerClient;
@@ -62,38 +55,91 @@ namespace PravegaWrapperTestProject
             testScope.NativeString = scopeToBaseOn;
             testController.CreateScope(testScope).GetAwaiter().GetResult();
 
-            // Create a stream config to control the stream
-            StreamConfiguration streamConfiguration = new StreamConfiguration();
-            streamConfiguration.ConfigScopedStream.Scope = testScope;
-            streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
+            // Normal case
+            if (testCase == 1)
+            {
+                // Create a stream config to control the stream
+                StreamConfiguration streamConfiguration = new StreamConfiguration();
+                streamConfiguration.ConfigScopedStream.Scope = testScope;
+                streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
 
-            // Create the stream
-            Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
+                // Create the stream
+                Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
+
+            }
+
+            // Exception Case
+            else if (testCase == 3)
+            {
+                try
+                {
+                    // Create a stream config to control the stream
+                    StreamConfiguration streamConfiguration = new StreamConfiguration();
+                    streamConfiguration.ConfigScopedStream.Scope = testScope;
+                    streamConfiguration.ConfigScopedStream.Stream = new CustomCSharpString(streamName);
+
+                    // Create the stream
+                    Assert.IsTrue(testController.CreateStream(streamConfiguration).GetAwaiter().GetResult());
+                }
+                catch
+                {
+                    Assert.Pass();
+                }
+                Assert.Fail();
+            }
+            
         }
 
         /// <summary>
-        /// Unit Test. Create Scope
-        /// Requires a running Pravega server.
-        /// Cannot be ran in NUnit 
+        ///  ControllerClient Create Scope Test. Tests the ability to create scopes on a Pravega server from C#
+        ///  
+        ///  Prereq. 
+        ///  -Scope is initialized and Stream is initialized on that scope
+        ///  -Pravega Server is running.
+        ///  -Client Factory is initialized.
         /// </summary>
         /// <param name="scopeName">
-        ///  Testing name of the scope
+        ///  Scope being tested
         /// </param>
-        /// <returns>
-        ///  A bool signifying if the test was successful.
-        /// </returns>
-        //[Test]
+        /// <param name="testCase">
+        ///  Type of test being done. 
+        ///  1 = normal
+        ///  2 = boarder
+        ///  3 = exception
+        /// </param>
+        [Test]
         [TestCase("testScope")]
-        [TestCase(" ")]
-        public void ControllerClientCreateScope(string scopeName)
+        [TestCase(" ", 3)]
+        public void ControllerClientCreateScope(string scopeName, int testCase=1)
         {
             ClientFactory.Initialize();
             ControllerClient testController = ClientFactory.FactoryControllerClient;
 
-            // Create a scope and verify signs of life.
-            Scope testScope = new Scope();
-            testScope.NativeString = scopeName;
-            Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
+            // Normal case
+            if (testCase == 1)
+            {
+                // Create a scope and verify signs of life.
+                Scope testScope = new Scope();
+                testScope.NativeString = scopeName;
+                Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
+            }
+
+            // Exception case
+            else if (testCase == 3)
+            {
+                try
+                {
+                    // Create a scope and verify signs of life.
+                    Scope testScope = new Scope();
+                    testScope.NativeString = scopeName;
+                    Assert.IsTrue(testController.CreateScope(testScope).GetAwaiter().GetResult());
+                }
+                catch
+                {
+                    Assert.Pass();
+                }
+                Assert.Fail();
+            }
         }
         
     }

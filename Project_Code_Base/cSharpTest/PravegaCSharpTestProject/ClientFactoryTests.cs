@@ -135,16 +135,14 @@ namespace PravegaWrapperTestProject
             ClientConfig testConfig = new ClientConfig();
             testConfig.MaxConnectionsInPool = 10;
 
-            // Create a factory and extract a runtime from it
-            ClientFactory.Initialize();
-            TokioRuntime testRuntime = ClientFactory.Runtime;
-            ClientFactory.Destroy();
+            // Create a runtime for testing
+            TokioRuntime testRuntime = new TokioRuntime();
 
             // Initialze factory with runtime and config created.
             ClientFactory.Initialize(testConfig, testRuntime);
 
             // Make sure client factory was initiated
-            Assert.IsFalse(ClientFactory.Initialized());
+            Assert.IsTrue(ClientFactory.Initialized());
 
             // Make sure that the config information was stored
             Assert.IsTrue(ClientFactory.Config.MaxConnectionsInPool == 10);

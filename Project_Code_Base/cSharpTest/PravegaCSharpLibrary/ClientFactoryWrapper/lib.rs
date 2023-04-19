@@ -9,7 +9,7 @@
 ///     Provides definitions on the Rust side.
 ///
 use interoptopus::{Inventory, InventoryBuilder};
-use pravega_client::{client_factory::{ClientFactory, ClientFactoryAsync}};
+use pravega_client::{client_factory::{ClientFactory, ClientFactoryAsync}, byte::ByteReader, byte::ByteWriter};
 use std::{time::Instant, string};
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
 use pravega_controller_client::{ControllerClient, ControllerClientImpl, mock_controller::MockController};
@@ -17,8 +17,12 @@ use utility_wrapper::{CustomRustStringSlice, CustomRustString};
 use tokio::runtime::{Runtime, Handle};
 use once_cell::sync::OnceCell;
 use debugless_unwrap::*;
+use pravega_client_config::{connection_type};
+use pravega_client_shared::{ScopedStream, Scope, Stream, StreamConfiguration, Scaling, ScaleType, Retention, RetentionType};
+use std::io::{Error, ErrorKind, SeekFrom};
 
 static INSTANCE: OnceCell<ClientFactory> = OnceCell::new();
+const TESTING_AMOUNT: i32 = 10;
 
 //////////////////////////
 // Client Factory Methods
@@ -26,9 +30,6 @@ static INSTANCE: OnceCell<ClientFactory> = OnceCell::new();
 
 // Default Constructor for Client Factory
 //  -Creates client factory with default config, generated runtime.
-
-const TESTING_AMOUNT: i32 = 10;
-
 #[no_mangle]
 extern "C" fn CreateClientFactory() -> &'static ClientFactory{
     
@@ -176,7 +177,7 @@ extern "C" fn CreateClientFactoryFromConfigAndRuntimeTime() -> u64
     return total_time / (TESTING_AMOUNT as u64);
 }
 
-// Getters and Setters for ClientFactory
+// Other Methods for ClientFactory
 
 // ClientFactory.runtime
 #[no_mangle]
@@ -304,7 +305,6 @@ extern "C" fn GetClientFactoryControllerClient(source_client_factory: &'static C
     return return_pointer;
 }
 
-
 // ClientFactory.to_async
 #[no_mangle]
 extern "C" fn ClientFactoryToAsync(source_client_factory: &'static ClientFactory) -> *const ClientFactoryAsync{
@@ -317,6 +317,7 @@ extern "C" fn ClientFactoryToAsync(source_client_factory: &'static ClientFactory
     let box_pointer: *const ClientFactoryAsync = Box::into_raw(factory_client_factory_async_clone_box);     
     return box_pointer;
 }
+
 // Runs the associated function and returns the time taken to complete in rust in milliseconds.
 #[no_mangle]
 extern "C" fn ClientFactoryToAsyncTime() -> u64
@@ -343,6 +344,204 @@ extern "C" fn ClientFactoryToAsyncTime() -> u64
     }
     //Calculate average time taken in nano seconds
     return total_time / (TESTING_AMOUNT as u64);
+}
+
+
+//////////////////////////
+/// A special note for this next section:
+/// During development, certain functions were found to work in this dll specifically though not part of this dll.
+/// This is because of the use of OnceCell and we theorize that because C# allocated memory when a dll is called and 
+/// keeps it in memory until the program ends, there could be a dependancy for methods to be in the same memory space 
+/// as the dll. 
+/// 
+/// For example, the ByteReader constructor doesn't work inside of the Byte folder's lib.rs, but works perfectly fine here.
+/// 
+/// Therefore, for future development, a possible cause of code not working could be stemming from this dependancy. This 
+/// could also stem from an internal working of the pravega source code causing unforseen issues with C#'s compatability.
+//////////////////////////
+ 
+ 
+//////////////////////////
+// Special Byte  Methods
+//////////////////////////
+ 
+/// Byte Writer Methods
+// Create Byte Writer
+#[no_mangle]
+pub extern "C" fn CreateByteWriter(
+    scope: CustomRustString,
+    stream: CustomRustString,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, *const ByteWriter)){
+
+
+        // Construct scopedstream and clientfactoryasync from function inputs
+        let scope_converted = Scope{
+            name: scope.as_string()
+        };
+        let stream_converted = Stream{
+            name: stream.as_string()
+        };
+        let ss: ScopedStream = ScopedStream{
+            scope: scope_converted,
+            stream: stream_converted  
+        };
+
+        // Get the reference to the main client factory from instance.
+        let factory_instance = INSTANCE.get().unwrap();
+
+        // Create the new bytewriter asynchronously with the inputted runtime and the
+        factory_instance.runtime().block_on( async move {
+            let result: ByteWriter = factory_instance.create_byte_writer(ss).await;
+            let result_box: Box<ByteWriter> = Box::new(result);
+            let result_ptr: *const ByteWriter = Box::into_raw(result_box);
+            unsafe { callback(key, result_ptr) };
+        }) ;
+        
+}
+
+// ByteWriter.seal
+#[no_mangle]
+pub extern "C" fn ByteWriterSeal(
+    byte_writer_ptr: &mut ByteWriter,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64)
+)
+{
+    let client_factory_ptr = INSTANCE.get().unwrap();
+
+    // Block on the client factory's runtime
+    client_factory_ptr.runtime().block_on( async move {
+
+        // Write data to server
+        byte_writer_ptr.seal().await.unwrap();
+        unsafe { callback(key, 1); }
+    });
+}
+
+// ByteWriter.seek_to_tail
+#[no_mangle]
+pub extern "C" fn ByteWriterSeekToTail(
+    byte_writer_ptr: &mut ByteWriter,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64)
+)
+{
+    let client_factory_ptr = INSTANCE.get().unwrap();
+
+    // Block on the client factory's runtime
+    client_factory_ptr.runtime().block_on( async move {
+
+        // Write data to server
+        byte_writer_ptr.seek_to_tail().await;
+        unsafe { callback(key, 1); }
+    });
+}
+
+/// Byte Reader Methods
+// Create Byte Reader
+#[no_mangle]
+pub extern "C" fn CreateByteReader(
+    scope: CustomRustString,
+    stream: CustomRustString,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, *const ByteReader))
+    {   
+        // Construct scopedstream and clientfactoryasync from function inputs
+        let scope_converted = Scope{
+            name: scope.as_string()
+        };
+        let stream_converted = Stream{
+            name: stream.as_string()
+        };
+        let ss: ScopedStream = ScopedStream{
+            scope: scope_converted,
+            stream: stream_converted  
+        };
+
+        // Get the reference to the main client factory from instance.
+        let factory_instance = INSTANCE.get().unwrap();
+
+        // Create the new bytewriter asynchronously with the inputted runtime and the
+        factory_instance.runtime().block_on( async move {
+            let result: ByteReader = factory_instance.create_byte_reader(ss).await;
+            let result_box: Box<ByteReader> = Box::new(result);
+            let result_ptr: *const ByteReader = Box::into_raw(result_box);
+            unsafe { callback(key, result_ptr) };
+        }) ;
+        
+}
+
+// ByteReader.current_tail
+#[no_mangle]
+pub extern "C" fn ByteReaderCurrentTail(
+    source_byte_reader: &mut ByteReader,
+    key: u64,  
+    callback: unsafe extern "C" fn(u64, u64)
+) -> ()
+{
+    let client_factory_ptr: &ClientFactory = INSTANCE.get().unwrap();
+
+    // Block on the client factory's runtime
+    client_factory_ptr.runtime().block_on( async move {
+
+        // Write data to server
+        let result = source_byte_reader.current_tail().await.unwrap();
+        unsafe { callback(key, result); }
+    });
+}
+
+// ByteReader.seek
+#[no_mangle]
+pub extern "C" fn ByteReaderSeek(
+    source_byte_reader: &mut ByteReader,
+    mode: u64,
+    number_of_bytes: i64,
+    key: u64, 
+    callback: unsafe extern "C" fn(u64, u64))
+{
+
+    // Initialize locals
+    let reader_seek_from: SeekFrom;
+    if mode == 0{
+        reader_seek_from = SeekFrom::Start(number_of_bytes as u64);
+    }
+    else if mode == 1{
+        reader_seek_from = SeekFrom::Current(number_of_bytes);
+    }
+    else if mode == 2{
+        reader_seek_from = SeekFrom::End(number_of_bytes);
+    }
+    else{
+        panic!("Invalid seek mode inputted")
+    }
+
+    let client_factory_ptr: &ClientFactory = INSTANCE.get().unwrap();
+
+    // Seek from the reader seek from position
+    client_factory_ptr.runtime().block_on( async move {
+        let result: u64 = source_byte_reader.seek(reader_seek_from).await.unwrap();
+        unsafe { callback(key, result) };
+    }) ;
+}
+
+// ByteReader.current_head
+#[no_mangle]
+pub extern "C" fn ByteReaderCurrentHead(
+    source_byte_reader: &mut ByteReader, 
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64)
+) -> ()
+{
+    let client_factory_ptr: &ClientFactory = INSTANCE.get().unwrap();
+
+    // Block on the client factory's runtime
+    client_factory_ptr.runtime().block_on( async move {
+
+        // Write data to server
+        let result = source_byte_reader.current_head().await.unwrap();
+        unsafe { callback(key, result); }
+    });
 }
 
 // Used for interoptopus wrapping

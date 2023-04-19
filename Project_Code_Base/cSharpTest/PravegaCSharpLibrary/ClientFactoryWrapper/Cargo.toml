@@ -18,6 +18,7 @@ interoptopus_backend_csharp = { path = "../../../Interoptopus/backends/csharp" }
 utility_wrapper = { path = "../UtilityWrapper" } 
 pravega-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master" }
 pravega-client-config = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/config" }
+pravega-client-shared = {path = "../../../pravega-client-rust-master/pravega-client-rust-master/shared"}
 pravega-controller-client = { path = "../../../pravega-client-rust-master/pravega-client-rust-master/controller-client" }
 tokio = { version = "1", features = ["full"] }
 once_cell = {version = "1.17.1"}

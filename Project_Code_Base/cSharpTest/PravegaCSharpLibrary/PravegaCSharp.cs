@@ -15,8 +15,16 @@ namespace Pravega {
     // Contains globals for the C# wrapper as well
     public static partial class Interop
     {
-        // String constants
-        internal const string RustDllPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\PravegaCSharp.dll";
+        /// <summary>
+        ///     Path constants. Used when library needs to make a .dll call
+        /// </summary>
+        internal const string ByteDLLPath = "byte_wrapper.dll";
+        internal const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
+        internal const string ConfigDLLPath = "config_wrapper.dll";
+        internal const string ControllerclientDLLPath = "controller_client_wrapper.dll";
+        internal const string RetryDLLPath = "retry_wrapper.dll";
+        internal const string RustDllPath = "PravegaCSharp.dll";
+        internal const string UtilityDLLPath = "utility_wrapper.dll";
 
         /// <summary>
         /// Delegate functions used for async callbacks from rust.

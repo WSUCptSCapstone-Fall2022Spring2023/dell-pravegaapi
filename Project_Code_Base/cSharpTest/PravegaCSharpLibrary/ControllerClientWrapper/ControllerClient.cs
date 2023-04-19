@@ -24,17 +24,11 @@ namespace Pravega.ControllerCli
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop
     {
-        public const string ControllerclientDLLPath = "controller_client_wrapper.dll";
-        //public const string ControllerclientDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\controller_client_wrapper.dll";
         ////////
         /// Controller Client
         ////////
-        // ControllerClient default constructor (inputted client config)
-        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateControllerCliDefault")]
-        internal static extern IntPtr CreateControllerCliDefault(IntPtr clientFactoryPointer, IntPtr clientConfigPointer);
-
         // ControllerClient.create_scope()
-        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
+        [DllImport(Pravega.Interop.ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateScope")]
         internal static extern void ControllerClientImplCreateScope(
             IntPtr clientFactoryPointer,
             IntPtr controllerClientPointer,
@@ -43,7 +37,7 @@ namespace Pravega.ControllerCli
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
 
         // ControllerClient.create_stream()
-        [DllImport(ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateStream")]
+        [DllImport(Pravega.Interop.ControllerclientDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplCreateStream")]
         internal static extern void ControllerClientImplCreateStream(
             IntPtr clientFactoryPointer,
             IntPtr controllerClientPointer,
@@ -72,32 +66,6 @@ namespace Pravega.ControllerCli
         internal ControllerClient(){
             this._rustStructPointer = IntPtr.Zero;
         }
-
-        /// <summary>
-        ///  Constructor for controller client. Creates using a client config and runtime handle inputted.
-        /// </summary>
-        /*
-        public ControllerClient(ClientConfig sourceConfig)
-        {
-            // Verify ClientFactory is initialized. If not, throw.
-            if (!ClientFactory.Initialized()){
-                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
-            }
-
-            // Verify both objects aren't null
-            if (sourceConfig.IsNull())
-            {
-                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
-            }
-            else
-            {
-                this._rustStructPointer = Interop.CreateControllerCliDefault(ClientFactory.RustStructPointer, sourceConfig.RustStructPointer);
-
-                // Mark client config as null since it was consumed.
-                sourceConfig.MarkAsNull();
-            }
-        }
-        */
         
         /// <summary>
         ///  Creates a scope within the controller client's handle with the newScope's name.

@@ -45,9 +45,28 @@
 
             // Create the stream
             testController.CreateStream(streamConfiguration).GetAwaiter().GetResult();
-            Console.WriteLine("Above reader");
+
+            // Testing variables
+            List<byte> testList = new List<byte>();
+            testList.Clear();
+            testList.Add(0);
+            testList.Add(1);
+            testList.Add(2);
+            testList.Add(3);
+            testList.Add(4);
+
+            // Create a byte writer
+            ByteWriter testWriter = ClientFactory.CreateByteWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+
+            // Attempt to write to byte writer
+            ulong result = testWriter.Write(testList).GetAwaiter().GetResult();
+
             // Create the ByteWriter
-            ClientFactory.CreateByteReaderNoDelegate(streamConfiguration.ConfigScopedStream);
+            ByteReader testReader = ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+
+            byte[] bytes = testReader.Read(4).GetAwaiter().GetResult();
+
+            Console.WriteLine("finish");
         }
 
 

@@ -28,75 +28,70 @@ namespace Pravega.ClientFactoryModule
     // Continues building the Interop class by adding method signatures found in Client Factory.
     public static partial class Interop {
 
-        // Set path of ClientFactory .dll specifically
-        //public const string ClientFactoryDLLPath = @"E:\CptS421\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
-        // public const string ClientFactoryDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
-        //public const string ClientFactoryDLLPath = @"C:\Users\brand\Documents\Capstone\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\deps\client_factory_wrapper.dll";
-        public const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
 
         ////////
         /// Client Factory
         ////////
         // Client Factory default constructor (default client config, generated runtime)
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactory")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactory")]
         internal static extern IntPtr CreateClientFactory();
 
         // Client Factory constructor (inputted client config, generated runtime)
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfig")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfig")]
         internal static extern IntPtr CreateClientFactoryFromConfig(IntPtr clientConfigPointer);
 
         // Client Factory constructor (inputted client config, inputted runtime)
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigAndRuntime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigAndRuntime")]
         internal static extern IntPtr CreateClientFactoryFromConfigAndRuntime(IntPtr clientConfigPointer, IntPtr runtimePointer);
 
         // Getters and Setters
         // ClientFactory.runtime
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntime")]
         internal static extern IntPtr GetClientFactoryRuntime(IntPtr sourceClientFactory);
 
         // ClientFactory.runtime_handle
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandle")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandle")]
         internal static extern IntPtr GetClientFactoryRuntimeHandle(IntPtr sourceClientFactory);
 
         // ClientFactory.runtime_handle
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfig")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfig")]
         internal static extern IntPtr GetClientFactoryConfig(IntPtr sourceClientFactory);
 
         // ClientFactory.controller_client
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryControllerClient")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryControllerClient")]
         internal static extern IntPtr GetClientFactoryControllerClient(IntPtr sourceClientFactory);
         
         // ClientFactory.to_async()
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsync")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsync")]
         internal static extern IntPtr ClientFactoryToAsync(IntPtr sourceClientFactory);
 
         // ClientFactory testing functions
         // ClientFactory default constructor time take to complete in milliseconds in rust
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryTime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryTime")]
         internal static extern ulong CreateClientFactoryTime();
 
         // ClientFactory.new with config time take to complete in milliseconds in rust
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigTime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigTime")]
         internal static extern ulong CreateClientFactoryFromConfigTime();
 
         // ClientFactory.new_with_runtime time take to complete in milliseconds in rust
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigAndRuntimeTime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateClientFactoryFromConfigAndRuntimeTime")]
         internal static extern ulong CreateClientFactoryFromConfigAndRuntimeTime();
         
         // ClientFactory.runtime time take to complete in milliseconds in rust
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeTime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeTime")]
         internal static extern ulong GetClientFactoryRuntimeTime();
         
         // ClientFactory.handle time take to complete in milliseconds in rust
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandleTime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryRuntimeHandleTime")]
         internal static extern ulong GetClientFactoryRuntimeHandleTime();
         
         // ClientFactory.config time take to complete in milliseconds in rust
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfigTime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetClientFactoryConfigTime")]
         internal static extern ulong GetClientFactoryConfigTime();
         
         // to_async time take to complete in milliseconds in rust
-        [DllImport(ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsyncTime")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ClientFactoryToAsyncTime")]
         internal static extern ulong ClientFactoryToAsyncTime();
 
 
@@ -498,21 +493,6 @@ namespace Pravega.ClientFactoryModule
             }
         }
 
-        public static ByteReader CreateByteReaderNoDelegate(ScopedStream readerScopedStream)
-        {
-            if (!ClientFactory.Initialized())
-            {
-                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
-            }
-            else
-            {
-                ByteReader BR = new ByteReader();
-                BR.InitializeBRNoDelegate(readerScopedStream);
-                return BR;
-            }
-
-        }
-
         /// <summary>
         /// Creates the reader group from a scopedScream
         /// </summary>
@@ -554,11 +534,7 @@ namespace Pravega.ClientFactoryModule
     ///  asynchronous operations.
     /// </summary>
     public class ClientFactoryAsync : RustStructWrapper{
-#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
-        public virtual string Type(){
-#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
-            return "ClientFactoryAsync";
-        }
+
     }
         
 

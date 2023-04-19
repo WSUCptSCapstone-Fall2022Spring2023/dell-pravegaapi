@@ -29,16 +29,12 @@ namespace Pravega.Byte
     public static partial class Interop
     {
 
-        // Set path of byte .dll specifically
-        public const string ByteDLLPath = "byte_wrapper.dll";
-
         ////////
         /// Byte Writer
         ////////
         // ByteWriter default constructor (default client config, generated runtime)
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteWriter")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteWriter")]
         internal static extern IntPtr CreateByteWriter(
-            IntPtr clientFactoryPointer,
             CustomRustString scope, 
             CustomRustString stream, 
             ulong key,
@@ -46,11 +42,11 @@ namespace Pravega.Byte
         
 
         // ByteWriter current offset getter
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterCurrentOffset")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterCurrentOffset")]
         internal static extern ulong ByteWriterCurrentOffset(IntPtr byteWriterPointer);
 
         // ByteWriter.write()
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterWrite")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterWrite")]
         internal static extern ulong ByteWriterWrite(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
@@ -61,7 +57,7 @@ namespace Pravega.Byte
         
 
         // ByteWriter.flush()
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterFlush")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterFlush")]
         internal static extern ulong ByteWriterFlush(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
@@ -70,16 +66,15 @@ namespace Pravega.Byte
         
 
         // ByteWriter.seal()
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeal")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeal")]
         internal static extern ulong ByteWriterSeal(
-            IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
         
 
         // ByteWriter.trunate_data_before
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterTruncateDataBefore")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterTruncateDataBefore")]
         internal static extern ulong ByteWriterTruncateDataBefore(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
@@ -89,16 +84,15 @@ namespace Pravega.Byte
         
 
         // ByteWriter.seek_to_tail()
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeekToTail")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterSeekToTail")]
         internal static extern ulong ByteWriterSeekToTail(
-            IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
         
 
         // ByteWriter.reset()
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterReset")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteWriterReset")]
         internal static extern ulong ByteWriterReset(
             IntPtr clientFactroyPointer,
             IntPtr byteWriterPointer,
@@ -110,45 +104,35 @@ namespace Pravega.Byte
         /// Byte Reader
         ////////
         // ByteReader default constructor
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteReader")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteReader")]
         internal static extern void CreateByteReader(
-            IntPtr clientFactoryPointer,
             CustomRustString scope,
             CustomRustString stream,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback
         );
 
-        //CreateByteReaderNoDelegate
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateByteReaderNoDelegate")]
-        internal static extern IntPtr CreateByteReaderNoDelegate(
-            IntPtr clientFactoryPointer,
-            CustomRustString scope,
-            CustomRustString stream
-          );
-
 
         // ByteReader current offset getter
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentOffset")]
         internal static extern ulong ByteReaderCurrentOffset(IntPtr byteReaderPointer);
 
         // ByteReader available getter
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderAvailable")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderAvailable")]
         internal static extern ulong ByteReaderAvailable(IntPtr byteReaderPointer);
 
         // ByteReader.seek()
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderSeek")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderSeek")]
         internal static extern void ByteReaderSeek(
-            IntPtr clientFactoryPointer,
             IntPtr byteReaderPointer,
             ulong mode,
-            ulong nBytes,
+            long nBytes,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
         
 
         // ByteReader.read()
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderRead")]
+        [DllImport(Pravega.Interop.ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderRead")]
         internal static extern void ByteReaderRead(
             IntPtr clientFactoryPointer,
             IntPtr byteReaderPointer,
@@ -158,18 +142,16 @@ namespace Pravega.Byte
         
 
         // ByteReader.current_head
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentHead")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentHead")]
         internal static extern void ByteReaderCurrentHead(
-            IntPtr clientFactoryPointer,
             IntPtr byteReaderPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
         
 
         // ByteReader.current_tail
-        [DllImport(ByteDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentTail")]
+        [DllImport(Pravega.Interop.ClientFactoryDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ByteReaderCurrentTail")]
         internal static extern void ByteReaderCurrentTail(
-            IntPtr clientFactoryPointer,
             IntPtr byteReaderPointer,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
@@ -234,7 +216,6 @@ namespace Pravega.Byte
             };
             ulong key = CallbackDelegateManager.AddToRustCallbackDict(callback);
             Interop.CreateByteWriter(
-                ClientFactory.RustStructPointer,
                 writerScopedStream.Scope.RustString,
                 writerScopedStream.Stream.RustString,
                 key,
@@ -380,7 +361,6 @@ namespace Pravega.Byte
             ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
             // Call bytewriter seal
             Interop.ByteWriterSeal(
-                ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
@@ -457,7 +437,6 @@ namespace Pravega.Byte
             ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
             // Call bytewriter seek to tail
             Interop.ByteWriterSeekToTail(
-                ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
@@ -546,21 +525,6 @@ namespace Pravega.Byte
             }
         }
 
-        internal void InitializeBRNoDelegate(ScopedStream writerScopedStream)
-        {
-            if (ClientFactory.Initialized())
-            {
-
-                this._rustStructPointer = Interop.CreateByteReaderNoDelegate(ClientFactory.RustStructPointer,
-                writerScopedStream.Scope.RustString,
-                writerScopedStream.Stream.RustString);
-            }
-            else
-            {
-                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
-            }
-        }
-
         /// <summary>
         ///  Internal method that generates a byte reader using a dll call. Sets this object's pointer when initialized successfully.
         /// </summary>
@@ -577,7 +541,6 @@ namespace Pravega.Byte
             };
             ulong key = CallbackDelegateManager.AddToRustCallbackDict(callback);
             Interop.CreateByteReader(
-                ClientFactory.RustStructPointer,
                 writerScopedStream.Scope.RustString,
                 writerScopedStream.Stream.RustString,
                 key,
@@ -653,7 +616,7 @@ namespace Pravega.Byte
         /// <returns>
         ///     A task that will eventually complete and contains the newoffset of this byte reader.
         /// </returns>
-        public Task<ulong> Seek(ulong mode=0, ulong numberOfBytes=0)
+        public Task<ulong> Seek(ulong mode=0, long numberOfBytes=0)
         {
             // If Client Factory isn't initialized, throw
             if (!ClientFactory.Initialized())
@@ -675,7 +638,6 @@ namespace Pravega.Byte
             };
             ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
             Interop.ByteReaderSeek(
-                ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 mode,
                 numberOfBytes,
@@ -711,13 +673,12 @@ namespace Pravega.Byte
             rustCallbackArray callback = (arrPointer, numberOfBytesRead)
             =>
             {
-                U8Slice buffer = new U8Slice();
-                buffer.slice_pointer = arrPointer;
-                buffer.length = numberOfBytesRead;
+                U8Slice buffer = new U8Slice(arrPointer, numberOfBytesRead);
                 byte[] bufferManaged = buffer.Copied;
                 task.SetResult(bufferManaged);
             };
             ulong key = CallbackDelegateManager.AddToRustCallbackArrayDictionary(callback);
+
             // Create a task and call ByteReaderRead. Await array pointer passback
             Interop.ByteReaderRead(
                 ClientFactory.RustStructPointer,
@@ -762,7 +723,6 @@ namespace Pravega.Byte
             ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
             // Call bytewriter reset
             Interop.ByteReaderCurrentHead(
-                ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
@@ -798,7 +758,6 @@ namespace Pravega.Byte
             ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
             // Call bytewriter reset
             Interop.ByteReaderCurrentTail(
-                ClientFactory.RustStructPointer,
                 this._rustStructPointer,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
