@@ -37,6 +37,29 @@ namespace Pravega.Event
             CustomRustString stream,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback);
+        /// <summary>
+        /// Drops the Event Writer. Synchronous Function
+        /// </summary>
+        /// <param name="EWpointer">The event writer pointer.</param>
+        /// <returns></returns>
+        [DllImport(EventDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "EventWriterDrop")]
+        internal static extern IntPtr DropEW(IntPtr EWpointer);
+
+        [DllImport(EventDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "EventWriterFlush")]
+        internal static extern ulong EventWriterFlush(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        [DllImport(EventDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "EventWriterWrite")]
+        internal static extern ulong EventWriterWrite(
+            IntPtr clientFactroyPointer,
+            IntPtr byteWriterPointer,
+            IntPtr bufferPointer,
+            uint bufferSize,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
     }
 
     // ***** Wrapper for EventWriter *****
@@ -80,6 +103,77 @@ namespace Pravega.Event
                 writerScopedStream.Stream.RustString,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackDict
+            );
+            return task.Task;
+        }
+        /// <summary>
+        /// Drops the event writer.
+        /// </summary>
+        public void DropEventWriter()
+        {
+            Interop.DropEW(this.RustStructPointer);
+        }
+
+        public Task<ulong> EventWriterFlush()
+        {
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+            // Call bytewriter flush
+            Interop.EventWriterFlush(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            return task.Task;
+        }
+
+        public Task<ulong> Write(
+            List<byte> buffer
+        )
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Split the list into local variables. 
+            byte[] bufferArray = buffer.ToArray();
+            uint bufferSize = (uint)bufferArray.Length;
+
+            // Marshal the array to unmanaged memory.
+            IntPtr unmanagedBufferArray = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte))
+                       * (int)bufferSize);
+            Marshal.Copy(bufferArray, 0, unmanagedBufferArray, (int)bufferSize);
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+            // Write to stream the unmanaged buffer
+            Interop.EventWriterWrite(
+                ClientFactory.RustStructPointer,
+                this._rustStructPointer,
+                unmanagedBufferArray,
+                bufferSize,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
             return task.Task;
         }

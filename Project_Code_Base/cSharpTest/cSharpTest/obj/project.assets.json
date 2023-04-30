@@ -3990,24 +3990,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\john_\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\eveer\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "projectUniqueName": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
       "projectName": "cSharpTest",
-      "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
-      "packagesPath": "C:\\Users\\john_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
+      "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "packagesPath": "C:\\Users\\eveer\\.nuget\\packages\\",
+      "outputPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\john_\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\eveer\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4021,11 +4016,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
-              "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
+            "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
+              "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
             },
-            "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpTestProject\\PravegaCSharpTestProject.csproj": {
-              "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpTestProject\\PravegaCSharpTestProject.csproj"
+            "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpTestProject\\PravegaCSharpTestProject.csproj": {
+              "projectPath": "E:\\CptS421\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpTestProject\\PravegaCSharpTestProject.csproj"
             }
           }
         }
@@ -4055,7 +4050,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -126,13 +126,18 @@ callback: unsafe extern "C" fn (u64, u64)
 client_factory_ptr.runtime().block_on( async move {
 
     // Write data to server
-    event_writer_ptr.flush().await.unwrap();
-    unsafe { callback(key, 1); }
+    let result = event_writer_ptr.flush().await.unwrap();
+    let mut returnVal:u64 = 1;
+    if result==()
+    {
+        returnVal =0;
+    }
+    unsafe { callback(key, returnVal); }
 });
 }
 
 #[no_mangle]
-pub extern "C" fn ByteWriterWrite(
+pub extern "C" fn EventWriterWrite(
     client_factory_ptr: &'static ClientFactory,
     event_writer_ptr: &mut EventWriter,
     buffer: *mut u8,
@@ -151,7 +156,7 @@ pub extern "C" fn ByteWriterWrite(
         // Write data to server
         let mut result: tokio::sync::oneshot::Receiver<Result<(), pravega_client::error::Error>> = event_writer_ptr.write_event(buffer_array.to_vec()).await;
         let reviever_value: () = result.try_recv().unwrap().unwrap();
-        let mut return_value =-1;
+        let mut return_value:u64 =1;
         if reviever_value==()
         {
             return_value =0;
