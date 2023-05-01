@@ -8,56 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "C:\\Users\\john_\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
-=======
     "C:\\Users\\brand\\.nuget\\packages\\": {}
->>>>>>> 6181495 (Finished code for RoutingKEy function.)
-=======
-    "C:\\Users\\brand\\.nuget\\packages\\": {}
->>>>>>> 6181495985d8e42f411864e00c7a2668944d6f40
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-      "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
-      "projectName": "PravegaCSharpLibrary",
-      "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
-      "packagesPath": "C:\\Users\\john_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\obj\\",
-=======
       "projectUniqueName": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
       "projectName": "PravegaCSharpLibrary",
       "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
       "packagesPath": "C:\\Users\\brand\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\obj\\",
->>>>>>> 6181495 (Finished code for RoutingKEy function.)
-=======
-      "projectUniqueName": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
-      "projectName": "PravegaCSharpLibrary",
-      "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj",
-      "packagesPath": "C:\\Users\\brand\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\obj\\",
->>>>>>> 6181495985d8e42f411864e00c7a2668944d6f40
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-<<<<<<< HEAD
-<<<<<<< HEAD
-        "C:\\Users\\john_\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-=======
         "C:\\Users\\brand\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> 6181495 (Finished code for RoutingKEy function.)
-=======
-        "C:\\Users\\brand\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> 6181495985d8e42f411864e00c7a2668944d6f40
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -98,7 +61,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

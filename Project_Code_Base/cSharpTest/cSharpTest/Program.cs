@@ -91,6 +91,7 @@
                 Console.WriteLine("3) Send Data to a local server");
                 Console.WriteLine("4) Recieve Data from a local server");
                 Console.WriteLine("5) Exit");
+                Console.WriteLine("6) EventWriter");
 
                 // Get user input
                 holder = Console.ReadLine();
@@ -382,7 +383,43 @@
                     case "5":
                         demoing = false;
                         break;
+                    case "6":
+                        Console.WriteLine("Enter scope name:");
+                        if (holder == null)
+                        {
+                            Console.WriteLine("An error occurred while recieving your input. It has been set to the default name 'testScope'");
+                            option = "testScope";
+                        }
+                        else
+                        {
+                            option = holder;
+                        }
+                        Console.WriteLine("Enter scope name:");
+                        if (holder == null)
+                        {
+                            Console.WriteLine("An error occurred while recieving your input. It has been set to the default name 'testStream'");
+                            option2 = "testStream";
+                        }
+                        else
+                        {
+                            option2 = holder;
+                        }
+                        List<byte> testBytes = new List<byte>();
+                        testBytes.Add(0);
+                        testBytes.Add(1);
+                        testBytes.Add(2);
+                        testBytes.Add(3);
 
+                        demoStreamConfig = new StreamConfiguration();
+                        demoStreamConfig.ConfigScopedStream.Scope = new CustomCSharpString(option);
+                        demoStreamConfig.ConfigScopedStream.Stream = new CustomCSharpString(option2);
+
+                        EventWriter e = ClientFactory.CreateEventWriter(demoStreamConfig.ConfigScopedStream).GetAwaiter().GetResult();
+                        Console.WriteLine("Your scope and stream are created hit enter...");
+                        Console.ReadLine();
+                        Console.WriteLine("Continuing");
+                        e.WriteRoutingKey(testBytes, "testKey");
+                        break;
                     // Catch case
                     default:
                         Console.WriteLine("Invalid option chosen");
@@ -390,23 +427,6 @@
                         break;
                 }
             }
-
-
-            List<byte> testBytes = new List<byte>();
-            testBytes.Add(0);
-            testBytes.Add(1);
-            testBytes.Add(2);
-            testBytes.Add(3);
-            Console.WriteLine(testWriter.Write(testBytes).GetAwaiter().GetResult().ToString());
-            Console.WriteLine("Testing EventWriter");
-            EventWriter e = ClientFactory.CreateEventWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-            Console.WriteLine("Testing EventWriter:WriteRoutingKey");
-            e.WriteRoutingKey(testBytes, "testKey");
-            Console.WriteLine("Testing ReaderGroup");
-            ReaderGroup r = ClientFactory.CreateReaderGroup(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-            Console.WriteLine("Testing ByteReader");
-            ByteReader testReader = ClientFactory.CreateByteReader(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
-
         }
 
 
