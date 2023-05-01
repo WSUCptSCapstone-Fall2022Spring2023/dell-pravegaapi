@@ -29,6 +29,8 @@ use tokio::task;
 
 use utility_wrapper::U8Slice;
 
+use utility_wrapper::U8Slice;
+
 // Used for interoptopus wrapping
 pub fn my_inventory() -> Inventory {
     {
