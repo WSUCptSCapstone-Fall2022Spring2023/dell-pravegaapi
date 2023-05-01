@@ -254,31 +254,6 @@ namespace Pravega.Shared
     }
 
 
-    //  ***** Wrapper for WriterID *****
-    public class WriterId
-    {
-        private U128 value;
-
-        // Default Constructor
-        public WriterId()
-        {
-            this.value = new U128();
-        }
-
-        // Setter and Getter for value
-        public U128 Value
-        {
-            get{return this.value;}
-            set{this.value = value;}
-        }
-    }
-    /* Originally from pravega-client-rust/shared/src/lib.rs 
-        as:
-        #[derive(From, Shrinkwrap, Copy, Clone, Hash, PartialEq, Eq)]
-        pub struct WriterId(pub u128);
-    */
-
-
     //  ***** Wrapper for DelegationToken *****
     public class DelegationToken : RustStructWrapper{
     }

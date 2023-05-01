@@ -8,8 +8,6 @@
 /// Purpose: Contains methods transferred from the PravegaConfig area. Not all methods are transferred, only necessary ones.
 ///     Provides definitions on the Rust side.
 ///
-pub mod connection_type_wrapper;
-pub mod credentials_wrapper;
 
 use interoptopus::{Inventory, InventoryBuilder};
 use utility_wrapper::{CustomRustString};

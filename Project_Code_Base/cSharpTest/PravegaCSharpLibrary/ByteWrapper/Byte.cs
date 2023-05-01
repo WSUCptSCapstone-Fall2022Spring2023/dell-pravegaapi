@@ -303,7 +303,9 @@ namespace Pravega.Byte
         /// It will wait until all pending appends have acknowledgment.
         /// </summary>
         /// <returns>
-        ///  Number of bytes written
+        ///  A task. Set to:
+        ///  1 when successfully flushed
+        ///  0 if unsuccessfully flushed
         /// </returns>
         /// <exception cref="PravegaException">
         ///  Thrown when called and ClientFactory isn't initialized
@@ -338,7 +340,9 @@ namespace Pravega.Byte
         ///  Seal the segment and no further writes are allowed.
         /// </summary>
         /// <returns>
-        ///  A task. Result is set to 1 when complete
+        ///  A task. Set to:
+        ///  1 when complete and successful
+        ///  0 if unsuccessfully sealled
         /// </returns>
         /// <exception cref="PravegaException">
         ///  Thrown when called and ClientFactory isn't initialized
@@ -376,7 +380,9 @@ namespace Pravega.Byte
         ///  Offset to truncate before.
         /// </param>
         /// <returns>
-        ///  A task. Result is set to 1 when complete
+        ///  A task. Set to:
+        ///  1 when successfully truncated
+        ///  0 if unsuccessfully truncated
         /// </returns>
         /// <exception cref="PravegaException">
         ///  Thrown if called when no ClientFactory is in place.
@@ -452,7 +458,9 @@ namespace Pravega.Byte
         /// 
         /// </summary>
         /// <returns>
-        ///  A task. Result is set to 1 when finished and 0 if an error occurred.
+        ///  A task. Set to:
+        ///  1 when successfully reset
+        ///  0 if unsuccessfully reset
         /// </returns>
         public Task<ulong> Reset()
         {

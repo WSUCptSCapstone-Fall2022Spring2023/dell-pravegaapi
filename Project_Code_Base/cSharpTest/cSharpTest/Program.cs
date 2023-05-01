@@ -1,5 +1,9 @@
-﻿
- namespace Pravega
+﻿///
+/// File: Program.cs
+/// File Creator: John Sbur
+/// Purpose:  A demonstration program of what this library could do. Not all features are in the demonstration. 
+///
+namespace Pravega
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +19,7 @@
     using Pravega.Event;
     using Pravega.Byte;
     using Pravega.ControllerCli;
-    using Pathgen;
+    using Pravega.Pathgen;
     using Pravega.Utility;
     using PravegaWrapperTestProject;
     using NUnit.Framework;

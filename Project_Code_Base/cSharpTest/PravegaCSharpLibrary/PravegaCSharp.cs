@@ -1,3 +1,10 @@
+/// <summary>
+/// File: PravegaCSharp.cs
+/// File Creator: John Sbur
+/// Description: Overarching namespace for the C# Wrapper. Contains definitions that apply to all wrappers.
+/// </summary>
+ 
+
 #pragma warning disable 0105
 using System;
 using System.Collections;
@@ -6,8 +13,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 #pragma warning restore 0105
-
-// Overarching namespace for the C# Wrapper. Contains definitions that apply to all wrappers.
 namespace Pravega {
 
 
