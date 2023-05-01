@@ -14,22 +14,25 @@ use crate::LIBRARY_CLIENT_FACTORY;
 use crate::utility::{CustomRustString, U8Slice};
 
 // Library Imports
+use futures::executor;
 use interoptopus::{Inventory, InventoryBuilder};
+use once_cell::sync::OnceCell;
+use pravega_client::{client_factory::ClientFactory};
 use pravega_client::client_factory::ClientFactoryAsync;
-use pravega_client::{byte::ByteReader,byte::ByteWriter};
+use pravega_client::byte::{ByteReader,ByteWriter};
+use pravega_client::event::{ReaderGroup,EventWriter};
 use pravega_client_config::connection_type;
 use pravega_client_shared::{ScopedStream, Scope, Stream};
-use pravega_client::{client_factory::ClientFactory};
-use pravega_client::event::ReaderGroup;
-use pravega_client::event::EventWriter;
-use tokio::task::JoinHandle;
 use std::ops::Deref;
 use std::{thread, time};
 use std::io::{Error, ErrorKind, SeekFrom};
 use std::time::Duration;
-use once_cell::sync::OnceCell;
 use tokio::runtime::{Builder, Runtime, EnterGuard};
 use tokio::task;
+use tokio::task::JoinHandle;
+
+
+//use utility_wrapper::U8Slice;
 
 // Used for interoptopus wrapping
 pub fn my_inventory() -> Inventory {
@@ -79,7 +82,6 @@ pub extern "C" fn CreateReaderGroup(
 
 #[no_mangle]
 pub extern "C" fn CreateEventWriter(
-    client_factory_ptr: &'static ClientFactory,
     scope: CustomRustString,
     stream: CustomRustString,
     key: u64,
@@ -99,9 +101,9 @@ pub extern "C" fn CreateEventWriter(
         };
         println!("above block on");
         // Create the new bytewriter asynchronously with the inputted runtime and the
-        client_factory_ptr.runtime().block_on( async move {
+        LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
             println!("in block on");
-            let result: EventWriter = client_factory_ptr.create_event_writer(ss);
+            let result: EventWriter = LIBRARY_CLIENT_FACTORY.get().unwrap().create_event_writer(ss);
             println!("below create EW");
             let result_box: Box<EventWriter> = Box::new(result);
             let result_ptr: *const EventWriter = Box::into_raw(result_box);
@@ -120,17 +122,48 @@ pub extern "C" fn EventWriterDrop(EW: &mut EventWriter)
 }
 
 #[no_mangle]
-pub extern "C" fn EventWriterFlush(client_factory_ptr: &'static ClientFactory,
+pub extern "C" fn EventWriterFlush(
 event_writer_ptr: &mut EventWriter,
 key: u64,
 callback: unsafe extern "C" fn (u64, u64)
 )
 {
 // Block on the client factory's runtime
-client_factory_ptr.runtime().block_on( async move {
+LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
 
     // Write data to server
     event_writer_ptr.flush().await.unwrap();
     unsafe { callback(key, 1); }
 });
+}
+
+#[no_mangle]
+pub extern "C" fn WriteEventByRoutingKey(
+    event_writer_ptr: &mut EventWriter,
+    routing_key: CustomRustString,
+    event: *mut u8,
+    event_size: u32,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64)
+){
+    let rs = routing_key.as_string();
+
+    let event_slice: U8Slice = U8Slice { slice_pointer: event as *mut i32, length: event_size };
+    let event_array: &mut [u8] = event_slice.as_rust_u8_slice_mut();
+    let event_vector = Vec::from(event_array);//In Future update
+
+    LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on(async move {
+        let receiver = event_writer_ptr.write_event_by_routing_key(rs, event_vector);
+        let mut result = receiver.await;
+        match result.try_recv(){
+            Ok(x) => {
+                println!("WriteEventByRoutingKey: {:?}", x);
+                unsafe { callback(key, 1) }
+            },
+            Err(e) => {
+                println!("WriteEventByRoutingKey: {:?}", e);
+                unsafe { callback(key, 0) }
+            }
+        }
+    })
 }

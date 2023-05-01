@@ -1,9 +1,3 @@
-///
-
-/// File: Index.cs
-/// File Creator: John Sbur
-/// Purpose: Contains helper structs under the index module. Implements the C# equivalent of the Rust wrapper structs
-
 /// File: Event.cs
 /// File Creator: John Sbur
 /// Purpose: Contains helper structs under the event module. Implements the C# equivalent of the Rust wrapper structs
@@ -21,8 +15,11 @@ using static Pravega.Interop;
 
 namespace Pravega.Event
 {
+
+    // Continues building the Interop class by adding method signatures found in Byte.
     public static partial class Interop
     {
+        // ReaderGroup constructor
         [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateReaderGroup")]
         internal static extern IntPtr CreateReaderGroup(IntPtr clientFactoryPointer,
             CustomRustString scope,
@@ -30,16 +27,28 @@ namespace Pravega.Event
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback);
 
+        // EventWriter constructor
         [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateEventWriter")]
         internal static extern IntPtr CreateEventWriter(IntPtr clientFactoryPointer,
             CustomRustString scope,
             CustomRustString stream,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackInvoke callback);
+
+        // Event Writer Write Event by Routing Key
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "WriteEventByRoutingKey")]
+        internal static extern IntPtr WriteEventByRoutingKey(
+            IntPtr eventPointer,
+            CustomRustString routingKey,
+            IntPtr bufferPointer,
+            uint bufferSize,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
     }
 
-    // ***** Wrapper for EventWriter *****
-
+    /// <summary>
+    ///     Wrapper for Event Writer
+    /// </summary> 
     public class EventWriter : RustStructWrapper
     {
 
@@ -82,11 +91,52 @@ namespace Pravega.Event
             );
             return task.Task;
         }
+        public Task<ulong> WriteRoutingKey(
+            List<byte> buffer,
+            String routingKey
+        )
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            //CustomRustString routingKeyRust = new CustomRustString((uint)routingKey.Length);
+            CustomCSharpString routingKeyCSharp = new CustomCSharpString(routingKey);
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Split the list into local variables. 
+            byte[] bufferArray = buffer.ToArray();
+            uint bufferSize = (uint)bufferArray.Length;
+            // Marshal the array to unmanaged memory.
+            IntPtr unmanagedBufferArray = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte))
+                       * (int)bufferSize);
+            Marshal.Copy(bufferArray, 0, unmanagedBufferArray, (int)bufferSize);
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+
+            // Write to stream the unmanaged buffer
+            Interop.WriteEventByRoutingKey(
+                this._rustStructPointer,
+                routingKeyCSharp.RustString,
+                unmanagedBufferArray,
+                bufferSize,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            return task.Task;
+        }
     }
 
 
-    // ***** Wrapper for EventReader *****
-
+    /// <summary>
+    ///     Wrapper for Event Reader
+    /// </summary> 
     public class EventReader : RustStructWrapper
     {
 
@@ -111,7 +161,9 @@ namespace Pravega.Event
 
 
 
-    // ***** Wrapper for ReaderGroup *****
+    /// <summary>
+    ///     Wrapper for Reader Group
+    /// </summary> 
     public class ReaderGroup : RustStructWrapper
     {
 
@@ -155,7 +207,9 @@ namespace Pravega.Event
         }
     }
 
-    // ***** Wrapper for ReaderGroupConfig *****
+    /// <summary>
+    ///     Wrapper for ReaderGroupConfig
+    /// </summary>     
     public class ReaderGroupConfig : RustStructWrapper
     {
 
