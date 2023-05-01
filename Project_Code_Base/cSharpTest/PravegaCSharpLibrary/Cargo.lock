@@ -6,27 +6,22 @@ version = 3
 name = "PravegaCSharp"
 version = "0.14.14"
 dependencies = [
+ "async-ffi",
  "async-std",
- "auth_wrapper",
- "byte_wrapper",
- "client_factory_wrapper",
- "config_wrapper",
- "controller_client_wrapper",
- "debugless-unwrap",
- "event_wrapper",
+ "futures 0.3.25",
  "interoptopus",
  "interoptopus_backend_csharp",
+ "num",
  "once_cell",
  "pravega-client",
  "pravega-client-config",
+ "pravega-client-retry",
  "pravega-client-shared",
  "pravega-controller-client",
- "retry_wrapper",
- "shared_wrapper",
- "sync",
  "tokio 1.24.2",
- "utility_wrapper",
- "wire_protocol_wrapper",
+ "tokio-timer",
+ "tracing",
+ "tracing-subscriber 0.3.17",
 ]
 
 [[package]]
@@ -130,9 +125,9 @@ dependencies = [
 
 [[package]]
 name = "async-ffi"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7e73758d044aab514155e8888ed142d408498712c6f82f24e3ee0650d5943b0"
+checksum = "1ed5a937a789391ebc1c77d3a15b060e0d100e6d7c483a2af3f250d6b8dc2a23"
 
 [[package]]
 name = "async-global-executor"
@@ -293,15 +288,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "auth_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "shared_wrapper",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -369,23 +355,6 @@ name = "bumpalo"
 version = "3.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d261e256854913907f67ed06efbc3338dfe6179796deefc1ff763fc1aee5535"
-
-[[package]]
-name = "byte_wrapper"
-version = "0.14.14"
-dependencies = [
- "async-ffi",
- "debugless-unwrap",
- "futures 0.3.25",
- "interoptopus",
- "interoptopus_backend_csharp",
- "once_cell",
- "pravega-client",
- "pravega-client-config",
- "pravega-client-shared",
- "tokio 1.24.2",
- "utility_wrapper",
-]
 
 [[package]]
 name = "byteorder"
@@ -464,21 +433,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "client_factory_wrapper"
-version = "0.14.14"
-dependencies = [
- "debugless-unwrap",
- "interoptopus",
- "interoptopus_backend_csharp",
- "once_cell",
- "pravega-client",
- "pravega-client-config",
- "pravega-controller-client",
- "tokio 1.24.2",
- "utility_wrapper",
-]
-
-[[package]]
 name = "cloudabi"
 version = "0.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -507,30 +461,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "config_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "pravega-client",
- "pravega-client-config",
- "pravega-client-retry",
- "pravega-client-shared",
- "retry_wrapper",
- "shared_wrapper",
- "utility_wrapper",
-]
-
-[[package]]
-name = "connection_pool_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "utility_wrapper",
-]
-
-[[package]]
 name = "const-random"
 version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -550,22 +480,6 @@ dependencies = [
  "once_cell",
  "proc-macro-hack",
  "tiny-keccak",
-]
-
-[[package]]
-name = "controller_client_wrapper"
-version = "0.14.14"
-dependencies = [
- "async-std",
- "interoptopus",
- "interoptopus_backend_csharp",
- "num",
- "pravega-client",
- "pravega-client-config",
- "pravega-client-shared",
- "pravega-controller-client",
- "tokio 1.24.2",
- "utility_wrapper",
 ]
 
 [[package]]
@@ -836,12 +750,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "debugless-unwrap"
-version = "0.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f400d0750c0c069e8493f2256cb4da6f604b6d2eeb69a0ca8863acde352f8400"
-
-[[package]]
 name = "derive-new"
 version = "0.5.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -936,23 +844,6 @@ name = "event-listener"
 version = "2.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
-
-[[package]]
-name = "event_wrapper"
-version = "0.14.14"
-dependencies = [
- "async-ffi",
- "debugless-unwrap",
- "futures 0.3.25",
- "interoptopus",
- "interoptopus_backend_csharp",
- "once_cell",
- "pravega-client",
- "pravega-client-config",
- "pravega-client-shared",
- "tokio 1.24.2",
- "utility_wrapper",
-]
 
 [[package]]
 name = "fastrand"
@@ -1372,15 +1263,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "index_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "utility_wrapper",
-]
-
-[[package]]
 name = "indexmap"
 version = "1.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1686,6 +1568,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2983372caf4480544083767bf2d27defafe32af49ab4df3a0b7fc90793a3664"
 
 [[package]]
+name = "nu-ansi-term"
+version = "0.46.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77a8165726e8236064dbb45459242600304b42a5ea24ee2948e18e023bf7ba84"
+dependencies = [
+ "overload",
+ "winapi",
+]
+
+[[package]]
 name = "num"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1814,6 +1706,12 @@ dependencies = [
  "num-traits",
  "serde",
 ]
+
+[[package]]
+name = "overload"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
 name = "parking"
@@ -2030,7 +1928,7 @@ dependencies = [
  "tokio-util 0.3.1",
  "tracing",
  "tracing-futures",
- "tracing-subscriber",
+ "tracing-subscriber 0.2.25",
  "uuid",
 ]
 
@@ -2071,7 +1969,7 @@ dependencies = [
  "serde_json",
  "tokio 1.24.2",
  "tracing",
- "tracing-subscriber",
+ "tracing-subscriber 0.2.25",
 ]
 
 [[package]]
@@ -2477,16 +2375,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "retry_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "pravega-client-retry",
- "utility_wrapper",
-]
-
-[[package]]
 name = "ring"
 version = "0.16.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2636,15 +2524,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "segment_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "utility_wrapper",
-]
-
-[[package]]
 name = "semver"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2734,15 +2613,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "900fba806f70c630b0a382d0d825e17a0f19fcd059a2ade1ff237bcddf446b31"
 dependencies = [
  "lazy_static",
-]
-
-[[package]]
-name = "shared_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "utility_wrapper",
 ]
 
 [[package]]
@@ -2897,21 +2767,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "sync"
-version = "0.14.14"
-dependencies = [
- "futures 0.3.25",
- "interoptopus",
- "interoptopus_backend_csharp",
- "pravega-client",
- "pravega-client-config",
- "pravega-client-shared",
- "tokio 1.24.2",
- "tokio-timer",
- "utility_wrapper",
 ]
 
 [[package]]
@@ -3334,6 +3189,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "tracing-subscriber"
+version = "0.3.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "30a651bc37f915e81f087d86e62a18eec5f79550c7faff886f7090b4ea757c77"
+dependencies = [
+ "nu-ansi-term",
+ "sharded-slab",
+ "smallvec",
+ "thread_local",
+ "tracing-core",
+ "tracing-log",
+]
+
+[[package]]
 name = "try-lock"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3393,15 +3262,6 @@ dependencies = [
  "form_urlencoded",
  "idna",
  "percent-encoding",
-]
-
-[[package]]
-name = "utility_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "tokio 1.24.2",
 ]
 
 [[package]]
@@ -3686,13 +3546,4 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "80d0f4e272c85def139476380b12f9ac60926689dd2e01d4923222f40580869d"
 dependencies = [
  "winapi",
-]
-
-[[package]]
-name = "wire_protocol_wrapper"
-version = "0.14.14"
-dependencies = [
- "interoptopus",
- "interoptopus_backend_csharp",
- "utility_wrapper",
 ]
