@@ -5,7 +5,7 @@
       "coverlet.collector/3.1.2": {
         "type": "package",
         "build": {
-          "build/netstandard1.0/_._": {}
+          "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
       "Microsoft.CodeCoverage/17.3.2": {
@@ -17,7 +17,8 @@
           "lib/netcoreapp1.0/Microsoft.VisualStudio.CodeCoverage.Shim.dll": {}
         },
         "build": {
-          "build/netstandard1.0/_._": {}
+          "build/netstandard1.0/Microsoft.CodeCoverage.props": {},
+          "build/netstandard1.0/Microsoft.CodeCoverage.targets": {}
         }
       },
       "Microsoft.CSharp/4.0.1": {
@@ -62,10 +63,11 @@
           "lib/netcoreapp2.1/_._": {}
         },
         "build": {
-          "build/netcoreapp2.1/_._": {}
+          "build/netcoreapp2.1/Microsoft.NET.Test.Sdk.props": {},
+          "build/netcoreapp2.1/Microsoft.NET.Test.Sdk.targets": {}
         },
         "buildMultiTargeting": {
-          "buildMultiTargeting/_._": {}
+          "buildMultiTargeting/Microsoft.NET.Test.Sdk.props": {}
         }
       },
       "Microsoft.NETCore.Platforms/1.1.0": {
@@ -333,7 +335,7 @@
           }
         },
         "build": {
-          "build/netcoreapp2.1/_._": {}
+          "build/netcoreapp2.1/Microsoft.TestPlatform.TestHost.props": {}
         }
       },
       "NETStandard.Library/2.0.0": {
@@ -348,7 +350,7 @@
           "lib/netstandard1.0/_._": {}
         },
         "build": {
-          "build/netstandard2.0/_._": {}
+          "build/netstandard2.0/NETStandard.Library.targets": {}
         }
       },
       "Newtonsoft.Json/9.0.1": {
@@ -417,7 +419,7 @@
           }
         },
         "build": {
-          "build/_._": {}
+          "build/NUnit.props": {}
         }
       },
       "NUnit.Analyzers/3.3.0": {
@@ -426,7 +428,7 @@
       "NUnit3TestAdapter/4.2.1": {
         "type": "package",
         "build": {
-          "build/netcoreapp2.1/_._": {}
+          "build/netcoreapp2.1/NUnit3TestAdapter.props": {}
         }
       },
       "System.Collections/4.0.11": {
@@ -980,24 +982,6 @@
         },
         "runtime": {
           "bin/placeholder/PravegaCSharpLibrary.dll": {}
-        }
-      },
-      "PravegaCSharpTestProject/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "Microsoft.NET.Test.Sdk": "17.3.2",
-          "NUnit": "3.13.3",
-          "NUnit.Analyzers": "3.3.0",
-          "NUnit3TestAdapter": "4.2.1",
-          "PravegaCSharpLibrary": "1.0.0",
-          "coverlet.collector": "3.1.2"
-        },
-        "compile": {
-          "bin/placeholder/PravegaCSharpTestProject.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/PravegaCSharpTestProject.dll": {}
         }
       }
     }
@@ -3976,54 +3960,32 @@
       "type": "project",
       "path": "../PravegaCSharpLibrary/PravegaCSharpLibrary.csproj",
       "msbuildProject": "../PravegaCSharpLibrary/PravegaCSharpLibrary.csproj"
-    },
-    "PravegaCSharpTestProject/1.0.0": {
-      "type": "project",
-      "path": "../PravegaCSharpTestProject/PravegaCSharpTestProject.csproj",
-      "msbuildProject": "../PravegaCSharpTestProject/PravegaCSharpTestProject.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Microsoft.NET.Test.Sdk >= 17.3.2",
+      "NUnit >= 3.13.3",
+      "NUnit.Analyzers >= 3.3.0",
+      "NUnit3TestAdapter >= 4.2.1",
       "PravegaCSharpLibrary >= 1.0.0",
-      "PravegaCSharpTestProject >= 1.0.0"
+      "coverlet.collector >= 3.1.2"
     ]
   },
   "packageFolders": {
-<<<<<<< HEAD
-    "C:\\Users\\john_\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
-=======
     "C:\\Users\\brand\\.nuget\\packages\\": {}
->>>>>>> 6181495 (Finished code for RoutingKEy function.)
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
-      "projectUniqueName": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
-      "projectName": "cSharpTest",
-      "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
-      "packagesPath": "C:\\Users\\john_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
-=======
-      "projectUniqueName": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
-      "projectName": "cSharpTest",
-      "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\cSharpTest.csproj",
+      "projectUniqueName": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaWrapperTestProject\\PravegaWrapperTestProject.csproj",
+      "projectName": "PravegaWrapperTestProject",
+      "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaWrapperTestProject\\PravegaWrapperTestProject.csproj",
       "packagesPath": "C:\\Users\\brand\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\cSharpTest\\obj\\",
->>>>>>> 6181495 (Finished code for RoutingKEy function.)
+      "outputPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaWrapperTestProject\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-<<<<<<< HEAD
-        "C:\\Users\\john_\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-=======
         "C:\\Users\\brand\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> 6181495 (Finished code for RoutingKEy function.)
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4037,16 +3999,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-<<<<<<< HEAD
-            "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
-              "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
-            },
-            "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpTestProject\\PravegaCSharpTestProject.csproj": {
-              "projectPath": "C:\\Users\\john_\\Desktop\\Programming\\Senior Project CS421\\dell-pravegaapi\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpTestProject\\PravegaCSharpTestProject.csproj"
-=======
             "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj": {
               "projectPath": "C:\\Users\\brand\\Documents\\Capstone\\dell-pravegaapi\\Project_Code_Base\\cSharpTest\\PravegaCSharpLibrary\\PravegaCSharpLibrary.csproj"
->>>>>>> 6181495 (Finished code for RoutingKEy function.)
             }
           }
         }
@@ -4060,6 +4014,28 @@
     "frameworks": {
       "net6.0": {
         "targetAlias": "net6.0",
+        "dependencies": {
+          "Microsoft.NET.Test.Sdk": {
+            "target": "Package",
+            "version": "[17.3.2, )"
+          },
+          "NUnit": {
+            "target": "Package",
+            "version": "[3.13.3, )"
+          },
+          "NUnit.Analyzers": {
+            "target": "Package",
+            "version": "[3.3.0, )"
+          },
+          "NUnit3TestAdapter": {
+            "target": "Package",
+            "version": "[4.2.1, )"
+          },
+          "coverlet.collector": {
+            "target": "Package",
+            "version": "[3.1.2, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
@@ -4076,7 +4052,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
