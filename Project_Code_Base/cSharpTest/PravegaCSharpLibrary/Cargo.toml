@@ -8,48 +8,24 @@ keywords = ["ffi","wrapper","C#"]
 categories = ["api-bindings", ".NET-core-development-tools"]
 repository = "https://github.com/WSUCptSCapstone-Fall2022Spring2023/dell-pravegaapi"
 
-[workspace]
-members = [
-    "AuthWrapper",
-    "ByteWrapper",
-    "ClientFactoryWrapper",
-    "ConfigWrapper",
-    "ConnectionPoolWrapper",
-    "ControllerClientWrapper",
-    "EventWrapper",
-    "IndexWrapper",
-    "RetryWrapper",
-    "SegmentWrapper",
-    "SharedWrapper",
-    "UtilityWrapper",
-    "WireProtocolWrapper",
-    "EventWrapper",
-    "Sync"
-]
-
 [lib]
-path = "./src/main.rs"
+path = "./RustWrapperSource/lib.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+async-ffi = { version = "0.4.0" }
 async-std = { version = "1", features = ["attributes", "tokio1"] }
-tokio = { version = "1", features = ["full"] }
-pravega-client = { path = "../../pravega-client-rust-master/pravega-client-rust-master" }
-pravega-client-config = { path = "../../pravega-client-rust-master/pravega-client-rust-master/config" }
-pravega-client-shared = { path = "../../pravega-client-rust-master/pravega-client-rust-master/shared" }
-pravega-controller-client = { path = "../../pravega-client-rust-master/pravega-client-rust-master/controller-client" }
+futures = "0.3.1"
 interoptopus = { path = "../../Interoptopus/core", version = "0.14.0"}
 interoptopus_backend_csharp = { path = "../../Interoptopus/backends/csharp" }
-auth_wrapper = {path = "./AuthWrapper" }
-byte_wrapper = {path = "./ByteWrapper"}
-client_factory_wrapper = {path = "./ClientFactoryWrapper"}
-config_wrapper = { path = "./ConfigWrapper" }
-retry_wrapper = {path = "./RetryWrapper"}
-controller_client_wrapper = {path = "./ControllerClientWrapper"}
-shared_wrapper = {path = "./SharedWrapper"}
-utility_wrapper = { path = "./UtilityWrapper" }
-wire_protocol_wrapper = {path = "./WireProtocolWrapper"}
-event_wrapper = {path = "./EventWrapper"}
-sync = {path = "./Sync"}
+pravega-client = { path = "../../pravega-client-rust-master/pravega-client-rust-master" }
+pravega-client-config = { path = "../../pravega-client-rust-master/pravega-client-rust-master/config" }
+pravega-client-retry = { path = "../../pravega-client-rust-master/pravega-client-rust-master/retry"}
+pravega-client-shared = { path = "../../pravega-client-rust-master/pravega-client-rust-master/shared" }
+pravega-controller-client = { path = "../../pravega-client-rust-master/pravega-client-rust-master/controller-client" }
+num = { version = "0.4.0" }
 once_cell = {version = "1.17.1"}
-debugless-unwrap = { version = "0.0.4" }
+tokio = { version = "1", features = ["full"] }
+tokio-timer = "0.2.13"
+tracing = "0.1"
+tracing-subscriber = "0.3"

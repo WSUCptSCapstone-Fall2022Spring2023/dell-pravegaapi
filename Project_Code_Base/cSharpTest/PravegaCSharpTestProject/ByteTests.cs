@@ -233,9 +233,6 @@ namespace PravegaWrapperTestProject
         [Test]
         public void ByteWriterSealTest()
         {
-            // Local variables
-            int failedSuccessfully = 0;
-
             // Client Factory for testing
             ClientFactory.Initialize();
             ControllerClient testController = ClientFactory.FactoryControllerClient;
@@ -261,7 +258,6 @@ namespace PravegaWrapperTestProject
 
             // Attempt to flush the data, which should error and show that the stream is sealled
             Assert.Pass();
-
         }
 
         /// <summary>

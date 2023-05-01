@@ -108,8 +108,8 @@ namespace PravegaWrapperTestProject
         ///  3 = exception
         /// </param>
         [Test]
-        [TestCase("testScope")]
         [TestCase(" ", 3)]
+        [TestCase("testScope")]
         public void ControllerClientCreateScope(string scopeName, int testCase=1)
         {
             ClientFactory.Initialize();

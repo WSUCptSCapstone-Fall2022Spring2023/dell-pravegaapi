@@ -16,33 +16,27 @@ using System.Text;
 namespace Pravega {
 
 
-    // The static class that manages .dll function call signatures in C#. Built upon in different modules.
+    // The static class that manages .dll function call signatures in C# as well as interop integrity. Built upon in different modules.
     // Contains globals for the C# wrapper as well
     public static partial class Interop
     {
         /// <summary>
         ///     Path constants. Used when library needs to make a .dll call
         /// </summary>
-        internal const string ByteDLLPath = "byte_wrapper.dll";
-        internal const string ClientFactoryDLLPath = "client_factory_wrapper.dll";
-        internal const string ConfigDLLPath = "config_wrapper.dll";
-        internal const string ControllerclientDLLPath = "controller_client_wrapper.dll";
-        internal const string RetryDLLPath = "retry_wrapper.dll";
-        internal const string RustDllPath = "PravegaCSharp.dll";
-        internal const string UtilityDLLPath = "utility_wrapper.dll";
+        internal const string RustDLLPath = "PravegaCSharp.dll";
 
         /// <summary>
-        /// Delegate functions used for async callbacks from rust.
+        ///     Delegate functions used for async callbacks from rust.
         /// </summary>
         internal delegate void rustCallback(IntPtr arg);
         internal delegate void rustCallbackU64(ulong arg);
         internal delegate void rustCallbackArray(IntPtr arrayPointer, uint size);
 
         /// <summary>
-        ///  Utility delegates used with the callback delegate manager for invoking delegates from rust safely.
+        ///     Utility delegates used with the callback delegate manager for invoking delegates from rust safely.
         /// </summary>
         /// <param name="key">
-        ///  Key of delegate to be invoked
+        ///     Key of delegate to be invoked
         /// </param>    
         internal delegate void rustCallbackInvoke(ulong key, IntPtr arg);
         internal delegate void rustCallbackU64Invoke(ulong key, ulong arg);
