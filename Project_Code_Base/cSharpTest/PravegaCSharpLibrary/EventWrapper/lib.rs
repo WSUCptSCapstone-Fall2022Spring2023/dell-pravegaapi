@@ -26,6 +26,8 @@ use once_cell::sync::OnceCell;
 use tokio::runtime::{Builder, Runtime, EnterGuard};
 use tokio::task;
 
+use utility_wrapper::U8Slice;
+
 // Used for interoptopus wrapping
 pub fn my_inventory() -> Inventory {
     {
@@ -105,4 +107,40 @@ pub extern "C" fn CreateEventWriter(
             unsafe { callback(key,result_ptr) };
         }) ;
         
+}
+
+#[no_mangle]
+pub extern "C" fn WriteEventByRoutingKey(
+    client_factory_ptr: &'static ClientFactory,
+    event_writer_ptr: &mut EventWriter,
+    routing_key: CustomRustString,
+    event: *mut u8,
+    event_size: u32,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64)
+){
+    let rs = routing_key.as_string();
+
+    let event_slice: U8Slice = U8Slice { slice_pointer: event as *mut i32, length: event_size };
+    let event_array: &mut [u8] = event_slice.as_rust_u8_slice_mut();
+    let event_vector = Vec::from(event_array);//In Future update
+
+    client_factory_ptr.runtime().block_on(async move {
+        let receiver = event_writer_ptr.write_event_by_routing_key(rs, event_vector);
+        let mut result = receiver.await;
+        match result.try_recv(){
+            Ok(x) => {
+                println!("WriteEventByRoutingKey: {:?}", x);
+                unsafe { callback(key, 1) }
+            },
+            Err(e) => {
+                println!("WriteEventByRoutingKey: {:?}", e);
+                unsafe { callback(key, 0) }
+            }
+        }
+    });
+   
+
+
+    //TODO: React to receiver.
 }

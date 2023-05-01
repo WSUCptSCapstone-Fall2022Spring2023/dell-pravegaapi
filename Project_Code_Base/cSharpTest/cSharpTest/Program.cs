@@ -53,6 +53,8 @@
             Console.WriteLine(testWriter.Write(testBytes).GetAwaiter().GetResult().ToString());
             Console.WriteLine("Testing EventWriter");
             EventWriter e = ClientFactory.CreateEventWriter(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
+            Console.WriteLine("Testing EventWriter:WriteRoutingKey");
+            e.WriteRoutingKey(testBytes, "testKey");
             Console.WriteLine("Testing ReaderGroup");
             ReaderGroup r = ClientFactory.CreateReaderGroup(streamConfiguration.ConfigScopedStream).GetAwaiter().GetResult();
             Console.WriteLine("Testing ByteReader");
