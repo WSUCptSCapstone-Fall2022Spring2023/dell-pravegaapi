@@ -1,34 +1,33 @@
-﻿using System;
+﻿///
+/// File: PathGen.cs
+/// File Creator: Brandon Cook
+/// Purpose: Contains methods for helping C# find Rust .dll files.
+///
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pravega
+namespace Pravega.Pathgen
 {
     public class PathGen
     {
-        public string ConfigDLLPath = "";
-        public string CreateDllDirectory(string dll_name)
+        public static String CreateDllPath()
         {
-            var cwd = Directory.GetCurrentDirectory();
-            string code_base = "Project_Code_Base";
+            var cwd = System.IO.Directory.GetCurrentDirectory();
+            String code_base = "Project_Code_Base";
             int indexTo = cwd.IndexOf(code_base);
-            string return_string;
+            String return_string;
             // If IndexOf could not find code_base String
             if (indexTo == -1)
             {
                 return "";
             }
             return_string = cwd.Substring(0, indexTo + code_base.Length);
-            return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\" + dll_name;
+            return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\";
 
             return return_string;
-        }
-
-        public void GenerateAllDllPaths()
-        {
-            ConfigDLLPath = CreateDllDirectory("config_wrapper.dll");
         }
     }
 }

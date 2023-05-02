@@ -1,3 +1,10 @@
+/// <summary>
+/// File: PravegaCSharp.cs
+/// File Creator: John Sbur
+/// Description: Overarching namespace for the C# Wrapper. Contains definitions that apply to all wrappers.
+/// </summary>
+ 
+
 #pragma warning disable 0105
 using System;
 using System.Collections;
@@ -6,30 +13,30 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 #pragma warning restore 0105
-
-// Overarching namespace for the C# Wrapper. Contains definitions that apply to all wrappers.
 namespace Pravega {
 
 
-    // The static class that manages .dll function call signatures in C#. Built upon in different modules.
+    // The static class that manages .dll function call signatures in C# as well as interop integrity. Built upon in different modules.
     // Contains globals for the C# wrapper as well
     public static partial class Interop
     {
-        // String constants
-        internal const string RustDllPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\Project_Code_Base\cSharpTest\PravegaCSharpLibrary\target\debug\PravegaCSharp.dll";
+        /// <summary>
+        ///     Path constants. Used when library needs to make a .dll call
+        /// </summary>
+        internal const string RustDLLPath = "PravegaCSharp.dll";
 
         /// <summary>
-        /// Delegate functions used for async callbacks from rust.
+        ///     Delegate functions used for async callbacks from rust.
         /// </summary>
         internal delegate void rustCallback(IntPtr arg);
         internal delegate void rustCallbackU64(ulong arg);
         internal delegate void rustCallbackArray(IntPtr arrayPointer, uint size);
 
         /// <summary>
-        ///  Utility delegates used with the callback delegate manager for invoking delegates from rust safely.
+        ///     Utility delegates used with the callback delegate manager for invoking delegates from rust safely.
         /// </summary>
         /// <param name="key">
-        ///  Key of delegate to be invoked
+        ///     Key of delegate to be invoked
         /// </param>    
         internal delegate void rustCallbackInvoke(ulong key, IntPtr arg);
         internal delegate void rustCallbackU64Invoke(ulong key, ulong arg);
@@ -49,14 +56,24 @@ namespace Pravega {
         ///  by GC and therefore always be able to be used by rust. All rust has to do is enter the arguments to it as well as a key to
         ///  access the correct delegate assuming it exists at that point. An example of implementation can be found ing Byte.cs in 
         ///  GenerateByteWriter.
+        ///  
+        ///  *NOTE: During development, after having a successful proof of concept with ByteWriter, implementing this into other objects
+        ///  yielded positive results, though NUnit had trouble testing with this architecture and the callback architecture in general.
+        ///  As such, testing was not able to be implemented under NUnit for testing when objects used this architecture.
         /// </summary>
         internal static class CallbackDelegateManager
         {
             // Private lists used to keep track of delegates in GC memory.
             // Dictionaries are populated with keys starting from 0 and filling in counting up.
-            private static Dictionary<ulong, rustCallback> rustCallbackDict = new Dictionary<ulong, rustCallback>();
-            private static Dictionary<ulong, rustCallbackU64> rustCallbackU64Dict = new Dictionary<ulong, rustCallbackU64>();
-            private static Dictionary<ulong, rustCallbackArray> rustCallbackArrayDict = new Dictionary<ulong, rustCallbackArray>();
+            internal static Dictionary<ulong, rustCallback> rustCallbackDict = new Dictionary<ulong, rustCallback>();
+            internal static Dictionary<ulong, rustCallbackU64> rustCallbackU64Dict = new Dictionary<ulong, rustCallbackU64>();
+            internal static Dictionary<ulong, rustCallbackArray> rustCallbackArrayDict = new Dictionary<ulong, rustCallbackArray>();
+
+            // Locks for adding to each dictionary.
+            internal static readonly object rustCallbackThreadLock = new object();
+            internal static readonly object rustCallbackU64ThreadLock = new object();
+            internal static readonly object rustCallbackArrayThreadLock = new object();
+
 
             /// <summary>
             /// Adds a member to the rustCallbackList, returning the key of the callback
@@ -67,12 +84,15 @@ namespace Pravega {
             internal static ulong AddToRustCallbackDict(rustCallback arg)
             {
                 ulong i = 0;
-                while (rustCallbackDict.ContainsKey(i))
-                {
-                    i++;
+                lock (rustCallbackThreadLock){
+                    while (rustCallbackDict.ContainsKey(i))
+                    {
+                        i++;
+                    }
+                    rustCallbackDict[i] = arg;
                 }
-                rustCallbackDict[i] = arg;
                 return i;
+
             }
 
             /// <summary>
@@ -84,12 +104,16 @@ namespace Pravega {
             internal static ulong AddToRustCallbackU64Dictionary(rustCallbackU64 arg)
             {
                 ulong i = 0;
-                while (rustCallbackU64Dict.ContainsKey(i))
+                lock (rustCallbackU64ThreadLock)
                 {
-                    i++;
+                    while (rustCallbackU64Dict.ContainsKey(i))
+                    {
+                        i++;
+                    }
+                    rustCallbackU64Dict[i] = arg;
                 }
-                rustCallbackU64Dict[i] = arg;
                 return i;
+
             }
 
             /// <summary>
@@ -101,11 +125,14 @@ namespace Pravega {
             internal static ulong AddToRustCallbackArrayDictionary(rustCallbackArray arg)
             {
                 ulong i = 0;
-                while (rustCallbackArrayDict.ContainsKey(i))
+                lock (rustCallbackArrayThreadLock)
                 {
-                    i++;
+                    while (rustCallbackArrayDict.ContainsKey(i))
+                    {
+                        i++;
+                    }
+                    rustCallbackArrayDict[i] = arg;
                 }
-                rustCallbackArrayDict[i] = arg;
                 return i;
             }
 
@@ -269,6 +296,7 @@ namespace Pravega {
                     rustCallbackArrayDict.Remove(key);
                 }
             }
+
         }
     }
 
