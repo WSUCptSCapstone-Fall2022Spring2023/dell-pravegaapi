@@ -1,15 +1,15 @@
 # Sprint x Report (4/2/23 - 5/2/2023)
 
 ## What's New (User Facing)
- * Feature 1 or Bug Fix 1
- * Feature 2 or Bug Fix 2
- * Feature n or Bug Fix n
+ * Feature 1 Rework of GitHub structure
+ * Feature 2 Finished working on the Byte module
+ * Feature 3 Implemented the event_writer functions
 
 ## Work Summary (Developer Facing)
-Provide a one paragraph synposis of what your team accomplished this sprint. Don't repeat the "What's New" list of features. Instead, help the instructor understand how you went about the work described there, any barriers you overcame, and any significant learnings for your team.
+During this sprint we finsihed implementing the Byte module, and wrote the code for the event_writer object. We also reorganized the repo so that it is easier to understand, and so that the Rust code can access a singular ClientFactory stored in OnceCell.
 
 ## Unfinished Work
-If applicable, explain the work you did not finish in this sprint. For issues/user stories in the current sprint that have not been closed, (a) any progress toward completion of the issues has been clearly tracked (by checking the checkboxes of  acceptance criteria), (b) a comment has been added to the issue to explain why the issue could not be completed (e.g., "we ran out of time" or "we did not anticipate it would be so much work"), and (c) the issue is added to a subsequent sprint, so that it can be addressed later.
+We were unable to finish certain parts of the Event module as well as the remaining modules that were our goals at the beginning of the semester. Event is acceptably complete. We were also unable to implement read/write locks, improve timing, and error logging. This was due to the fact that making Async work took the majority of our time, and a major breakthrouhg was only discovered a couple of weeks before the end of the semester.
 
 ## Completed Issues/User Stories
 Here are links to the issues that we completed in this sprint:

@@ -44,6 +44,37 @@ namespace Pravega.Event
             uint bufferSize,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        /// <summary>
+        /// Drops the EventWriter.
+        /// </summary>
+        /// <param name="EWpointer">The event writer pointer.</param>
+        /// <returns></returns>
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "EventWriterDrop")]
+        internal static extern IntPtr DropEW(IntPtr EWpointer);
+
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "EventWriterFlush")]
+        internal static extern ulong EventWriterFlush(
+            IntPtr byteWriterPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        /// <summary>
+        /// Calls the rust dll file to write an event
+        /// </summary>
+        /// <param name="byteWriterPointer">The EventWriter pointer.</param>
+        /// <param name="bufferPointer">The buffer pointer.</param>
+        /// <param name="bufferSize">Size of the buffer.</param>
+        /// <param name="key">The key for the delegate manager.</param>
+        /// <param name="callback">The callback function pointer.</param>
+        /// <returns></returns>
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "EventWriterWrite")]
+        internal static extern ulong EventWriterWrite(
+        IntPtr byteWriterPointer,
+        IntPtr bufferPointer,
+        uint bufferSize,
+        ulong key,
+        [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
     }
 
     /// <summary>
@@ -124,6 +155,92 @@ namespace Pravega.Event
             Interop.WriteEventByRoutingKey(
                 this._rustStructPointer,
                 routingKeyCSharp.RustString,
+                unmanagedBufferArray,
+                bufferSize,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            return task.Task;
+        }
+
+        /// <summary>
+        /// Drops the event writer.
+        /// </summary>
+        public void DropEventWriter()
+        {
+            Interop.DropEW(this.RustStructPointer);
+        }
+
+        /// <summary>
+        /// Flushes Data
+        /// </summary>
+        /// <returns>
+        /// Task w/ 0 is success, 1 if failure</returns>
+        /// <exception cref="Pravega.PravegaException"></exception>
+        /// Error if client factory not initialized
+        public Task<ulong> EventWriterFlush()
+        {
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+            // Call bytewriter flush
+            Interop.EventWriterFlush(
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+            return task.Task;
+        }
+
+        /// <summary>
+        /// Writes an event.
+        /// </summary>
+        /// <param name="buffer">Bytes to be writtena s an event</param>
+        /// <returns>
+        /// Task that returns 0 is successs, 1 if failure
+        /// </returns>
+        /// <exception cref="Pravega.PravegaException"></exception>
+        /// Exception if ClientFactory not initialized
+        public Task<ulong> Write(
+           List<byte> buffer
+       )
+        {
+            // If ClientFactory isn't initialized, throw an exception.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+
+            // Create task
+            TaskCompletionSource<ulong> task = new TaskCompletionSource<ulong>();
+
+            // Split the list into local variables. 
+            byte[] bufferArray = buffer.ToArray();
+            uint bufferSize = (uint)bufferArray.Length;
+
+            // Marshal the array to unmanaged memory.
+            IntPtr unmanagedBufferArray = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte))
+                       * (int)bufferSize);
+            Marshal.Copy(bufferArray, 0, unmanagedBufferArray, (int)bufferSize);
+
+            // Create and pin the callback so it isn't garbage collected.
+            rustCallbackU64 callback = (value) => {
+                task.SetResult(value);
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+            // Write to stream the unmanaged buffer
+            Interop.EventWriterWrite(
+                this._rustStructPointer,
                 unmanagedBufferArray,
                 bufferSize,
                 key,
