@@ -20,30 +20,8 @@ namespace PravegaWrapperTestProject
     {
         //The number means how many times slower can the C# library be
         const int ConversionLossLimit = 8;
-
         const int TestingAmount = 10;
 
-        public static String CreateDllPath()
-        {
-           var cwd = System.IO.Directory.GetCurrentDirectory();
-           String code_base = "Project_Code_Base";
-           int indexTo = cwd.IndexOf(code_base);
-           String return_string;
-           // If IndexOf could not find code_base String
-           if (indexTo == -1)
-           {
-               return "";
-           }
-           return_string = cwd.Substring(0, indexTo + code_base.Length);
-           return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\";
-
-           return return_string;
-        }
-        [SetUp]
-        public void SetupEnvironment()
-        {
-           Environment.CurrentDirectory = CreateDllPath();
-        }
         // / <summary>
         // /  Client Factory Tests
         // / </summary> 

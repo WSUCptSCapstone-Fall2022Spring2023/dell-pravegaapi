@@ -25,12 +25,12 @@ namespace PravegaWrapperTestProject
         }
 
         [SetUp]
-        public void Setup()
+        public void SetupEnvironment()
         {
             var cwd = System.IO.Directory.GetCurrentDirectory();
-            String code_base = "Project_Code_Base";
+            string code_base = "dell-pravegaapi";
             int indexTo = cwd.IndexOf(code_base);
-            String return_string;
+            string return_string;
             // If IndexOf could not find code_base String
             if (indexTo == -1)
             {
@@ -39,10 +39,9 @@ namespace PravegaWrapperTestProject
             else
             {
                 return_string = cwd.Substring(0, indexTo + code_base.Length);
-                return_string += @"\cSharpTest\PravegaCSharpLibrary\target\debug\deps\";
+                return_string += @"\dell-pravegaapi\PravegaCSharp\target\debug\deps\";
             }
             Environment.CurrentDirectory = return_string;
-
         }
     }
 }

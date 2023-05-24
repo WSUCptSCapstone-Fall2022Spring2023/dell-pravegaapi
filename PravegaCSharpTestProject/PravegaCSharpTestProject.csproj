@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PravegaCSharpLibrary\PravegaCSharpLibrary.csproj" />
+    <ProjectReference Include="..\PravegaCSharp\PravegaCSharp.csproj" />
   </ItemGroup>
 
 </Project>
