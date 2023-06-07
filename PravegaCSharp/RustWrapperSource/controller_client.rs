@@ -50,6 +50,66 @@ extern "C" fn ControllerClientImplCreateScope(
         }
 }
 
+// ControllerClientImpl.check_scope_exists()
+#[no_mangle]
+extern "C" fn ControllerClientImplCheckScopeExists(
+    source_controller_client_impl: &mut &dyn ControllerClient, 
+    source_scope: CustomRustString,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64))
+    -> ()
+    {
+        unsafe { 
+
+            let newScope: Scope = Scope::from(source_scope.as_string());
+            
+            // Check if the scope exists asynchronously 
+            LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
+
+                let result: bool = source_controller_client_impl
+                    .check_scope_exists(&newScope)
+                    .await
+                    .expect("check scope exists");
+                if result == true{
+                    callback(key, 1);
+                }
+                else{
+                    callback(key, 0);
+                }
+            });        
+        }
+    }
+
+// ControllerClientImpl.delete_scope()
+#[no_mangle]
+extern "C" fn ControllerClientImplDeleteScope(
+    source_controller_client_impl: &mut &dyn ControllerClient, 
+    source_scope: CustomRustString,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64))
+    -> ()
+    {
+        unsafe { 
+
+            let newScope: Scope = Scope::from(source_scope.as_string());
+            
+                // Check if the scope exists asynchronously 
+                LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
+                    
+                    let result: bool = source_controller_client_impl
+                        .delete_scope(&newScope)
+                        .await
+                        .expect("delete scope");
+                    if result == true{
+                        callback(key, 1);
+                    }
+                    else{
+                        callback(key, 0);
+                    }                   
+                });     
+        }
+    }
+
 // ControllerClientImpl.create_stream()
 #[no_mangle]
 extern "C" fn ControllerClientImplCreateStream(
@@ -125,6 +185,43 @@ extern "C" fn ControllerClientImplCreateStream(
                 .await
                 .expect("create stream");
             callback(key, 1);
+        });      
+    }
+}
+
+// ControllerClientImpl.check_stream_exists()
+#[no_mangle]
+extern "C" fn ControllerClientImplCheckStreamExists(
+    source_controller_client_impl: &mut &dyn ControllerClient, 
+    targetStream: CustomRustString,
+    targetScope: CustomRustString,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64))
+    -> ()
+{
+
+    unsafe
+    {
+        // Initialize locals
+        // ScopedStream
+        let targetSS: ScopedStream = ScopedStream{
+            scope: Scope::from(targetScope.as_string().to_owned()),
+            stream: Stream::from(targetStream.as_string().to_owned()),
+        };
+
+        // Create the new stream asynchronously
+        LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
+
+            let result = source_controller_client_impl
+                .check_stream_exists(&targetSS)
+                .await
+                .expect("check stream exists");
+            if result == true{
+                callback(key, 1);
+            }
+            else{
+                callback(key, 0);
+            }
         });      
     }
 }
