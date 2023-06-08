@@ -79,6 +79,23 @@ namespace Pravega.ControllerCli
                     ulong key,
                     [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
 
+        // ControllerClient.delete_stream()
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplDeleteStream")]
+        internal static extern void ControllerClientImplDeleteStream(
+                    IntPtr controllerClientPointer,
+                    CustomRustString targetStream,
+                    CustomRustString targetScope,
+                    ulong key,
+                    [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
+
+        // ControllerClient.seal_stream()
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplSealStream")]
+        internal static extern void ControllerClientImplSealStream(
+                    IntPtr controllerClientPointer,
+                    CustomRustString targetStream,
+                    CustomRustString targetScope,
+                    ulong key,
+                    [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
     }
 
     /// <summary>
@@ -171,10 +188,14 @@ namespace Pravega.ControllerCli
         }
 
         /// <summary>
-        ///  Given the name of a scope, this function checks if the scope exists on the ClientFactory's server.
+        ///  Given the name of a scope, this function tries to delete the scope from the ClientFactory's server.
+        ///  
+        ///  Exception cases:
+        ///  -Stream/Scope doesn't exist
+        ///  -Invalid Stream/Scope name.
         /// </summary>
-        /// <param name="checkingScope">
-        ///  Scope being checked
+        /// <param name="targetScope">
+        ///  Scope to be deleted
         /// </param>
         /// <returns>
         ///  A task that will be completed in the future. The value will be
@@ -262,6 +283,9 @@ namespace Pravega.ControllerCli
 
         /// <summary>
         /// Checks to see whether a ScopedStream exists in the controller runtime.
+        /// 
+        ///  Exception cases:
+        ///  -Invalid Stream/Scope name.
         /// </summary>
         /// <param name="checkingScopedStream">
         ///  ScopedStream used for checking
@@ -295,6 +319,97 @@ namespace Pravega.ControllerCli
                 this.RustStructPointer,
                 checkingScopedStream.Stream.RustString,
                 checkingScopedStream.Scope.RustString,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+
+            return task.Task;
+        }
+
+        /// <summary>
+        ///  Given the name of a scopedstream, this function tries to delete said stream in the background.
+        ///  Requires that the stream is sealled before deletion.
+        /// </summary>
+        /// <param name="targetScopedStream">
+        ///  ScopedStream to be deleted
+        /// </param>
+        /// <returns>
+        ///  A task that will be completed in the future. The value will be
+        ///  -true when successfully deleted
+        ///  -false when unsuccessfully deleted
+        /// </returns>
+        public Task<bool> DeleteStream(ScopedStream targetScopedStream)
+        {
+            // Verify ClientFactory is initialized. If not, throw.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+
+            // Create and pin the callback so it isn't garbage collected.
+            TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
+            rustCallbackU64 callback = (value) => {
+                if (value == 1)
+                {
+                    task.SetResult(true);
+                }
+                else
+                {
+                    task.SetResult(false);
+                }
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+            Interop.ControllerClientImplDeleteStream(
+                this._rustStructPointer,
+                targetScopedStream.Stream.RustString,
+                targetScopedStream.Scope.RustString,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
+            );
+
+            return task.Task;
+        }
+
+        /// <summary>
+        ///  Given the name of a scopedstream, this function tries to seal said stream in the background, preventing further writes to it.
+        ///  
+        ///  Exception cases:
+        ///  -Stream/Scope doesn't exist
+        ///  -Invalid Stream/Scope name.
+        /// </summary>
+        /// <param name="targetScopedStream">
+        ///  ScopedStream to be sealed
+        /// </param>
+        /// <returns>
+        ///  A task that will be completed in the future. The value will be
+        ///  -true when successfully deleted
+        ///  -false when unsuccessfully deleted
+        /// </returns>
+        public Task<bool> SealStream(ScopedStream targetScopedStream)
+        {
+            // Verify ClientFactory is initialized. If not, throw.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+
+            // Create and pin the callback so it isn't garbage collected.
+            TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
+            rustCallbackU64 callback = (value) => {
+                if (value == 1)
+                {
+                    task.SetResult(true);
+                }
+                else
+                {
+                    task.SetResult(false);
+                }
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackU64Dictionary(callback);
+            Interop.ControllerClientImplSealStream(
+                this._rustStructPointer,
+                targetScopedStream.Stream.RustString,
+                targetScopedStream.Scope.RustString,
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );

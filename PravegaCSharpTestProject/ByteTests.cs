@@ -56,9 +56,7 @@ namespace PravegaWrapperTestProject
         ///  ByteWriter Constructor Test. Create ByteWriter from inputted ScopedStream
         ///  
         ///  Prereq. 
-        ///  -Scope is initialized and Stream is initialized on that scope
-        ///  -Pravega Server is running.
-        ///  -Client Factory is initialized.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         /// <param name="scopeToBaseOn">
         ///  Scope to test on.
@@ -131,6 +129,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///     Byte Writer Current Offset Test. Verify that offset is changed when writing froma  bytewriter
+        ///     
+        ///  Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteWriterCurrentOffsetTest()
@@ -162,17 +163,13 @@ namespace PravegaWrapperTestProject
             // Verify that current offset changed by the amount written or more if the tail is longer than the amount written (in case streams are writing in parallel to it when it gets the current offset)
             Assert.IsTrue(currentOffset + result >= testWriter.CurrentOffset);
         }
- 
+
         /// <summary>
         ///  ByteWriter Write Test. Write bytes inputted in test list to byte writer inputted
         ///  
         ///  Prereq. 
-        ///  -ByteWriter is initialized
-        ///  -Pravega Server is running.
-        ///  -Client Factory is initialized.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
-        /// <param name="testWriter"></param>
-        /// <param name="testList"></param>
         [Test]
         public void ByteWriterWriteTest()
         {
@@ -203,6 +200,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Writer Flush Test. Tests the ability to flush from a byte writer object
+        ///  
+        /// Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteWriterFlushTest()
@@ -229,6 +229,8 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Writer Seal Test. Tests the ability to seal a stream
+        ///  
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteWriterSealTest()
@@ -262,6 +264,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Writer TruncateBefore Test. 
+        ///  
+        ///  Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteWriterTruncateBeforeTest()
@@ -297,6 +302,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Writer Seek To Tail Test. Verifies that seek to tail seeks to the end of the segment.
+        ///  
+        /// Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteWriterSeekToTailTest()
@@ -325,6 +333,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///   Byte Writer Reset Test.
+        ///   
+        /// Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteWriterResetTest()
@@ -375,9 +386,7 @@ namespace PravegaWrapperTestProject
         ///  ByteReader Constructor Test. Create ByteReader from inputted ScopedStream
         ///  
         ///  Prereq. 
-        ///  -Scope is initialized and Stream is initialized on that scope
-        ///  -Pravega Server is running.
-        ///  -Client Factory is initialized.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         /// <param name="scopeToBaseOn">
         ///  Scope to test on.
@@ -451,6 +460,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Reader Read Test. Tests byte reader's ability to read a payload
+        ///  
+        ///  Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteReaderReadTest()
@@ -493,6 +505,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Reader Current Offset Test. Tests byte reader's current offset, making sure it's 0 to start and non-zero after reading.
+        ///  
+        /// Prereq.
+        /// -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteReaderCurrentOffsetTest()
@@ -531,6 +546,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Reader Available Test. Tests byte reader's available field after having content written to its segment and before.
+        ///  
+        /// Prereq.
+        /// -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteReaderAvailableTest()
@@ -579,9 +597,7 @@ namespace PravegaWrapperTestProject
         ///  ByteReaderSeek Test. Tests the different cases of seek and if it functions correctly.
         ///  
         ///  Prereq. 
-        ///  -Scope is initialized and Stream is initialized on that scope
-        ///  -Pravega Server is running.
-        ///  -Client Factory is initialized.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         /// <param name="mode">
         ///  Seek mode being tested
@@ -679,6 +695,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Reader Current Head Test. Tests reading current head before and after the stream is truncated
+        ///  
+        /// Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteReaderCurrentHeadTest()
@@ -725,6 +744,9 @@ namespace PravegaWrapperTestProject
 
         /// <summary>
         ///  Byte Reader Current Head Test. Tests reading current head before and after the stream is truncated
+        ///  
+        /// Prereq.
+        ///  -Pravega Standalone Server is running locally.
         /// </summary>
         [Test]
         public void ByteReaderCurrentTailTest()

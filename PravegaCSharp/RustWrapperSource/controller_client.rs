@@ -225,3 +225,77 @@ extern "C" fn ControllerClientImplCheckStreamExists(
         });      
     }
 }
+
+// ControllerClientImpl.delete_stream()
+#[no_mangle]
+extern "C" fn ControllerClientImplDeleteStream(
+    source_controller_client_impl: &mut &dyn ControllerClient, 
+    targetStream: CustomRustString,
+    targetScope: CustomRustString,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64))
+    -> ()
+{
+
+    unsafe
+    {
+        // Initialize locals
+        // ScopedStream
+        let targetSS: ScopedStream = ScopedStream{
+            scope: Scope::from(targetScope.as_string().to_owned()),
+            stream: Stream::from(targetStream.as_string().to_owned()),
+        };
+
+        // Create the new stream asynchronously
+        LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
+
+            let result = source_controller_client_impl
+                .delete_stream(&targetSS)
+                .await
+                .expect("delete stream");
+            if result == true{
+                callback(key, 1);
+            }
+            else{
+                callback(key, 0);
+            }
+        });      
+    }
+}
+
+// ControllerClientImpl.seal_stream()
+#[no_mangle]
+extern "C" fn ControllerClientImplSealStream(
+    source_controller_client_impl: &mut &dyn ControllerClient, 
+    targetStream: CustomRustString,
+    targetScope: CustomRustString,
+    key: u64,
+    callback: unsafe extern "C" fn(u64, u64))
+    -> ()
+{
+
+    unsafe
+    {
+        // Initialize locals
+        // ScopedStream
+        let targetSS: ScopedStream = ScopedStream{
+            scope: Scope::from(targetScope.as_string().to_owned()),
+            stream: Stream::from(targetStream.as_string().to_owned()),
+        };
+
+        // Create the new stream asynchronously
+        LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
+
+            let result = source_controller_client_impl
+                .seal_stream(&targetSS)
+                .await
+                .expect("seal stream");
+            if result == true{
+                callback(key, 1);
+            }
+            else{
+                callback(key, 0);
+            }
+        });      
+    }
+}
