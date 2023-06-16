@@ -41,7 +41,7 @@ namespace Pravega.Event
             IntPtr eventPointer,
             CustomRustString routingKey,
             IntPtr bufferPointer,
-            uint bufferSize,
+            ulong bufferSize,
             ulong key,
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
 
@@ -72,7 +72,7 @@ namespace Pravega.Event
         internal static extern ulong EventWriterWrite(
         IntPtr byteWriterPointer,
         IntPtr bufferPointer,
-        uint bufferSize,
+        ulong bufferSize,
         ulong key,
         [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback);
     }
@@ -139,7 +139,7 @@ namespace Pravega.Event
 
             // Split the list into local variables. 
             byte[] bufferArray = buffer.ToArray();
-            uint bufferSize = (uint)bufferArray.Length;
+            ulong bufferSize = (ulong)bufferArray.Length;
             // Marshal the array to unmanaged memory.
             IntPtr unmanagedBufferArray = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte))
                        * (int)bufferSize);
@@ -226,7 +226,7 @@ namespace Pravega.Event
 
             // Split the list into local variables. 
             byte[] bufferArray = buffer.ToArray();
-            uint bufferSize = (uint)bufferArray.Length;
+            ulong bufferSize = (ulong)bufferArray.Length;
 
             // Marshal the array to unmanaged memory.
             IntPtr unmanagedBufferArray = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte))

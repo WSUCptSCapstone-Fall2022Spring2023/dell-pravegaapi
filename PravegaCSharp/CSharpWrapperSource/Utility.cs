@@ -173,24 +173,80 @@ namespace Pravega.Utility
 
     /// <summary>
     /// Used to hold a slice of Rust strings (Usually a vectory or array)
+    /// Depreciated.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     internal partial struct CustomRustStringSlice
     {
+        public ulong length;
         public IntPtr slice_pointer;
-        public uint length;
+    }
+    internal partial struct CustomRustStringSlice : IEnumerable<CustomRustString>
+    {
+        public CustomRustStringSlice(GCHandle handle, ulong count)
+        {
+            this.slice_pointer = handle.AddrOfPinnedObject();
+            this.length = count;
+        }
+        public CustomRustStringSlice(IntPtr handle, ulong count)
+        {
+            this.slice_pointer = handle;
+            this.length = count;
+        }
+        public CustomRustString this[int i]
+        {
+            get
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(CustomRustString));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                return Marshal.PtrToStructure<CustomRustString>(ptr);
+            }
+            set
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(CustomRustString));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                Marshal.StructureToPtr(value, ptr, false);
+            }
+        }
+        public CustomRustString[] Copied
+        {
+            get
+            {
+                var rval = new CustomRustString[length];
+                for (var i = 0; i < (int)length; i++)
+                {
+                    rval[i] = this[i];
+                }
+                return rval;
+            }
+        }
+        public int Count => (int)length;
+        public IEnumerator<CustomRustString> GetEnumerator()
+        {
+            for (var i = 0; i < (int)length; ++i)
+            {
+                yield return this[i];
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
     }
 
     /// <summary>
     /// Used to hold a slice of Rust strings (Usually a vectory or array)
+    /// Depreciated.
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     internal partial struct CustomCSharpStringSlice
     {
+        public ulong length;
         public IntPtr slice_pointer;
-        public uint length;
     }
 
     /// <summary>
@@ -200,17 +256,17 @@ namespace Pravega.Utility
     [StructLayout(LayoutKind.Sequential)]
     internal partial struct U8Slice
     {
+        public ulong length;
         public IntPtr slice_pointer;
-        public uint length;
     }
     internal partial struct U8Slice : IEnumerable<byte>
     {
-        public U8Slice(GCHandle handle, uint count)
+        public U8Slice(GCHandle handle, ulong count)
         {
             this.slice_pointer = handle.AddrOfPinnedObject();
             this.length = count;
         }
-        public U8Slice(IntPtr handle, uint count)
+        public U8Slice(IntPtr handle, ulong count)
         {
             this.slice_pointer = handle;
             this.length = count;
@@ -243,7 +299,7 @@ namespace Pravega.Utility
                 return rval;
             }
         }
-        public int Count => (int) length;
+        public long Count => (long) length;
         public IEnumerator<byte> GetEnumerator()
         {
             for (var i = 0; i < (int)length; ++i)
@@ -264,17 +320,17 @@ namespace Pravega.Utility
     [StructLayout(LayoutKind.Sequential)]
     internal partial struct U16Slice
     {
+        public ulong length;
         public IntPtr slice_pointer;
-        public uint length;
     }
     internal partial struct U16Slice : IEnumerable<ushort>
     {
-        public U16Slice(GCHandle handle, uint count)
+        public U16Slice(GCHandle handle, ulong count)
         {
             this.slice_pointer = handle.AddrOfPinnedObject();
             this.length = count;
         }
-        public U16Slice(IntPtr handle, uint count)
+        public U16Slice(IntPtr handle, ulong count)
         {
             this.slice_pointer = handle;
             this.length = count;
@@ -286,7 +342,7 @@ namespace Pravega.Utility
                 if (i >= Count) throw new IndexOutOfRangeException();
                 var size = Marshal.SizeOf(typeof(ushort));
                 var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
-                return Marshal.PtrToStructure<byte>(ptr);
+                return Marshal.PtrToStructure<ushort>(ptr);
             }
             set
             {
@@ -308,7 +364,7 @@ namespace Pravega.Utility
                 return rval;
             }
         }
-        public int Count => (int)length;
+        public long Count => (long)length;
         public IEnumerator<ushort> GetEnumerator()
         {
             for (var i = 0; i < (int)length; ++i)
@@ -322,6 +378,134 @@ namespace Pravega.Utility
         }
     }
 
+    /// <summary>
+    /// A representation of an array of data in unmanaged memory which can be modified. Array consists of 32bit objects.
+    /// </summary>
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    internal partial struct U32Slice
+    {
+        public ulong length;
+        public IntPtr slice_pointer;
+    }
+    internal partial struct U32Slice : IEnumerable<uint>
+    {
+        public U32Slice(GCHandle handle, ulong count)
+        {
+            this.slice_pointer = handle.AddrOfPinnedObject();
+            this.length = count;
+        }
+        public U32Slice(IntPtr handle, ulong count)
+        {
+            this.slice_pointer = handle;
+            this.length = count;
+        }
+        public uint this[int i]
+        {
+            get
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(uint));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                return Marshal.PtrToStructure<uint>(ptr);
+            }
+            set
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(uint));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                Marshal.StructureToPtr<uint>(value, ptr, false);
+            }
+        }
+        public uint[] Copied
+        {
+            get
+            {
+                var rval = new uint[length];
+                for (var i = 0; i < (int)length; i++)
+                {
+                    rval[i] = this[i];
+                }
+                return rval;
+            }
+        }
+        public long Count => (long)length;
+        public IEnumerator<uint> GetEnumerator()
+        {
+            for (var i = 0; i < (int)length; ++i)
+            {
+                yield return this[i];
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+    }
+
+    /// <summary>
+    /// A representation of an array of data in unmanaged memory which can be modified. Array consists of 34bit objects.
+    /// </summary>
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    internal partial struct U64Slice { 
+        public ulong length;
+        public IntPtr slice_pointer;
+    }
+    internal partial struct U64Slice : IEnumerable<ulong>
+    {
+        public U64Slice(GCHandle handle, ulong count)
+        {
+            this.slice_pointer = handle.AddrOfPinnedObject();
+            this.length = count;
+        }
+        public U64Slice(IntPtr handle, ulong count)
+        {
+            this.slice_pointer = handle;
+            this.length = count;
+        }
+        public ulong this[int i]
+        {
+            get
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(ulong));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                return Marshal.PtrToStructure<ulong>(ptr);
+            }
+            set
+            {
+                if (i >= Count) throw new IndexOutOfRangeException();
+                var size = Marshal.SizeOf(typeof(ulong));
+                var ptr = new IntPtr(slice_pointer.ToInt64() + i * size);
+                Marshal.StructureToPtr<ulong>(value, ptr, false);
+            }
+        }
+        public ulong[] Copied
+        {
+            get
+            {
+                var rval = new ulong[length];
+                for (var i = 0; i < (int)length; i++)
+                {
+                    rval[i] = this[i];
+                }
+                return rval;
+            }
+        }
+        public long Count => (long)length;
+        public IEnumerator<ulong> GetEnumerator()
+        {
+            for (var i = 0; i < (int)length; ++i)
+            {
+                yield return this[i];
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+    }
 
     /////////////////////////////////////////
     /// String Structs/Classes
@@ -408,7 +592,7 @@ namespace Pravega.Utility
 
             // Convert this string into all the pieces necessary for a customCSharpString
             CustomCSharpString new_custom = new CustomCSharpString(translated_utf16_string);
-            this.capacity = new_custom.capacity;
+            this.capacity = new_custom.string_slice.length;
             this.string_slice = new_custom.string_slice;
         }
 
@@ -565,7 +749,7 @@ namespace Pravega.Utility
     }
     public partial struct CustomRustString
     {
-        internal CustomRustString(uint length){
+        internal CustomRustString(ulong length){
 
             // Create an empty array of the requested length
             byte[] byteArray = new byte[length];
@@ -580,5 +764,4 @@ namespace Pravega.Utility
             this.capacity = length;
         }
     }
-
 }

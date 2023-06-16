@@ -176,8 +176,8 @@ pub extern "C" fn ByteReaderRead(
         let result: usize = source_byte_reader.read(&mut buffer).await.unwrap();
         
         // Box and then return.
-        let buffer_slice = U8Slice::from_rust_u8_slice_mut(buffer.as_mut_slice(), &result);
-        let buffer_slice_array_pointer = buffer_slice.slice_pointer;
+        let buffer_slice: U8Slice = U8Slice::from_rust_u8_slice_mut(buffer.as_mut_slice(), &result);
+        let buffer_slice_array_pointer: *mut i32 = buffer_slice.slice_pointer;
         let _buffer_box: Box<U8Slice> = Box::new(buffer_slice);
         unsafe { callback(key, buffer_slice_array_pointer, result as u32); }
     })
@@ -276,7 +276,7 @@ pub extern "C" fn ByteWriterSeekToTail(
 pub extern "C" fn ByteWriterWrite(
     byte_writer_ptr: &mut ByteWriter,
     buffer: *mut u8,
-    buffer_size: u32,
+    buffer_size: u64,
     key: u64, 
     callback: unsafe extern "C" fn(u64, u64)
 )

@@ -11,17 +11,20 @@
 use crate::LIBRARY_CLIENT_FACTORY;
 
 // Crate Imports
-use crate::utility::CustomRustString;
+use crate::utility::{CustomRustString, CustomRustStringSlice};
 
 // Library Imports
-use pravega_controller_client::{self, ControllerClientImpl, ControllerClient};
+use pravega_controller_client::{self, ControllerClientImpl, ControllerClient, paginator::list_scopes};
 use tokio::{runtime::{Runtime, Handle, EnterGuard}, task::JoinHandle};
 use pravega_client_config::{ClientConfig, ClientConfigBuilder};
-use pravega_client_shared::{Scope, ScopedStream, Stream, Scaling, StreamConfiguration, ScaleType, RetentionType, Retention};
+use pravega_client_shared::{CToken, Scope, ScopedStream, Stream, Scaling, StreamConfiguration, ScaleType, RetentionType, Retention};
 use std::{thread, time::{self, Duration}, mem::size_of, mem, env::join_paths, ptr::null};
 use pravega_client::{client_factory::{ClientFactory, self}};
 use pravega_client::client_factory::ClientFactoryAsync;
+use pravega_controller_client::ResultRetry;
 use num::FromPrimitive;
+use tracing::error;
+use tracing::info;
 
 // ControllerClientImpl.create_scope()
 #[no_mangle]
@@ -39,12 +42,10 @@ extern "C" fn ControllerClientImplCreateScope(
             // Create the new scope asynchronously 
             LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
 
-                //println!("test create scope begin");
                 source_controller_client_impl
                     .create_scope(&newScope)
                     .await
                     .expect("create scope");
-                //println!("test create scope end");
                 callback(key, 1);
             });        
         }
@@ -80,6 +81,68 @@ extern "C" fn ControllerClientImplCheckScopeExists(
         }
     }
 
+// ControllerClientImpl.list_scopes()
+#[no_mangle]
+extern "C" fn ControllerClientImplListScopes(
+    source_controller_client_impl: &mut &dyn ControllerClient, 
+    key: u64,
+    callback: unsafe extern "C" fn(u64, *mut i32, u32)
+) -> (){
+
+    unsafe{
+
+    
+        // Get a list of all the scopes the controller is tied to asynchronously
+        LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
+
+            // Attempt to get the list of scopes from the controller client.      
+            let token: CToken = CToken::new("".to_owned());
+            
+        
+            // Initial state with an empty Continuation token.
+            // execute a request to the controller.
+            let res: ResultRetry<Option<(Vec<Scope>, CToken)>> = source_controller_client_impl.list_scopes(&token).await;
+            match res {
+
+                // If the result is none, callback and return an empty array pointer.
+                Ok(None) => {
+                    callback(key, 0 as *mut i32, 0);                
+                },
+                // If the result isn't none, create a CustomRustString list
+                Ok(Some((list, _ct))) => {
+                    // Unpack the list and transfer it into arrays
+                    let mut rawArray: Vec<CustomRustString> = Vec::<CustomRustString>::new();
+                    let mut returnArraySize: u32 = 0;
+                    for scope in list
+                    {
+                        let insertString: CustomRustString = CustomRustString::from_string(scope.name.to_owned());
+                        rawArray.push(insertString);
+                        returnArraySize = returnArraySize + 1;
+                    }
+
+                    // Turn the vector into a mutable slice of pointers
+                    let processedArray = rawArray.as_mut_slice();
+                    let returnSlice: CustomRustStringSlice = CustomRustStringSlice::from_rust_string_slice_mut(
+                        processedArray,
+                        &(returnArraySize as usize)
+                    ); 
+                        
+                    // Box the return array and return along with its size
+                    let string_slice_pointer = returnSlice.string_slice;
+                    let returnArrayBox: Box<CustomRustStringSlice> = Box::new(returnSlice);
+                    callback(key, string_slice_pointer, returnArraySize);           
+                }
+                // Error case
+                Err(e) => {
+                    //log an error and return None to indicate end of stream.
+                    error!("Error while attempting to list scopes. Error: {:?}", e);
+                }
+            }
+        });    
+    } 
+}
+
+
 // ControllerClientImpl.delete_scope()
 #[no_mangle]
 extern "C" fn ControllerClientImplDeleteScope(
@@ -93,7 +156,7 @@ extern "C" fn ControllerClientImplDeleteScope(
 
             let newScope: Scope = Scope::from(source_scope.as_string());
             
-                // Check if the scope exists asynchronously 
+                // Delete the scope asynchronously 
                 LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
                     
                     let result: bool = source_controller_client_impl
@@ -209,7 +272,7 @@ extern "C" fn ControllerClientImplCheckStreamExists(
             stream: Stream::from(targetStream.as_string().to_owned()),
         };
 
-        // Create the new stream asynchronously
+        // Check for the stream asynchronously
         LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
 
             let result = source_controller_client_impl
@@ -246,7 +309,7 @@ extern "C" fn ControllerClientImplDeleteStream(
             stream: Stream::from(targetStream.as_string().to_owned()),
         };
 
-        // Create the new stream asynchronously
+        // Delete the stream asynchronously
         LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
 
             let result = source_controller_client_impl
@@ -283,7 +346,7 @@ extern "C" fn ControllerClientImplSealStream(
             stream: Stream::from(targetStream.as_string().to_owned()),
         };
 
-        // Create the new stream asynchronously
+        // Seal the stream asynchronously
         LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
 
             let result = source_controller_client_impl

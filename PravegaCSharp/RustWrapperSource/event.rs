@@ -134,7 +134,7 @@ LIBRARY_CLIENT_FACTORY.get().unwrap().runtime().block_on( async move {
 pub extern "C" fn EventWriterWrite(
     event_writer_ptr: &mut EventWriter,
     buffer: *mut u8,
-    buffer_size: u32,
+    buffer_size: u64,
     key: u64, 
     callback: unsafe extern "C" fn(u64, u64)
 )
@@ -164,7 +164,7 @@ pub extern "C" fn WriteEventByRoutingKey(
     event_writer_ptr: &mut EventWriter,
     routing_key: CustomRustString,
     event: *mut u8,
-    event_size: u32,
+    event_size: u64,
     key: u64,
     callback: unsafe extern "C" fn(u64, u64)
 ){

@@ -129,7 +129,7 @@ namespace PravegaWrapperTestProject
             CustomCSharpString testString = new CustomCSharpString(testInput);
             if (testInput == "")
             {
-                Assert.That(1, Is.EqualTo(testString.Capacity));
+                Assert.That(testString.Capacity, Is.EqualTo(1));
             }
             else
             {

@@ -156,6 +156,90 @@ namespace PravegaWrapperTestProject
         }
 
         /// <summary>
+        ///  ControllerClient List Scopes Test. Tests the ability of the controller client to retrieve all scopes the controller client is connected to.
+        ///  
+        ///  Prereq. 
+        ///  -Pravega Server is running.
+        /// </summary>
+        /// <param name="testCase">
+        ///  Type of test being done. 
+        ///  1 = normal
+        ///  2 = boarder
+        ///  3 = exception
+        /// </param>
+        [Test]
+        [TestCase(1)]
+        public void ControllerClientListScopes(int testCase = 1)
+        {
+            // Initialize factory
+            ClientFactory.Initialize();
+
+            // Make a controller client
+            ControllerClient testController = ClientFactory.FactoryControllerClient;
+
+            switch (testCase)
+            {
+
+                // Normal Case
+                case 1:
+
+                    // Generate randomly named scopes and create them
+                    List<string> randomScopeStrings = new List<string>();
+                    Scope holder = new Scope();
+                    randomScopeStrings.Clear();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        randomScopeStrings.Add(RandomString(8));
+                        holder.NativeString = randomScopeStrings[i];
+                        Assert.IsTrue(testController.CreateScope(holder).GetAwaiter().GetResult());
+                    }
+
+                    // Get a list of scopes from the controller
+                    List<string>? returnedScopes = testController.ListScopes().GetAwaiter().GetResult();
+
+                    // Verify that the scopes retrieved are the same.
+                    //  If no scopes were returned
+                    if (returnedScopes == null)
+                    {
+                        Assert.Fail();
+                    }
+                    //  Otherwise, check
+                    for (int i = 0; i < 8; i++)
+                    {
+                        // Can't be null from earlier check.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                        Assert.IsTrue(returnedScopes.Contains(randomScopeStrings[i]));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    }
+
+                    Assert.Pass();
+                    break;
+
+                // Boundary Case
+                case 2:
+
+                    // Not implemented
+                    Assert.Fail();
+
+                    break;
+
+                // Exception Case
+                case 3:
+
+                    // Not implemented
+                    Assert.Fail();
+
+                    break;
+
+                // Default to fail
+                default:
+                    Assert.Fail();
+                    break;
+
+            }
+        }
+
+        /// <summary>
         ///  ControllerClient Delete Scope Test. Tests the ability of the controller client to delete existing scopes
         ///  
         ///  Prereq. 
@@ -502,7 +586,7 @@ namespace PravegaWrapperTestProject
                     //  it's considered timed out and therefore fails.
                     while (checks > 0)
                     {
-                        if (testController.CheckStreamExists(randomScopedStream).GetAwaiter().GetResult() == true)
+                        if (testController.CheckStreamExists(randomScopedStream).GetAwaiter().GetResult() == false)
                         {
                             Assert.Pass();
                             break;
@@ -570,6 +654,18 @@ namespace PravegaWrapperTestProject
             }
         }
 
+        /// <summary>
+        ///  ControllerClient Seal Stream Test. Tests the ability of the controller client to seal existing streams
+        ///  
+        ///  Prereq. 
+        ///  -Pravega Standalone Server is running locally.
+        /// </summary>
+        /// <param name="testCase">
+        ///  Type of test being done. 
+        ///  1 = normal
+        ///  2 = boarder
+        ///  3 = exception
+        /// </param>
         [Test]
         [TestCase(1)]
         [TestCase(3)]

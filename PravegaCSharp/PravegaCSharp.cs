@@ -26,12 +26,41 @@ namespace Pravega {
         //internal const string RustDLLPath = "PravegaCSharp.dll";
         internal const string RustDLLPath = @"C:\Users\john_\Desktop\Programming\Senior Project CS421\dell-pravegaapi\dell-pravegaapi\PravegaCSharp\target\debug\deps\PravegaCSharp.dll";
 
+
+
         /// <summary>
         ///     Delegate functions used for async callbacks from rust.
         /// </summary>
+        /// <summary>
+        ///  A delegate that takes 1 int pointer as an argument.
+        /// </summary>
         internal delegate void rustCallback(IntPtr arg);
+        /// <summary>
+        ///  A delegate that takes 1 ulong argument.
+        /// </summary>
+        /// <param name="arg"></param>
         internal delegate void rustCallbackU64(ulong arg);
-        internal delegate void rustCallbackArray(IntPtr arrayPointer, uint size);
+        /// <summary>
+        ///  A delegate that takes 2 arguments to represent an array.
+        /// </summary>
+        /// <param name="arrayPointer"></param>
+        /// <param name="size"></param>
+        internal delegate void rustCallbackArray(IntPtr arrayPointer, uint arraySize);
+        /// <summary>
+        ///  A delegate that takes 3 arguments to represent an array of arrays.
+        /// </summary>
+        /// <param name="arrayPointer">
+        ///  Represents the array of arrays pointer
+        /// </param>
+        /// <param name="arraySizeArrayPointer">
+        ///  Represents an array containing the sizes of the arrays in the arrayPointer (same size as arrayPointer)
+        /// </param>
+        /// <param name="arraySize">
+        ///  Represents how many arrays are contained in arrayPointer
+        /// </param>
+        internal delegate void rustCallbackArrayArray(IntPtr arrayPointer, IntPtr arraySizeArrayPointer, uint arraySize);
+
+
 
         /// <summary>
         ///     Utility delegates used with the callback delegate manager for invoking delegates from rust safely.
@@ -39,9 +68,13 @@ namespace Pravega {
         /// <param name="key">
         ///     Key of delegate to be invoked
         /// </param>    
+        
         internal delegate void rustCallbackInvoke(ulong key, IntPtr arg);
         internal delegate void rustCallbackU64Invoke(ulong key, ulong arg);
-        internal delegate void rustCallbackArrayInvoke(ulong key, IntPtr arrayPointer, uint size);
+        internal delegate void rustCallbackArrayInvoke(ulong key, IntPtr arrayPointer, uint arraySize);
+        internal delegate void rustCallbackArrayArrayInvoke(ulong key, IntPtr arrayPointer, IntPtr arraySizeArrayPointer, uint arraySize);
+
+
 
         /// <summary>
         ///  Manages delegates allocated, keeping them from being collected from GC until they are removed.
@@ -69,11 +102,13 @@ namespace Pravega {
             internal static Dictionary<ulong, rustCallback> rustCallbackDict = new Dictionary<ulong, rustCallback>();
             internal static Dictionary<ulong, rustCallbackU64> rustCallbackU64Dict = new Dictionary<ulong, rustCallbackU64>();
             internal static Dictionary<ulong, rustCallbackArray> rustCallbackArrayDict = new Dictionary<ulong, rustCallbackArray>();
+            internal static Dictionary<ulong, rustCallbackArrayArray> rustCallbackArrayArrayDict = new Dictionary<ulong, rustCallbackArrayArray>();
 
             // Locks for adding to each dictionary.
             internal static readonly object rustCallbackThreadLock = new object();
             internal static readonly object rustCallbackU64ThreadLock = new object();
             internal static readonly object rustCallbackArrayThreadLock = new object();
+            internal static readonly object rustCallbackArrayArrayThreadLock = new object();
 
 
             /// <summary>
@@ -138,6 +173,26 @@ namespace Pravega {
             }
 
             /// <summary>
+            /// Adds a member to the rustCallbackArrayArray, returning the key of the callback
+            /// </summary>
+            /// <param name="arg">
+            /// Callback to be added
+            /// </param>
+            internal static ulong AddToRustCallbackArrayArrayDictionary(rustCallbackArrayArray arg)
+            {
+                ulong i = 0;
+                lock (rustCallbackArrayArrayThreadLock)
+                {
+                    while (rustCallbackArrayArrayDict.ContainsKey(i))
+                    {
+                        i++;
+                    }
+                    rustCallbackArrayArrayDict[i] = arg;
+                }
+                return i;
+            }
+
+            /// <summary>
             ///  Given a key and an argument, this function tries to invoke a delegate matching the dictionary key
             ///  inputting "arg" as its argument.
             /// </summary>
@@ -174,7 +229,7 @@ namespace Pravega {
             }
 
             /// <summary>
-            ///  Given a key and an argument, this function tries to invoke a delegate matching the dictionary key
+            ///  Given a key, the array pointer, and the size of the array, this function tries to invoke a delegate matching the dictionary key
             ///  inputting "arg" as its argument.
             /// </summary>
             /// <param name="key">
@@ -195,8 +250,27 @@ namespace Pravega {
             }
 
             /// <summary>
+            ///  Given a key, the array pointer, the array size array pointer, and the size of both arrays, this function tries to invoke a delegate matching the dictionary key
+            /// </summary>
+            /// <param name="key">
+            ///  Key of delegate to be invoked.
+            /// </param>
+            /// <param name="arrayPtr">
+            ///  Pointer to relevant array
+            /// </param>
+            /// <param name="size">
+            ///  Size of relevant array
+            /// </param>
+            internal static void InvokeFromRustCallbackArrayDict(ulong key, IntPtr arrayPtr, IntPtr arraySizeArrayPtr, uint size)
+            {
+                if (rustCallbackArrayArrayDict.ContainsKey(key))
+                {
+                    rustCallbackArrayArrayDict[key].Invoke(arrayPtr, arraySizeArrayPtr, size);
+                }
+            }
+
+            /// <summary>
             ///  Given a key and an argument, this function tries to invoke a delegate matching the dictionary key
-            ///  inputting "arg" as its argument.
             ///  The only difference between this and the non OneTimeMethod is that this also tries to delete the
             ///  delegate after using it.
             /// </summary>
@@ -235,8 +309,7 @@ namespace Pravega {
             }
 
             /// <summary>
-            ///  Given a key and an argument, this function tries to invoke a delegate matching the dictionary key
-            ///  inputting "arg" as its argument.
+            ///  Given a key, an array pointer, and the size of the array, this function tries to invoke a delegate matching the dictionary key
             /// </summary>
             /// <param name="key">
             ///  Key of delegate to be invoked.
@@ -253,6 +326,27 @@ namespace Pravega {
                 {
                     rustCallbackArrayDict[key].Invoke(arrayPtr, size);
                     rustCallbackArrayDict.Remove(key);
+                }
+            }
+
+            /// <summary>
+            ///  Given a key, an array pointer, the array of sizes of arrays pointer, and the size of both arrays, this function tries to invoke a delegate matching the dictionary key
+            /// </summary>
+            /// <param name="key">
+            ///  Key of delegate to be invoked.
+            /// </param>
+            /// <param name="arrayPtr">
+            ///  Pointer to relevant array
+            /// </param>
+            /// <param name="size">
+            ///  Size of relevant array
+            /// </param>
+            internal static void OneTimeInvokeFromRustCallbackArrayArrayDict(ulong key, IntPtr arrayPtr, IntPtr arraySizeArrayPtr, uint size)
+            {
+                if (rustCallbackArrayArrayDict.ContainsKey(key))
+                {
+                    rustCallbackArrayArrayDict[key].Invoke(arrayPtr, arraySizeArrayPtr, size);
+                    rustCallbackArrayArrayDict.Remove(key);
                 }
             }
 
@@ -298,6 +392,19 @@ namespace Pravega {
                 }
             }
 
+            /// <summary>
+            ///  Removes a member from the RustCallbackArrayArrayList according to the key if it exists.
+            /// </summary>
+            /// <param name="key">
+            ///  Key of value to be removed
+            /// </param>
+            internal static void RemoveFromRustCallbackArrayArrayDict(ulong key)
+            {
+                if (rustCallbackArrayArrayDict.ContainsKey(key))
+                {
+                    rustCallbackArrayArrayDict.Remove(key);
+                }
+            }
         }
     }
 

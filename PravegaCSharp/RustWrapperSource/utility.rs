@@ -44,13 +44,13 @@ extern "C" fn KillRuntime(target_runtime: *const Runtime) -> ()
 /////////////////////////////////////////
 #[repr(C)]
 pub struct U8Slice{
+    pub length: u64,
     pub slice_pointer: *mut i32,
-    pub length: u32,
 }
 impl U8Slice{
 
     // Constructs a U8 slice of length "newLength"
-    pub fn new(new_length: &u32) -> U8Slice {
+    pub fn new(new_length: &u64) -> U8Slice {
         let mut slice_vec: Vec<u8> = Vec::with_capacity(*new_length as usize);
         U8Slice {
             length: *new_length,
@@ -76,19 +76,19 @@ impl U8Slice{
     -> U8Slice{
         U8Slice{
             slice_pointer: source.as_mut_ptr() as *mut i32,
-            length: *new_length as u32,
+            length: *new_length as u64,
         }
     }
 }
 #[repr(C)]
 pub struct U16Slice{
+    pub length: u64,
     pub slice_pointer: *mut i32,
-    pub length: u32,
 }
 impl U16Slice{
 
     // Constructs a U8 slice of length "newLength"
-    pub fn new(new_length: &u32) -> U16Slice {
+    pub fn new(new_length: &u64) -> U16Slice {
         let mut slice_vec: Vec<u8> = Vec::with_capacity(*new_length as usize);
         U16Slice {
             length: *new_length,
@@ -114,7 +114,7 @@ impl U16Slice{
     -> U16Slice{
         U16Slice{
             slice_pointer: source.as_mut_ptr() as *mut i32,
-            length: *new_length as u32,
+            length: *new_length as u64,
         }
     }
 }
@@ -126,14 +126,14 @@ impl U16Slice{
 // Custom string used for transferring native Rust strings to and from C#
 #[repr(C)]
 pub struct CustomRustString {
-    pub capacity: u32,
+    pub capacity: u64,
     pub string_slice: U8Slice,
 }
 // Functions related to CustomRustString
 impl CustomRustString{
 
     // Default constructor
-    pub fn new(new_length: &u32) -> CustomRustString{
+    pub fn new(new_length: &u64) -> CustomRustString{
         CustomRustString{
             capacity: *new_length,
             string_slice: U8Slice::new(new_length)
@@ -144,11 +144,10 @@ impl CustomRustString{
     pub fn from_string(source_string: String) -> CustomRustString{
         let string_size: usize = source_string.len() as usize;
         let mut source_string_clone: String = source_string.clone();
-        println!("capacity: {0}, string_slice{1}", string_size, source_string_clone);
         unsafe{
             return CustomRustString 
             { 
-                capacity: string_size as u32,
+                capacity: string_size as u64,
                 string_slice: U8Slice::from_rust_u8_slice_mut(source_string_clone.as_mut_vec().as_mut_slice(), &string_size),
             }
         }
@@ -160,3 +159,20 @@ impl CustomRustString{
     }
 }
 
+#[repr(C)]
+pub struct CustomRustStringSlice{
+    pub capacity: u64,
+    pub string_slice: *mut i32,
+}
+impl CustomRustStringSlice{
+    pub fn from_rust_string_slice_mut(
+        source: &mut [CustomRustString],
+        new_length: &usize,
+    ) -> CustomRustStringSlice
+    {
+        CustomRustStringSlice{
+            string_slice: source.as_mut_ptr() as *mut i32,
+            capacity: *new_length as u64,
+        }
+    }
+}

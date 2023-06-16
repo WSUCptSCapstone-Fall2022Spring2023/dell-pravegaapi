@@ -45,6 +45,14 @@ namespace Pravega.ControllerCli
             [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackU64Invoke callback
         );
 
+        // ControllerClient.list_scopes
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplListScopes")]
+        internal static extern void ControllerClientImplListScopes(
+            IntPtr controllerClientPointer,
+            ulong key,
+            [MarshalAs(UnmanagedType.FunctionPtr)] rustCallbackArrayInvoke callback
+        );
+
         // ControllerClient.delete_scope()
         [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ControllerClientImplDeleteScope")]
         internal static extern void ControllerClientImplDeleteScope(
@@ -140,7 +148,6 @@ namespace Pravega.ControllerCli
                 key,
                 CallbackDelegateManager.OneTimeInvokeFromRustCallbackU64Dict
             );
-           
             
             return task.Task;
         }
@@ -185,6 +192,71 @@ namespace Pravega.ControllerCli
             );
 
             return task.Task;
+        }
+
+        /// <summary>
+        ///  Lists all scopes on the controller client's server
+        /// </summary>
+        /// <returns>
+        ///  A task that once completed will contain either:
+        ///  - A list of strings with the names of the scopes on the server
+        ///  - Null if there are no scopes on the server
+        /// </returns>
+        public Task<List<string>?> ListScopes()
+        {
+            // Verify ClientFactory is initialized. If not, throw.
+            if (!ClientFactory.Initialized())
+            {
+                throw new PravegaException(WrapperErrorMessages.ClientFactoryNotInitialized);
+            }
+
+            // Create and pin the callback so it isn't garbage collected.
+            TaskCompletionSource<List<string>?> task = new TaskCompletionSource<List<string>?>();
+            rustCallbackArray callback = (arrayArray, size) => {
+
+                // Safety checks. If the pointers are null, return an empty list.
+                if (arrayArray == IntPtr.Zero)
+                {
+                    task.SetResult(null);
+                }
+
+                // Local variables
+                CustomRustString rustStringHolder;
+                CustomCSharpString cSharpStringHolder;
+
+                // Turn the array pointer into an array
+                CustomRustStringSlice stringArraySlice = new CustomRustStringSlice(arrayArray, size);
+
+                // Extract the strings from each array, storing them as CustomRustStrings
+                List<string> stringList = new List<string>();
+                stringList.Clear();
+                for (int i = 0; i < size; i++)
+                {
+                    // Transfer the array value into a CustomRustString
+                    rustStringHolder = stringArraySlice[i];
+
+                    // Transfer the CustomRustString into a CustomCSharpString
+                    cSharpStringHolder = new CustomCSharpString(rustStringHolder);
+
+                    // Move the CustomCSharpString into the list as a string.
+                    stringList.Add(cSharpStringHolder.NativeString);
+                }
+
+                // Set the result of the task to be the derived list
+                task.SetResult(stringList);
+
+                // Exit
+                return;
+            };
+            ulong key = CallbackDelegateManager.AddToRustCallbackArrayDictionary(callback);
+            Interop.ControllerClientImplListScopes(
+                this._rustStructPointer,
+                key,
+                CallbackDelegateManager.OneTimeInvokeFromRustCallbackArrayDict
+            );
+
+            return task.Task;
+
         }
 
         /// <summary>
