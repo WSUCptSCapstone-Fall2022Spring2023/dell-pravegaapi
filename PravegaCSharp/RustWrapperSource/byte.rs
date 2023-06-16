@@ -177,8 +177,8 @@ pub extern "C" fn ByteReaderRead(
         
         // Box and then return.
         let buffer_slice: U8Slice = U8Slice::from_rust_u8_slice_mut(buffer.as_mut_slice(), &result);
-        let buffer_slice_array_pointer: *mut i32 = buffer_slice.slice_pointer;
-        let _buffer_box: Box<U8Slice> = Box::new(buffer_slice);
+        let buffer_box: Box<U8Slice> = Box::new(buffer_slice);
+        let buffer_slice_array_pointer: *mut i32 = Box::into_raw(buffer_box) as *mut i32;
         unsafe { callback(key, buffer_slice_array_pointer, result as u32); }
     })
 }

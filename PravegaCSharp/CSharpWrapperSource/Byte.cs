@@ -684,7 +684,7 @@ namespace Pravega.Byte
             rustCallbackArray callback = (arrPointer, numberOfBytesRead)
             =>
             {
-                U8Slice buffer = new U8Slice(arrPointer, numberOfBytesRead);
+                U8Slice buffer = Marshal.PtrToStructure<U8Slice>(arrPointer);
                 byte[] bufferManaged = buffer.Copied;
                 task.SetResult(bufferManaged);
             };

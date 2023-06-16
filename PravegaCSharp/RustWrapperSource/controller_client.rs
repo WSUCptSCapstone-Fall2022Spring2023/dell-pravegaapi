@@ -128,9 +128,9 @@ extern "C" fn ControllerClientImplListScopes(
                     ); 
                         
                     // Box the return array and return along with its size
-                    let string_slice_pointer = returnSlice.string_slice;
                     let returnArrayBox: Box<CustomRustStringSlice> = Box::new(returnSlice);
-                    callback(key, string_slice_pointer, returnArraySize);           
+                    let returnArrayPointer: *mut i32 = Box::into_raw(returnArrayBox) as *mut i32;
+                    callback(key, returnArrayPointer, returnArraySize);           
                 }
                 // Error case
                 Err(e) => {

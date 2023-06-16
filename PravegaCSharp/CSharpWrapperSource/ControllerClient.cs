@@ -225,7 +225,7 @@ namespace Pravega.ControllerCli
                 CustomCSharpString cSharpStringHolder;
 
                 // Turn the array pointer into an array
-                CustomRustStringSlice stringArraySlice = new CustomRustStringSlice(arrayArray, size);
+                CustomRustStringSlice stringArraySlice = Marshal.PtrToStructure<CustomRustStringSlice>(arrayArray);
 
                 // Extract the strings from each array, storing them as CustomRustStrings
                 List<string> stringList = new List<string>();
