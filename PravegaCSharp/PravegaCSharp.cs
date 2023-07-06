@@ -13,7 +13,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 #pragma warning restore 0105
-namespace Pravega {
+namespace Pravega
+{
 
 
     // The static class that manages .dll function call signatures in C# as well as interop integrity. Built upon in different modules.
@@ -68,7 +69,7 @@ namespace Pravega {
         /// <param name="key">
         ///     Key of delegate to be invoked
         /// </param>    
-        
+
         internal delegate void rustCallbackInvoke(ulong key, IntPtr arg);
         internal delegate void rustCallbackU64Invoke(ulong key, ulong arg);
         internal delegate void rustCallbackArrayInvoke(ulong key, IntPtr arrayPointer, uint arraySize);
@@ -120,7 +121,8 @@ namespace Pravega {
             internal static ulong AddToRustCallbackDict(rustCallback arg)
             {
                 ulong i = 0;
-                lock (rustCallbackThreadLock){
+                lock (rustCallbackThreadLock)
+                {
                     while (rustCallbackDict.ContainsKey(i))
                     {
                         i++;
@@ -419,10 +421,12 @@ namespace Pravega {
     }
 
     // Class containing preset error messages
-    internal static class WrapperErrorMessages{
+    internal static class WrapperErrorMessages
+    {
 
         // For when a rust object called or used cannot be found (consumed, set to null, or could not be dereferenced)
-        public static string RustObjectNotFound{
+        public static string RustObjectNotFound
+        {
             get
             {
                 return "Pravega object not found exception.";
@@ -435,6 +439,15 @@ namespace Pravega {
             get
             {
                 return "Client Factory was not initialized, but a function requiring Client Factory to be initialized was called.";
+            }
+        }
+
+        // For when an input option isn't valid in a function.
+        public static string InvalidInput
+        {
+            get
+            {
+                return "The input provided would cause a crash later in execution or an immediate crash and so execution was halted.";
             }
         }
     }

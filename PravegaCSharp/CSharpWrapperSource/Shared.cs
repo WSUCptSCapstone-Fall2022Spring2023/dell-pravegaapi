@@ -15,6 +15,46 @@ using Pravega.Utility;
 
 namespace Pravega.Shared
 {
+    // Continues building the Interop class by adding method signatures found in the Config para-module.
+    public static partial class Interop
+    {
+        ///////////////////
+        // PravegaNodeUri
+        ///////////////////
+
+        // PravegaNodeUriConstructor
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreatePravegaNodeUri")]
+        internal static extern IntPtr CreatePravegaNodeUri(
+            CustomRustString scheme,
+            CustomRustString domainName,
+            ushort port
+        );
+
+        // PravegaNodeUri FullAddress
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "PravegaNodeUriFullAddress")]
+        internal static extern CustomRustString PravegaNodeUriFullAddress(
+            IntPtr rustPointer
+        );
+
+        // PravegaNodeUri GetScheme
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "PravegaNodeUriGetScheme")]
+        internal static extern CustomRustString PravegaNodeUriGetScheme(
+            IntPtr rustPointer
+        );
+
+        // PravegaNodeUri GetDomain
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "PravegaNodeUriGetDomain")]
+        internal static extern CustomRustString PravegaNodeUriGetDomain(
+            IntPtr rustPointer
+        );
+
+        // PravegaNodeUri GetPort
+        [DllImport(Pravega.Interop.RustDLLPath, CallingConvention = CallingConvention.Cdecl, EntryPoint = "PravegaNodeUriGetPort")]
+        internal static extern ushort PravegaNodeUriGetPort(
+            IntPtr rustPointer
+        );
+    }
+
     //  ***** Wrapper for TxId *****
     public class TxId : U128
     {
@@ -363,6 +403,109 @@ namespace Pravega.Shared
     // ***** Wrapper for PravegaNodeUri *****
     public class PravegaNodeUri : RustStructWrapper
     {
+        /// <summary>
+        ///     Initializes a PravegaNodeUri with a scheme, domainName, and port. This becomes
+        ///     the connection point a server will look for if applied to a server.
+        /// </summary>
+        /// <param name="scheme">
+        ///     The type of connection. For example "tls"
+        /// </param>
+        /// <param name="domainName">
+        ///     The name of the domain of the uri node. For example 127.0.0.1
+        /// </param>
+        /// <param name="port">
+        ///     The number of the target port. For example 9090. 
+        /// </param>
+        public PravegaNodeUri(string scheme, string domainName, ushort port)
+        {
+            CustomRustString unmanagedScheme = new CustomCSharpString(scheme).RustString;
+            CustomRustString unmanagedDomainName = new CustomCSharpString(domainName).RustString;
+
+            // Check to see if scheme and domainName aren't empty as it will cause a malformed uri. If they are, throw
+            if (scheme == "" || domainName == "")
+            {
+                throw new PravegaException(WrapperErrorMessages.InvalidInput);
+            }
+
+            this._rustStructPointer = Interop.CreatePravegaNodeUri(unmanagedScheme, unmanagedDomainName, port);
+        }
+
+        /// <summary>
+        ///     Default constructor. Doesn't initialize a counterpart in Rust.
+        /// </summary>
+        public PravegaNodeUri(){
+
+        }
+
+        /// <summary>
+        ///  Returns the PravegaNodeUri as a complete string formatted as:
+        ///     {scheme}://{domain_name}:{port}
+        /// </summary>
+        public string FullAddress()
+        {
+            if (this._rustStructPointer == IntPtr.Zero)
+            {
+                throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+            }
+            else
+            {
+                return new CustomCSharpString(Interop.PravegaNodeUriFullAddress(this._rustStructPointer)).NativeString;
+            }
+        }
+
+        /// <summary>
+        ///  Allows the setting and getting of the Scheme
+        /// </summary>
+         public string Scheme
+         {
+            get
+            {
+                if (this._rustStructPointer == IntPtr.Zero)
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else
+                {
+                    return new CustomCSharpString(Interop.PravegaNodeUriGetScheme(this._rustStructPointer)).NativeString;
+                }
+            }
+         }
+
+        /// <summary>
+        ///  Allows the setting and getting of the DomainName
+        /// </summary>
+        public string DomainName
+        {
+            get
+            {
+                if (this._rustStructPointer == IntPtr.Zero)
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else
+                {
+                    return new CustomCSharpString(Interop.PravegaNodeUriGetDomain(this._rustStructPointer)).NativeString;
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Allows the setting and getting of the Port
+        /// </summary>
+        public ushort Port
+        {
+            get
+            {
+                if (this._rustStructPointer == IntPtr.Zero)
+                {
+                    throw new PravegaException(WrapperErrorMessages.RustObjectNotFound);
+                }
+                else
+                {
+                    return Interop.PravegaNodeUriGetPort(this._rustStructPointer);
+                }
+            }
+        }
     }
     /* 
         Originally from pravega-client-rust/shared/src/lib.rs

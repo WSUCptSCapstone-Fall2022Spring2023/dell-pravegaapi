@@ -87,12 +87,12 @@ namespace Pravega.Config
         ///     Default configuration:
         ///     MaxConnectionsInPool = uint.MaxValue
         ///     MaxControllerConnections = 3
-        ///     ConnectionType = Tokio
+        ///     (static) ConnectionType = Tokio
         ///     RetryPolicy = new RetryWithBackoff(); // Default constructor
         ///     TransactionTimeoutTime = 9000
         ///     Mock = false
-        ///     IsTlsEnabled = (determined based on application)
-        ///     IsAuthEnabled = false
+        ///     IsAuthEnabled = (determined based on application)
+        ///     IsTlsEnabled = false
         ///     RequestTimeout = (determined based on application)
         //      https://github.com/pravega/pravega-client-rust/blob/master/config/src/lib.rs
         /// </summary>
